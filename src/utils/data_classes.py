@@ -1,0 +1,82 @@
+import numpy as np
+import pandas as pd
+from dataclasses import dataclass
+
+
+@dataclass
+class MultipleTimeSeries:
+    dates: list
+    names: list
+    log_returns: dict
+    close_prices: dict
+    x_train: np.array
+    y_train: np.array
+    x_test: np.array
+    y_test: np.array
+    scaler: object
+
+    def get_returns_from_features(self, features: np.array) -> np.array:
+        if self.scaler:
+            log_returns = np.squeeze(
+                self.scaler.inverse_transform(features.reshape(-1, 1))
+            ).reshape(features.shape)
+        else:
+            log_returns = features
+        return np.exp(log_returns)
+
+    def get_returns_dict_from_features(self, features: np.array) -> dict:
+        return {
+            ISIN: np.round(self.get_returns_from_features(features)[:, i], 8).tolist()
+            for i, ISIN in enumerate(self.names)
+        }
+
+    def get_train_df(self, idx: int = -1, ts_name: str = "") -> pd.DataFrame():
+        if ts_name:
+            for i, name in enumerate(self.names):
+                if name == ts_name:
+                    ts_dict = {name: self.x_train[idx, :, i]}
+                    break
+        else:
+            ts_dict = {
+                name: self.x_train[idx, :, i] for i, name in enumerate(self.names)
+            }
+        dates = self.dates[
+            -self.x_train.shape[1] - len(self.y_test) : -len(self.y_test)
+        ]
+        df = pd.DataFrame(ts_dict, index=dates).unstack().reset_index()
+        df.columns = ["unique_id", "ds", "y"]
+        df["ds"] = pd.to_datetime(df["ds"])
+        df.sort_values("ds", inplace=True)
+        return df
+
+    def get_test_prices(self) -> dict:
+        return {
+            name: np.round(self.close_prices[name][-len(self.y_test) :], 2).tolist()
+            for name in self.names
+        }
+
+    def get_test_returns(self) -> dict:
+        return {
+            name: np.exp(log_returns[-len(self.y_test) :])
+            for name, log_returns in self.log_returns.items()
+        }
+
+    def get_test_dates(self) -> list:
+        return self.dates[-len(self.y_test) :]
+
+    def get_naive_errors(self) -> tuple[float, float]:
+        # MAE and RMSE of a naive model where y_t = y_t-1
+        naive_mae = float(np.mean(np.abs(np.diff(self.get_eval_returns(), axis=0))))
+        naive_rmse = float(
+            np.sqrt(np.mean(np.square(np.diff(self.get_eval_returns(), axis=0))))
+        )
+        return naive_mae, naive_rmse
+
+    def get_eval_returns(self) -> np.array:
+        return np.concatenate(
+            [
+                self.get_returns_from_features(self.x_train[-1]),
+                self.get_returns_from_features(self.y_test),
+            ],
+            0,
+        )
