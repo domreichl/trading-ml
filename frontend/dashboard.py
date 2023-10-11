@@ -21,7 +21,6 @@ performance = pd.read_csv(os.path.join(data_dir, "performance.csv"))
 trades = pd.read_csv(os.path.join(data_dir, "trades.csv")).drop(columns=["ID"])
 trading_statistics = pd.read_csv(os.path.join(data_dir, "trading_statistics.csv"))
 backtest = pd.read_csv(os.path.join(data_dir, "backtest.csv"))
-st.text(backtest.dtypes)
 
 
 # PREDICTIONS
@@ -132,11 +131,13 @@ st.subheader(
     f"Expected Profits when Trading Top ATX Stocks Initially Worth 1000€ as a Function of Model Precision"
 )
 precision = float(st.slider("Model Precision", 0.0, 1.0, 0.5, 0.05))
+x_range = [backtest["Holding Weeks"].min(), backtest["Holding Weeks"].max()]
 st.plotly_chart(
     px.bar(
         backtest[backtest["Model Precision"] == precision],
         x="Holding Weeks",
         y="Expected Monthly Profit [€]",
+        range_x=x_range,
     )
 )
 st.plotly_chart(
@@ -144,5 +145,6 @@ st.plotly_chart(
         backtest[backtest["Model Precision"] == precision],
         x="Holding Weeks",
         y="Expected Profit per Trade [€]",
+        range_x=x_range,
     )
 )
