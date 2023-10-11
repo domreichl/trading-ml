@@ -128,10 +128,11 @@ if st.button("Show details"):
 
 # BACKTEST
 st.title("General Backtest")
-precision = st.slider("Model Precision", 0.0, 1.0, 0.5, 0.05)
 st.subheader(
     f"Expected Profits when Trading Top ATX Stocks Initially Worth 1000€ as a Function of Model Precision"
 )
+precision = float(st.slider("Model Precision", 0.0, 1.0, 0.5, 0.05))
+st.dataframe(backtest[backtest["Model Precision"] == precision])
 st.bar_chart(
     backtest[backtest["Model Precision"] == precision],
     x="Holding Weeks",
