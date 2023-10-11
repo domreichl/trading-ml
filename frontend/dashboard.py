@@ -133,9 +133,10 @@ st.subheader(
 )
 precision = float(st.slider("Model Precision", 0.0, 1.0, 0.5, 0.05))
 st.dataframe(backtest[backtest["Model Precision"] == precision])
-backtest["EMP"] = backtest["Expected Monthly Profit [€]"]
-st.bar_chart(
-    backtest[backtest["Model Precision"] == precision],
-    x="Holding Weeks",
-    y="EMP",
+st.plotly_chart(
+    px.bar(
+        backtest[backtest["Model Precision"] == precision],
+        x="Holding Weeks",
+        y="Expected Monthly Profit [€]",
+    )
 )
