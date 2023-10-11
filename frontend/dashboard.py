@@ -133,13 +133,15 @@ precision = float(st.slider("Model Precision", 0.0, 1.0, 0.5, 0.05))
 bt = backtest[backtest["Model Precision"] == precision]
 st.plotly_chart(
     px.bar(
-        x=bt["Holding Weeks"],
-        y=bt["Expected Monthly Profit [€]"],
+        bt,
+        x="Holding Weeks",
+        y="Expected Monthly Profit [€]",
     )
 )
 st.plotly_chart(
     px.bar(
-        x=bt["Holding Weeks"],
-        y=bt["Expected Profit per Trade [€]"],
+        bt,
+        x="Holding Weeks",
+        y="Expected Profit per Trade [€]",
     )
 )
