@@ -147,6 +147,14 @@ profits.add_trace(
         marker_color=bt["ColorA"],
     ),
 )
+profits.add_trace(
+    go.Bar(
+        name="B",
+        x=bt["Holding Weeks"],
+        y=bt["Expected Profit per Trade [€]"],
+        marker_color=bt["ColorB"],
+    ),
+)
 
 # profits.add_trace(
 #     go.Bar(
