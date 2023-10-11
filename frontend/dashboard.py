@@ -137,7 +137,7 @@ st.plotly_chart(
         backtest[backtest["Model Precision"] == precision],
         x="Holding Weeks",
         y="Expected Monthly Profit [€]",
-        color_discrete_sequence="bluered",
+        color_discrete_sequence="darkgreen",
     )
 )
 st.plotly_chart(
@@ -145,6 +145,6 @@ st.plotly_chart(
         backtest[backtest["Model Precision"] == precision],
         x="Holding Weeks",
         y="Expected Profit per Trade [€]",
-        color_continuous_scale="RdBu",
+        color_continuous_scale="maroon",
     )
 )
