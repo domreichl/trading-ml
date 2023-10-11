@@ -127,7 +127,7 @@ if st.button("Show details"):
 # BACKTEST
 st.title("General Backtest")
 st.subheader(
-    f"Expected Profits when Weekly Trading Top ATX Stocks Initially Worth 1000€ as a Function of Model Precision"
+    f"Expected Profits when Weekly Trading Top ATX Stocks Initially Worth 1000€ with 1€ Fee as a Function of Model Precision"
 )
 precision = float(st.slider("Model Precision", 0.0, 1.0, 0.5, 0.05))
 bt = backtest[backtest["Model Precision"] == precision]
