@@ -21,6 +21,7 @@ performance = pd.read_csv(os.path.join(data_dir, "performance.csv"))
 trades = pd.read_csv(os.path.join(data_dir, "trades.csv")).drop(columns=["ID"])
 trading_statistics = pd.read_csv(os.path.join(data_dir, "trading_statistics.csv"))
 backtest = pd.read_csv(os.path.join(data_dir, "backtest.csv"))
+backtest["Model Precision"] = backtest["Model Precision"].astype(float)
 
 
 # PREDICTIONS
@@ -58,6 +59,29 @@ fig_prices.update_layout(
     xaxis=dict(title="Date", tickformat="%b %d"),
 )
 st.plotly_chart(fig_prices)
+
+
+# MODELS
+st.title("Model Performance")
+st.subheader("Testing")
+metric_selected = st.radio(
+    "Select metric",
+    options=list(performance["Metric"].unique()),
+    index=3,
+    horizontal=True,
+)
+st.bar_chart(
+    performance[performance["Metric"] == metric_selected],
+    x="Model",
+    y="Score",
+    color="#b35300",
+)
+st.subheader("Trading")
+st.plotly_chart(
+    px.box(x=trades["MODEL"], y=trades["GROSS_PROFIT"]).update_layout(
+        xaxis_title="Model", yaxis_title="Gross Profit [€]"
+    )
+)
 
 
 # TRADES
@@ -102,33 +126,14 @@ if st.button("Show details"):
     st.dataframe(trades)
 
 
-# MODELS
-st.title("Model Performance")
-st.subheader("Testing")
-metric_selected = st.radio(
-    "Select metric",
-    options=list(performance["Metric"].unique()),
-    index=3,
-    horizontal=True,
-)
-st.bar_chart(
-    performance[performance["Metric"] == metric_selected],
-    x="Model",
-    y="Score",
-    color="#b35300",
-)
-st.subheader("Trading")
-st.plotly_chart(
-    px.box(x=trades["MODEL"], y=trades["GROSS_PROFIT"]).update_layout(
-        xaxis_title="Model", yaxis_title="Gross Profit [€]"
-    )
-)
-
-
 # BACKTEST
+st.title("General Backtest")
 precision = st.slider("Model Precision", 0.0, 1.0, 0.5, 0.05)
-bt = backtest[backtest["Model Precision"] == precision]
 st.subheader(
     f"Expected Profits when Trading Top ATX Stocks Initially Worth 1000€ as a Function of Model Precision"
 )
-st.bar_chart(bt, x="Holding Weeks", y="Expected Monthly Profit [€]")
+st.bar_chart(
+    backtest[backtest["Model Precision"] == precision],
+    x="Holding Weeks",
+    y="Expected Monthly Profit [€]",
+)
