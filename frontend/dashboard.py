@@ -137,26 +137,26 @@ backtest["ColorA"] = np.where(
 backtest["ColorB"] = np.where(
     backtest["Expected Profit per Trade [€]"] < 0, "darkred", "darkgreen"
 )
+bt = backtest[backtest["Model Precision"] == precision]
 profits = go.Figure()
 profits.add_trace(
     go.Bar(
         name="A",
-        x=backtest["Holding Weeks"],
-        y=backtest["Expected Monthly Profit [€]"],
-        marker_color=np.where(
-            backtest["Expected Monthly Profit [€]"] < 0, "darkred", "darkgreen"
-        ),
-    )
+        x=bt["Holding Weeks"],
+        y=bt["Expected Monthly Profit [€]"],
+        marker_color=bt["ColorA"],
+    ),
 )
-profits.add_trace(
-    go.Bar(
-        name="B",
-        x=backtest["Holding Weeks"],
-        y=backtest["Expected Profit per Trade [€]"],
-        marker_color=np.where(
-            backtest["Expected Profit per Trade [€]"] < 0, "darkred", "darkgreen"
-        ),
-    )
-)
+
+# profits.add_trace(
+#     go.Bar(
+#         name="B",
+#         x=backtest["Holding Weeks"],
+#         y=backtest["Expected Profit per Trade [€]"],
+#         marker_color=np.where(
+#             backtest["Expected Profit per Trade [€]"] < 0, "darkred", "darkgreen"
+#         ),
+#     )
+# )
 # profits.update_layout(barmode="stack")
 st.plotly_chart(profits)
