@@ -138,7 +138,7 @@ backtest["ColorB"] = np.where(
     backtest["Expected Profit per Trade [€]"] < 0, "darkred", "darkgreen"
 )
 st.plotly_chart(
-    px.bar(
+    go.Bar(
         backtest[backtest["Model Precision"] == precision],
         x="Holding Weeks",
         y="Expected Monthly Profit [€]",
@@ -146,7 +146,7 @@ st.plotly_chart(
     )
 )
 st.plotly_chart(
-    px.bar(
+    go.Bar(
         backtest[backtest["Model Precision"] == precision],
         x="Holding Weeks",
         y="Expected Profit per Trade [€]",
