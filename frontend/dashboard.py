@@ -1,5 +1,4 @@
 import os
-import numpy as np
 import pandas as pd
 import streamlit as st
 import plotly.express as px
@@ -131,40 +130,16 @@ st.subheader(
     f"Expected Profits when Weekly Trading Top ATX Stocks Initially Worth 1000€ as a Function of Model Precision"
 )
 precision = float(st.slider("Model Precision", 0.0, 1.0, 0.5, 0.05))
-backtest["ColorA"] = np.where(
-    backtest["Expected Monthly Profit [€]"] < 0, "darkred", "darkgreen"
-)
-backtest["ColorB"] = np.where(
-    backtest["Expected Profit per Trade [€]"] < 0, "darkred", "darkgreen"
-)
 bt = backtest[backtest["Model Precision"] == precision]
-profits = go.Figure()
-profits.add_trace(
-    go.Bar(
-        name="A",
+st.plotly_chart(
+    px.bar(
         x=bt["Holding Weeks"],
         y=bt["Expected Monthly Profit [€]"],
-        marker_color=bt["ColorA"],
-    ),
+    )
 )
-profits.add_trace(
-    go.Bar(
-        name="B",
+st.plotly_chart(
+    px.bar(
         x=bt["Holding Weeks"],
         y=bt["Expected Profit per Trade [€]"],
-        marker_color=bt["ColorB"],
-    ),
+    )
 )
-
-# profits.add_trace(
-#     go.Bar(
-#         name="B",
-#         x=backtest["Holding Weeks"],
-#         y=backtest["Expected Profit per Trade [€]"],
-#         marker_color=np.where(
-#             backtest["Expected Profit per Trade [€]"] < 0, "darkred", "darkgreen"
-#         ),
-#     )
-# )
-# profits.update_layout(barmode="stack")
-st.plotly_chart(profits)
