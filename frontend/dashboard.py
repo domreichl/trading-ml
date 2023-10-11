@@ -1,6 +1,6 @@
 import os
+import numpy as np
 import pandas as pd
-import datetime as dt
 import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
@@ -128,16 +128,21 @@ if st.button("Show details"):
 # BACKTEST
 st.title("General Backtest")
 st.subheader(
-    f"Expected Profits when Trading Top ATX Stocks Initially Worth 1000€ as a Function of Model Precision"
+    f"Expected Profits when Weekly Trading Top ATX Stocks Initially Worth 1000€ as a Function of Model Precision"
 )
 precision = float(st.slider("Model Precision", 0.0, 1.0, 0.5, 0.05))
-backtest["Holding Weeks"] = backtest["Holding Weeks"].astype(str)
+backtest["ColorA"] = np.where(
+    backtest["Expected Monthly Profit [€]"] < 0, "darkred", "darkgreen"
+)
+backtest["ColorB"] = np.where(
+    backtest["Expected Profit per Trade [€]"] < 0, "darkred", "darkgreen"
+)
 st.plotly_chart(
     px.bar(
         backtest[backtest["Model Precision"] == precision],
         x="Holding Weeks",
         y="Expected Monthly Profit [€]",
-        color_discrete_sequence=["red", "darkgreen"],
+        color="ColorA",
     )
 )
 st.plotly_chart(
@@ -145,6 +150,6 @@ st.plotly_chart(
         backtest[backtest["Model Precision"] == precision],
         x="Holding Weeks",
         y="Expected Profit per Trade [€]",
-        color_discrete_sequence=["darkgreen", "red"],
+        color="ColorB",
     )
 )
