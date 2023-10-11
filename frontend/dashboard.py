@@ -21,7 +21,7 @@ performance = pd.read_csv(os.path.join(data_dir, "performance.csv"))
 trades = pd.read_csv(os.path.join(data_dir, "trades.csv")).drop(columns=["ID"])
 trading_statistics = pd.read_csv(os.path.join(data_dir, "trading_statistics.csv"))
 backtest = pd.read_csv(os.path.join(data_dir, "backtest.csv"))
-backtest["Model Precision"] = backtest["Model Precision"].astype(float)
+st.text(backtest.dtypes)
 
 
 # PREDICTIONS
