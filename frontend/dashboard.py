@@ -150,7 +150,7 @@ profits.add_trace(
 )
 profits.add_trace(
     go.Bar(
-        name="A",
+        name="B",
         x=backtest["Holding Weeks"],
         y=backtest["Expected Profit per Trade [€]"],
         marker_color=np.where(
