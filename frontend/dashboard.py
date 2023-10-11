@@ -131,13 +131,13 @@ st.subheader(
     f"Expected Profits when Trading Top ATX Stocks Initially Worth 1000€ as a Function of Model Precision"
 )
 precision = float(st.slider("Model Precision", 0.0, 1.0, 0.5, 0.05))
-x_range = [backtest["Holding Weeks"].min(), backtest["Holding Weeks"].max()]
+backtest["Holding Weeks"] = backtest["Holding Weeks"].astype(str)
 st.plotly_chart(
     px.bar(
         backtest[backtest["Model Precision"] == precision],
         x="Holding Weeks",
         y="Expected Monthly Profit [€]",
-        range_x=x_range,
+        color="bluered",
     )
 )
 st.plotly_chart(
@@ -145,6 +145,6 @@ st.plotly_chart(
         backtest[backtest["Model Precision"] == precision],
         x="Holding Weeks",
         y="Expected Profit per Trade [€]",
-        range_x=x_range,
+        color="RdBu",
     )
 )
