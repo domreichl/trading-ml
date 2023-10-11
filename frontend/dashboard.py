@@ -158,5 +158,5 @@ profits.add_trace(
         ),
     )
 )
-profits.update_layout(barmode="stack")
+# profits.update_layout(barmode="stack")
 st.plotly_chart(profits)
