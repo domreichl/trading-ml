@@ -1,9 +1,8 @@
-import os
 import numpy as np
 import pandas as pd
 from sklearn.metrics import precision_recall_fscore_support
 
-from config.config import results_config, paths
+from config.config import results_config
 from utils.data_processing import (
     get_signs_from_prices,
     stack_array_from_dict,

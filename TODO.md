@@ -1,9 +1,9 @@
 ## TODO
+0. recommendation.py
 1. enrich the weekly prediction-based trading strategy
     - https://learn.bybit.com/indicators/best-swing-trading-indicators/
     - https://www.ig.com/en/trading-strategies/10-trading-indicators-every-trader-should-know-190604
     - potential libraries: TA, Backtest
-    - 
 2. Prefect for workflow automation
     - pipeline: Data Update >> Preprocessing >> Model Evaluation >> Model Uptraining >> Model Evaluation >> Model Selection >> Model Prediction >> Visualization Update >> Trading >> Trading Results >> Trading Visualization Update
     - automated data updates with weekly training & new predictions every Sunday

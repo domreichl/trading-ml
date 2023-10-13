@@ -11,10 +11,12 @@ from prediction import (
     compute_prediction_performances,
     get_df_from_predictions,
 )
+from validation import validate_model
 from visualization import (
     plot_prediction_metrics,
     plot_optimization_metrics,
     plot_price_predictions,
+    plot_validation_metrics,
 )
 
 
@@ -34,12 +36,15 @@ def backtest():
 
 
 @cli.command()
-@click.argument("metrics_type")
-def plot_metrics(metrics_type: str):
-    if metrics_type == "optimization":
-        plot_optimization_metrics()
-    elif metrics_type == "prediction":
-        plot_prediction_metrics()
+@click.argument("model_name")
+def validate(model_name: str):
+    mts = preprocess_data(
+        paths["csv"], data_config["look_back_window_size"], include_stock_index=True
+    )
+    mae, rmse = validate_model(model_name, mts)
+    print(f"Validation results for {model_name}:")
+    print("MAE: ", mae)
+    print("RMSE: ", rmse)
 
 
 @cli.command()
@@ -82,5 +87,16 @@ def evaluate(model_name: str):
     print(df)
 
 
-for cmd in [prepare, backtest, plot_metrics, predict, evaluate]:
+@cli.command()
+@click.argument("metrics_type")
+def plot_metrics(metrics_type: str):
+    if metrics_type == "optimization":
+        plot_optimization_metrics()
+    elif metrics_type == "validation":
+        plot_validation_metrics()
+    elif metrics_type == "evaluation":
+        plot_prediction_metrics()
+
+
+for cmd in [prepare, backtest, validate, predict, evaluate, plot_metrics]:
     cli.add_command(cmd)

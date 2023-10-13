@@ -14,11 +14,13 @@
 1. Specify parameters for data processing and model training in *config.py*
 2. Download & preprocess data: `trading-ml prepare`
 3. Explore trading strategies: `trading-ml backtest`
+4. Validate a model: `trading-ml validate model_name`
 4. Predict signs, returns, and prices: `trading-ml predict model_name`
 5. Plot predictions and performance metrics:
     - `trading-ml plot-predictions model_name ISIN`
     - `trading-ml plot-metrics optimization`
-    - `trading-ml plot-metrics prediction`
+    - `trading-ml plot-metrics validation`
+    - `trading-ml plot-metrics evaluation`
 
 ### Visualization
 - https://dominicreichl.com/ml/stock-price-prediction/

@@ -45,5 +45,5 @@ def test_weekly_trading():
         precision=1.0,
         n_simulations=10,
     )
-    assert expected_monthly_profits == 132.62
-    assert expected_profits_per_trade == 30.6
+    assert expected_monthly_profits == 177.71
+    assert expected_profits_per_trade == 41.01

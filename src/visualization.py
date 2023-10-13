@@ -14,9 +14,27 @@ def plot_optimization_metrics() -> None:
     barplot = sns.barplot(
         x="look_back_window_size", y="RMSE", hue="Model", data=df, palette="Oranges"
     )
-    barplot.set(ylabel="log(RMSE)", yscale="log")
+    barplot.set(ylabel="RMSE (log scale)", yscale="log")
     plt.title(
         f"Validation Error for Hyperparameter Optimization with {df['Model'].nunique()} Prediction Models"
+    )
+    plt.show()
+
+
+def plot_validation_metrics() -> None:
+    df = pd.read_csv(os.path.join(paths["results"], "validation.csv"))
+    mae = df[["Model", "MAE"]].rename(columns={"MAE": "Score"})
+    mae["Metric"] = "MAE"
+    rmse = df[["Model", "RMSE"]].rename(columns={"RMSE": "Score"})
+    rmse["Metric"] = "RMSE"
+    df = pd.concat([mae, rmse])
+    df["Score"] = df["Score"]
+    barplot = sns.barplot(
+        x="Model", y="Score", hue="Metric", data=df, palette="Oranges"
+    )
+    barplot.set(ylabel="Score (log scale)", yscale="log")
+    plt.title(
+        f"Train Set Validation Error for {df['Model'].nunique()} Optimized Prediction Models"
     )
     plt.show()
 
@@ -76,7 +94,7 @@ def plot_prediction_metrics() -> None:
         **barplot_cfg,
     ).set(ylabel="Score [%]")
     plt.suptitle(
-        f"Performance of {df['Model'].nunique()} Prediction Models on Various Metrics",
+        f"Test Set Performance of {df['Model'].nunique()} Prediction Models on Various Metrics",
         y=0.9,
     )
     for i, ax in enumerate(axs):
@@ -95,6 +113,7 @@ def plot_prediction_metrics() -> None:
 
 if __name__ == "__main__":
     plot_optimization_metrics()
+    plot_validation_metrics()
     plot_prediction_metrics()
     plot_price_predictions(
         pd.read_csv(os.path.join(paths["results"], "predictions.csv"))
