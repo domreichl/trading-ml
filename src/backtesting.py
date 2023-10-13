@@ -5,7 +5,7 @@ import pandas as pd
 from config.config import data_config, paths
 from utils.data_preprocessing import preprocess_data
 from utils.data_processing import stack_array_from_dict
-from utils.backtest_plot import (
+from utils.backtest_charts import (
     visualize_averaged_yearly_log_returns,
     visualize_expected_buy_and_hold_profits,
     visualize_expected_weekly_trading_profits,
