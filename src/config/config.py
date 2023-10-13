@@ -7,8 +7,8 @@ root_dir = os.path.join(config_dir, "..", "..")
 
 data_config = {
     "data_source": "wiener_boerse",  # 'wiener_boerse' (wienerboerse.at) or 'yfinance' (finance.yahoo.com)
-    "start_date": dt.datetime(2000, 1, 1),
-    "end_date": dt.datetime(2023, 9, 19),
+    "start_date": dt.datetime(2000, 1, 3),  # Monday
+    "end_date": dt.datetime(2023, 9, 22),  # Friday
     "stock_index": "AT0000999982",
     "securities": json.load(open(os.path.join(config_dir, "securities.json"))),
     "look_back_window_size": 260,  # 52 weeks x 5 weekdays

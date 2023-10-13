@@ -58,4 +58,8 @@ def visualize_expected_weekly_trading_profits(
         hue="Holding Weeks",
         data=df,
     )
+    ax1.axhline(y=50, c="gray", linewidth=2)
+    ax1.axhline(y=100, c="gray", linewidth=1, linestyle="--")
+    ax2.axhline(y=50, c="gray", linewidth=2)
+    ax2.axhline(y=100, c="gray", linewidth=1, linestyle="--")
     plt.show()

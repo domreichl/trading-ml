@@ -121,7 +121,7 @@ def weekly_trading(
     daily_profits, profits_per_trade = [], []
     for dr in daily_returns:
         return_periods = [
-            dr[i + 1 : i + holding_period]  # returns from Monday to Friday
+            dr[i : i + holding_period]  # returns from Monday to Friday
             for i in range(0, len(dr), holding_period)
         ]
         return_periods = (
