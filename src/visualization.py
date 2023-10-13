@@ -39,32 +39,6 @@ def plot_validation_metrics() -> None:
     plt.show()
 
 
-def plot_price_predictions(df: pd.DataFrame, ts_name: str = "") -> None:
-    if not ts_name:
-        ts_name = random.choice(list(df["ISIN"].unique()))
-    df = df[df["ISIN"] == ts_name]
-    if len(df) == 0:
-        raise Exception(f"No predictions were generated for ISIN {ts_name}")
-    actual_prices = pd.DataFrame(
-        {
-            "PricePredicted": list(df["Price"][: df["Date"].nunique()]),
-            "Date": list(df["Date"][: df["Date"].nunique()]),
-        }
-    )
-    actual_prices["ISIN"] = ts_name
-    actual_prices["Model"] = "ACTUAL PRICE"
-    df = pd.concat([actual_prices, df])
-    df = df[["ISIN", "Date", "PricePredicted", "Model"]]
-    linepplot = sns.lineplot(
-        x="Date", y="PricePredicted", hue="Model", style="Model", size="Model", data=df
-    )
-    linepplot.set(ylabel="Price [€]")
-    plt.title(
-        f"Stock Price Prediction for {ts_name} over the next {df['Date'].nunique()} Business Days"
-    )
-    plt.show()
-
-
 def plot_prediction_metrics() -> None:
     df = pd.read_csv(os.path.join(paths["results"], "performance.csv"))
     fig, axs = plt.subplots(4, 1)
@@ -111,10 +85,50 @@ def plot_prediction_metrics() -> None:
     plt.show()
 
 
+def plot_price_predictions(df: pd.DataFrame) -> None:
+    if len(df) == 0:
+        raise Exception(f"No predictions were generated for ISIN {ts_name}")
+    ts_name = df["ISIN"][0]
+    actual_prices = pd.DataFrame(
+        {
+            "PricePredicted": list(df["Price"][: df["Date"].nunique()]),
+            "Date": list(df["Date"][: df["Date"].nunique()]),
+        }
+    )
+    actual_prices["ISIN"] = ts_name
+    actual_prices["Model"] = "ACTUAL PRICE"
+    df = pd.concat([actual_prices, df])
+    df = df[["ISIN", "Date", "PricePredicted", "Model"]]
+    linepplot = sns.lineplot(
+        x="Date", y="PricePredicted", hue="Model", style="Model", size="Model", data=df
+    )
+    linepplot.set(ylabel="Price [€]")
+    plt.title(
+        f"Stock Price Prediction for {ts_name} over the next {df['Date'].nunique()} Business Days"
+    )
+    plt.show()
+
+
+def plot_price_forecast(df: pd.DataFrame) -> None:
+    if len(df) == 0:
+        raise Exception(f"No forecast was generated for ISIN {ts_name}")
+    ts_name = df["ISIN"][0]
+    linepplot = sns.lineplot(
+        x="Date", y="Price", hue="Model", style="Model", size="Model", data=df
+    )
+    linepplot.set(ylabel="Price [€]")
+    plt.title(
+        f"Stock Price Forecast for {ts_name} over the next {df['Date'].nunique()} Business Days"
+    )
+    plt.show()
+
+
 if __name__ == "__main__":
     plot_optimization_metrics()
     plot_validation_metrics()
     plot_prediction_metrics()
-    plot_price_predictions(
-        pd.read_csv(os.path.join(paths["results"], "predictions.csv"))
-    )
+    predictions = pd.read_csv(os.path.join(paths["results"], "predictions.csv"))
+    forecast = pd.read_csv(os.path.join(paths["results"], "forecast.csv"))
+    ts_name = random.choice(list(predictions["ISIN"].unique()))
+    plot_price_predictions(predictions[predictions["ISIN"] == ts_name])
+    plot_price_forecast(forecast[forecast["ISIN"] == ts_name])

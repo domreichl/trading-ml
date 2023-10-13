@@ -6,7 +6,7 @@ from mlforecast import MLForecast
 from window_ops.rolling import rolling_mean, rolling_max, rolling_min
 from xgboost import XGBRegressor
 
-from config.config import data_config, model_config
+from config.config import model_config
 from utils.data_classes import MultipleTimeSeries
 from utils.evaluation import evaluate_return_predictions
 
@@ -38,9 +38,9 @@ def load_xgboost() -> MLForecast:
 
 
 def fit_predict_boosting_model(model_name: str, mts: MultipleTimeSeries) -> dict:
-    if model_name == "LGBMRegressor":
+    if "LGBMRegressor" in model_name:
         model = load_lightgbm()
-    elif model_name == "XGBRegressor":
+    elif "XGBRegressor" in model_name:
         model = load_xgboost()
     else:
         raise Exception(f"Name '{model_name}' is not a valid booster model name.")
@@ -55,9 +55,9 @@ def validate_boosting_model(
     mts: MultipleTimeSeries,
     n_validations: int = model_config["n_validations"],
 ) -> tuple[float, float]:
-    if model_name == "LGBMRegressor":
+    if "LGBMRegressor" in model_name:
         model = load_lightgbm()
-    elif model_name == "XGBRegressor":
+    elif "XGBRegressor" in model_name:
         model = load_xgboost()
     else:
         raise Exception(f"Name '{model_name}' is not a valid booster model name.")
@@ -84,6 +84,8 @@ def get_y_preds_from_boosting_results(
     results: pd.DataFrame, ts_names: list, model_name: str
 ) -> dict:
     return {
-        ts_name: list(results[results["unique_id"] == ts_name][model_name])
+        ts_name: list(
+            results[results["unique_id"] == ts_name][model_name.split("_")[-1]]
+        )
         for ts_name in ts_names
     }

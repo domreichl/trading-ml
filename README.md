@@ -15,12 +15,13 @@
 2. Download & preprocess data: `trading-ml prepare`
 3. Explore trading strategies: `trading-ml backtest`
 4. Validate a model: `trading-ml validate model_name`
-4. Predict signs, returns, and prices: `trading-ml predict model_name`
-5. Plot predictions and performance metrics:
-    - `trading-ml plot-predictions model_name ISIN`
+5. Plot performance metrics:
     - `trading-ml plot-metrics optimization`
     - `trading-ml plot-metrics validation`
     - `trading-ml plot-metrics evaluation`
+6. Generate predictions (test set) or a forecast (out-of-sample):
+    - `trading-ml predict model_name ISIN`
+    - `trading-ml forecast model_name ISIN`
 
 ### Visualization
 - https://dominicreichl.com/ml/stock-price-prediction/

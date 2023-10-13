@@ -10,36 +10,36 @@ from utils.file_handling import write_csv_results, write_frontend_data
 
 
 def generate_predictions(model_name: str, mts: MultipleTimeSeries) -> tuple[dict, dict]:
-    if model_name == "arima":
+    if model_name in ["arima", "prod_arima"]:
         from models.base import fit_predict_arima
 
-        y_preds = fit_predict_arima(mts)
-    elif model_name == "exponential_smoothing":
+        y_preds = fit_predict_arima(mts, ckpt_dir=model_name)
+    elif model_name in ["exponential_smoothing", "prod_exponential_smoothing"]:
         from models.base import fit_predict_exponential_smoothing
 
         y_preds = fit_predict_exponential_smoothing(mts)
-    elif model_name == "LGBMRegressor":
+    elif model_name in ["LGBMRegressor", "prod_LGBMRegressor"]:
         from models.boosting import fit_predict_boosting_model
 
         y_preds = fit_predict_boosting_model(model_name, mts)
-    elif model_name == "lstm":
+    elif model_name in ["lstm", "prod_lstm"]:
         from models.lstms import get_lstm_model
 
         model = get_lstm_model(model_name, mts)
         y_preds = model.predict()
-    elif model_name == "moving_average":
+    elif model_name in ["moving_average"]:
         from models.base import predict_moving_average
 
         y_preds = predict_moving_average(mts)
-    elif model_name == "moving_average_recursive":
+    elif model_name in ["moving_average_recursive", "prod_moving_average_recursive"]:
         from models.base import predict_moving_average_recursive
 
         y_preds = predict_moving_average_recursive(mts)
-    elif model_name == "prophet":
+    elif model_name in ["prophet", "prod_prophet"]:
         from models.base import fit_predict_prophet
 
-        y_preds = fit_predict_prophet(mts)
-    elif model_name == "XGBRegressor":
+        y_preds = fit_predict_prophet(mts, ckpt_dir=model_name)
+    elif model_name in ["XGBRegressor", "prod_XGBRegressor"]:
         from models.boosting import fit_predict_boosting_model
 
         y_preds = fit_predict_boosting_model(model_name, mts)

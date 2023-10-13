@@ -1,12 +1,13 @@
 import numpy as np
 import pandas as pd
+import datetime as dt
 from dataclasses import dataclass
 
 
 @dataclass
 class MultipleTimeSeries:
-    dates: list
-    names: list
+    dates: list[str]
+    names: list[str]
     log_returns: dict
     close_prices: dict
     x_train: np.array
@@ -29,6 +30,32 @@ class MultipleTimeSeries:
             ISIN: np.round(self.get_returns_from_features(features)[:, i], 8).tolist()
             for i, ISIN in enumerate(self.names)
         }
+
+    def get_forecast_dates(self) -> list[str]:
+        date_format = "%Y-%m-%d"
+        day = dt.datetime.strptime(self.dates[-1], date_format)
+        if day.weekday() == 4:  # Fri -> Mon
+            start = day + dt.timedelta(days=3)
+        elif day.weekday() in [5, 6]:
+            raise Exception("Error: Dates contain a Saturday or Sunday.")
+        else:
+            start = day + dt.timedelta(days=1)
+        forecast_dates = [start.strftime(date_format)]
+        next_day = start + dt.timedelta(days=1)
+        while len(forecast_dates) < len(self.y_test):
+            if next_day.weekday() not in [5, 6]:
+                forecast_dates.append(next_day.strftime(date_format))
+            next_day += dt.timedelta(days=1)
+        return forecast_dates
+
+    def merge_features(self, for_deep_learning: bool = False) -> None:
+        self.x_train = np.concatenate([self.x_train, np.expand_dims(self.x_test, 0)], 0)
+        self.y_train = np.concatenate([self.y_train, np.expand_dims(self.y_test, 0)], 0)
+        if not for_deep_learning:
+            self.x_train = np.concatenate(
+                [self.x_train[:, len(self.y_test) :, :], self.y_train], 1
+            )
+            self.y_train = self.x_test = np.array([])
 
     def get_train_df(self, idx: int = -1, ts_name: str = "") -> pd.DataFrame():
         if ts_name:

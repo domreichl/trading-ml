@@ -1,5 +1,6 @@
 import os
 import numpy as np
+import datetime as dt
 
 from config.config import data_config
 from utils.data_preprocessing import preprocess_data
@@ -15,6 +16,41 @@ from utils.evaluation import (
     evaluate_return_predictions,
     process_metrics,
 )
+
+
+def test_data_classes_mts_merge_features():
+    mts = preprocess_data(
+        path=os.path.join(os.path.dirname(__file__), "test_data.csv"),
+        look_back_window_size=data_config["look_back_window_size"],
+        include_stock_index=True,
+    )
+    assert mts.x_train.shape == (4929, 260, 4)
+    assert mts.y_train.shape == (4929, 10, 4)
+    mts.merge_features()
+    assert mts.x_train.shape == (4930, 260, 4)
+    assert mts.y_train.shape == (0,)
+    assert mts.x_test.shape == (0,)
+    assert mts.y_test.shape == (10, 4)
+    mts = preprocess_data(
+        path=os.path.join(os.path.dirname(__file__), "test_data.csv"),
+        look_back_window_size=data_config["look_back_window_size"],
+        include_stock_index=True,
+    )
+    mts.merge_features(for_deep_learning=True)
+    assert mts.x_train.shape == (4930, 260, 4)
+    assert mts.y_train.shape == (4930, 10, 4)
+
+
+def test_data_classes_mts_get_forecast_dates():
+    mts = preprocess_data(
+        path=os.path.join(os.path.dirname(__file__), "test_data.csv"),
+        look_back_window_size=data_config["look_back_window_size"],
+        include_stock_index=True,
+    )
+    forecast_dates = mts.get_forecast_dates()
+    assert mts.dates[-1] == "2023-09-15"
+    assert forecast_dates[0] == "2023-09-18"
+    assert forecast_dates[-1] == "2023-09-29"
 
 
 def test_data_preprocessing():

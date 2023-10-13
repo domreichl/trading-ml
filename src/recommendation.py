@@ -1,3 +1,14 @@
+import os
+import pandas as pd
+
+from config.config import paths
+
+
+def analyze_predictions():
+    df = pd.read_csv(os.path.join(paths["results"], "performance.csv"))
+    pass
+
+
 """
     rank ISINs by
         (a) number of models predictions profits
