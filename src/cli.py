@@ -19,6 +19,7 @@ from visualization import (
 )
 from utils.data_processing import get_df_from_predictions, get_forecast_df
 from utils.evaluation import compute_prediction_performances
+from utils.indicators import compute_market_signals, print_market_signals
 
 
 @click.group()
@@ -143,7 +144,9 @@ def recommend_open(position_type: str, optimize: str):
     )
     current_prices = {ts_name: cp[-1] for ts_name, cp in mts.close_prices.items()}
     top_models = pick_top_models(position_type)
-    recommend_stock(top_models, current_prices, position_type, optimize)
+    top_stock = recommend_stock(top_models, current_prices, position_type, optimize)
+    overbought, bullish = compute_market_signals(mts.close_prices[top_stock])
+    print_market_signals(top_stock, overbought, bullish)
 
 
 @cli.command()
@@ -157,6 +160,8 @@ def recommend_close(position_type: str, ts_name: str):
     )
     current_price = mts.close_prices[ts_name][-1]
     recommend_close_position(ts_name, current_price, position_type)
+    overbought, bullish = compute_market_signals(mts.close_prices[ts_name])
+    print_market_signals(ts_name, overbought, bullish)
 
 
 for cmd in [

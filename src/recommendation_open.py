@@ -4,6 +4,7 @@ import pandas as pd
 from config.config import data_config, paths
 from utils.data_preprocessing import preprocess_data
 from utils.data_processing import compute_predicted_returns
+from utils.indicators import compute_market_signals, print_market_signals
 from utils.model_selection import pick_top_models
 
 
@@ -93,4 +94,8 @@ if __name__ == "__main__":
     for position_type in ["short", "long"]:
         top_models = pick_top_models(position_type)
         for optimize in ["risk", "return"]:
-            recommend_stock(top_models, current_prices, position_type, optimize)
+            top_stock = recommend_stock(
+                top_models, current_prices, position_type, optimize
+            )
+            overbought, bullish = compute_market_signals(mts.close_prices[top_stock])
+            print_market_signals(top_stock, overbought, bullish)

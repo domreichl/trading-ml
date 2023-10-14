@@ -5,6 +5,7 @@ import pandas as pd
 from config.config import data_config, paths
 from utils.data_preprocessing import preprocess_data
 from utils.data_processing import compute_predicted_return
+from utils.indicators import compute_market_signals, print_market_signals
 from utils.model_selection import pick_top_models
 
 
@@ -58,3 +59,5 @@ if __name__ == "__main__":
     current_price = mts.close_prices[ISIN][-1]
     for position_type in ["short", "long"]:
         recommend_close_position(ISIN, current_price, position_type)
+    overbought, bullish = compute_market_signals(mts.close_prices[ISIN])
+    print_market_signals(ISIN, overbought, bullish)
