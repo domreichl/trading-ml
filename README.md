@@ -36,6 +36,7 @@
 ### Visualization
 - https://dominicreichl.com/ml/stock-price-prediction/
 
-### Bias Warning
-- Survivorship bias due to selection of stocks with long-term data from market indices
-- Model selection bias due to multiple evaluations and backtests
+### Warnings
+- This library is intended for technical purposes only and not to be financial advice.
+- Beware of the survivorship bias due to selection of stocks with long-term data from market indices.
+- Beware of the model selection bias due to multiple validations, evaluations, and backtests.
