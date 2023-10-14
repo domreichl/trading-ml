@@ -3,6 +3,7 @@ import pandas as pd
 
 from config.config import data_config, paths
 from utils.data_preprocessing import preprocess_data
+from utils.data_processing import compute_predicted_returns
 from utils.model_selection import pick_top_models
 
 
@@ -34,14 +35,6 @@ def recommend_stock(
             f" - Predicted gross profit when trading {buy_price}€: {round(buy_price*predicted_return-buy_price, 2)}€"
         )
     return top_stock
-
-
-def compute_predicted_returns(current_prices: dict, forecast: pd.DataFrame) -> dict:
-    predicted_returns = {}
-    for ISIN, current_price in current_prices.items():
-        predicted_price = float(forecast[forecast["ISIN"] == ISIN]["Price"].iloc[-1])
-        predicted_returns[ISIN] = predicted_price / current_price
-    return predicted_returns
 
 
 def pick_top_stock_candidates(

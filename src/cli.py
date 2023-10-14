@@ -7,7 +7,7 @@ from utils.model_selection import pick_top_models
 from data_preparation import prepare_data
 from backtesting import run_backtests
 from prediction import generate_predictions
-from recommendation_buy import recommend_stock
+from recommendation_open import recommend_stock
 from validation import validate_model
 from visualization import (
     plot_prediction_metrics,
@@ -134,7 +134,7 @@ def forecast(model_name: str, ts_name: str = ""):
 @cli.command()
 @click.argument("position_type")
 @click.argument("optimize")
-def recommend_buy(position_type: str, optimize: str):
+def recommend_open(position_type: str, optimize: str):
     mts = preprocess_data(
         paths["csv"],
         look_back_window_size=data_config["look_back_window_size"],
@@ -153,6 +153,6 @@ for cmd in [
     plot_metrics,
     predict,
     forecast,
-    recommend_buy,
+    recommend_open,
 ]:
     cli.add_command(cmd)
