@@ -7,6 +7,7 @@ from utils.model_selection import pick_top_models
 from data_preparation import prepare_data
 from backtesting import run_backtests
 from prediction import generate_predictions
+from recommendation_close import recommend_close_position
 from recommendation_open import recommend_stock
 from validation import validate_model
 from visualization import (
@@ -140,9 +141,22 @@ def recommend_open(position_type: str, optimize: str):
         look_back_window_size=data_config["look_back_window_size"],
         include_stock_index=True,
     )
-    current_prices = {ISIN: cp[-1] for ISIN, cp in mts.close_prices.items()}
+    current_prices = {ts_name: cp[-1] for ts_name, cp in mts.close_prices.items()}
     top_models = pick_top_models(position_type)
     recommend_stock(top_models, current_prices, position_type, optimize)
+
+
+@cli.command()
+@click.argument("position_type")
+@click.argument("ts_name")
+def recommend_close(position_type: str, ts_name: str):
+    mts = preprocess_data(
+        paths["csv"],
+        look_back_window_size=data_config["look_back_window_size"],
+        include_stock_index=True,
+    )
+    current_price = mts.close_prices[ts_name][-1]
+    recommend_close_position(ts_name, current_price, position_type)
 
 
 for cmd in [
@@ -154,5 +168,6 @@ for cmd in [
     predict,
     forecast,
     recommend_open,
+    recommend_close,
 ]:
     cli.add_command(cmd)

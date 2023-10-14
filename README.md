@@ -26,6 +26,7 @@
 
 7. Get trading recommendation:
     - `trading-ml recommend-open [position_type] [optimize]`
+    - `trading-ml recommend-close [position_type] [ISIN]`
 
 ### Parameters
 - [model_name] ∈ {src/config/config.py/model_config/names}

@@ -89,3 +89,9 @@ def compute_predicted_returns(current_prices: dict, forecast: pd.DataFrame) -> d
         predicted_price = float(forecast[forecast["ISIN"] == ISIN]["Price"].iloc[-1])
         predicted_returns[ISIN] = predicted_price / current_price
     return predicted_returns
+
+
+def compute_predicted_return(current_price: float, forecast: pd.DataFrame) -> float:
+    predicted_price = float(forecast["Price"].iloc[-1])
+    predicted_return = predicted_price / current_price
+    return predicted_return
