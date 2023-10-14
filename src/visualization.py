@@ -88,7 +88,7 @@ def plot_prediction_metrics() -> None:
 def plot_price_predictions(df: pd.DataFrame) -> None:
     if len(df) == 0:
         raise Exception(f"No predictions were generated for ISIN {ts_name}")
-    ts_name = df["ISIN"][0]
+    ts_name = df["ISIN"].iloc[0]
     actual_prices = pd.DataFrame(
         {
             "PricePredicted": list(df["Price"][: df["Date"].nunique()]),
@@ -112,7 +112,7 @@ def plot_price_predictions(df: pd.DataFrame) -> None:
 def plot_price_forecast(df: pd.DataFrame) -> None:
     if len(df) == 0:
         raise Exception(f"No forecast was generated for ISIN {ts_name}")
-    ts_name = df["ISIN"][0]
+    ts_name = df["ISIN"].iloc[0]
     linepplot = sns.lineplot(
         x="Date", y="Price", hue="Model", style="Model", size="Model", data=df
     )

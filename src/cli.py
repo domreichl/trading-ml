@@ -2,10 +2,12 @@ import click, random
 
 from config.config import data_config, paths
 from utils.data_preprocessing import preprocess_data
+from utils.model_selection import pick_top_models
 
 from data_preparation import prepare_data
 from backtesting import run_backtests
 from prediction import generate_predictions
+from recommendation_buy import recommend_stock
 from validation import validate_model
 from visualization import (
     plot_prediction_metrics,
@@ -113,7 +115,9 @@ def forecast(model_name: str, ts_name: str = ""):
     )
     mts.merge_features(for_deep_learning=deep_learning)
     model_name = "prod_" + model_name
-    returns_predicted, prices_predicted = generate_predictions(model_name, mts)
+    returns_predicted, prices_predicted = generate_predictions(
+        model_name, mts, forecast=True
+    )
     df = get_forecast_df(
         returns_predicted,
         prices_predicted,
@@ -127,5 +131,28 @@ def forecast(model_name: str, ts_name: str = ""):
     plot_price_forecast(df)
 
 
-for cmd in [prepare, backtest, validate, evaluate, plot_metrics, predict, forecast]:
+@cli.command()
+@click.argument("position_type")
+@click.argument("optimize")
+def recommend_buy(position_type: str, optimize: str):
+    mts = preprocess_data(
+        paths["csv"],
+        look_back_window_size=data_config["look_back_window_size"],
+        include_stock_index=True,
+    )
+    current_prices = {ISIN: cp[-1] for ISIN, cp in mts.close_prices.items()}
+    top_models = pick_top_models(position_type)
+    recommend_stock(top_models, current_prices, position_type, optimize)
+
+
+for cmd in [
+    prepare,
+    backtest,
+    validate,
+    evaluate,
+    plot_metrics,
+    predict,
+    forecast,
+    recommend_buy,
+]:
     cli.add_command(cmd)

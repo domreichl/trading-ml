@@ -83,7 +83,15 @@ def evaluate_sign_predictions(gt: np.array, pr: np.array) -> dict:
     precision, recall, f1_score, _ = precision_recall_fscore_support(
         gt, pr, average="binary"
     )
-    metrics = dict(zip(["Precision", "Recall", "F1"], [precision, recall, f1_score]))
+    negative_predictive_value, _, _, _ = precision_recall_fscore_support(
+        1 - gt, 1 - pr, average="binary"
+    )
+    metrics = dict(
+        zip(
+            ["Precision", "Recall", "F1", "NPV"],
+            [precision, recall, f1_score, negative_predictive_value],
+        )
+    )
     return metrics
 
 

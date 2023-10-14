@@ -31,6 +31,9 @@ def test_data_classes_mts_merge_features():
     assert mts.y_train.shape == (0,)
     assert mts.x_test.shape == (0,)
     assert mts.y_test.shape == (10, 4)
+
+
+def test_data_classes_mts_merge_features_dl():
     mts = preprocess_data(
         path=os.path.join(os.path.dirname(__file__), "test_data.csv"),
         look_back_window_size=data_config["look_back_window_size"],
@@ -96,14 +99,18 @@ def test_evaluation_evaluate_sign_predictions():
     pr = np.array([[0, 1, 1], [1, 1, 1]])
     P = len(gt[np.where(gt == 1)])
     Ppr = len(pr[np.where(pr == 1)])
+    Npr = len(pr[np.where(pr == 0)])
     TP = len(pr[np.where((pr == 1) & (pr == gt))])
+    TN = len(pr[np.where((pr == 0) & (pr == gt))])
     precision = TP / Ppr
     recall = TP / P
     f1_score = 2 * (precision * recall) / (precision + recall)
+    negative_predictive_value = TN / Npr
     metrics = evaluate_sign_predictions(gt.reshape(-1, 1), pr.reshape(-1, 1))
     assert metrics["Precision"] == precision
     assert metrics["Recall"] == recall
     assert metrics["F1"] == f1_score
+    assert metrics["NPV"] == negative_predictive_value
 
 
 def test_evaluation_evaluate_price_predictions():

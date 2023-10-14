@@ -10,12 +10,6 @@ from utils.file_handling import write_csv_results, write_frontend_data
 
 
 if __name__ == "__main__":
-    mts = preprocess_data(
-        paths["csv"],
-        look_back_window_size=data_config["look_back_window_size"],
-        include_stock_index=True,
-    )
-    mts.merge_features()
     predictions = []
     for model_name in model_config["names"]:
         if model_name == "moving_average":
@@ -31,7 +25,9 @@ if __name__ == "__main__":
         mts.merge_features(for_deep_learning=deep_learning)
         model_name = "prod_" + model_name
         print(f"Computing forecast with model '{model_name}'")
-        returns_predicted, prices_predicted = generate_predictions(model_name, mts)
+        returns_predicted, prices_predicted = generate_predictions(
+            model_name, mts, forecast=True
+        )
         predictions.append(
             get_forecast_df(
                 returns_predicted,

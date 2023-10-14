@@ -9,7 +9,9 @@ from utils.evaluation import compute_prediction_performances
 from utils.file_handling import write_csv_results, write_frontend_data
 
 
-def generate_predictions(model_name: str, mts: MultipleTimeSeries) -> tuple[dict, dict]:
+def generate_predictions(
+    model_name: str, mts: MultipleTimeSeries, forecast: bool = False
+) -> tuple[dict, dict]:
     if model_name in ["arima", "prod_arima"]:
         from models.base import fit_predict_arima
 
@@ -48,7 +50,10 @@ def generate_predictions(model_name: str, mts: MultipleTimeSeries) -> tuple[dict
     returns_predicted, prices_predicted = {}, {}
     for name, pred in y_preds.items():
         prices_predicted[name] = []
-        price = mts.close_prices[name][-1 - len(mts.y_test)]
+        if forecast:
+            price = mts.close_prices[name][-1]
+        else:
+            price = mts.close_prices[name][-1 - len(mts.y_test)]
         returns_predicted[name] = list(mts.get_returns_from_features(np.array(pred)))
         for r in returns_predicted[name]:
             price *= r
