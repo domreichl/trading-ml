@@ -1,12 +1,47 @@
 ## TODO
-1. Prefect for workflow automation
-    - pipeline: Data Update >> Preprocessing >> Model Evaluation >> Model Uptraining >> Model Evaluation >> Model Selection >> Model Prediction >> Visualization Update >> Trading >> Trading Results >> Trading Visualization Update
+1. rename & refactor files according to the pipeline below:
+    - look into DVC / Iterative Studio for experiment handling
+        - experiments being tied to commits would be great!
+        - DVC PIPELINE > PREFECT ?!??!?!?!
+    - install, configure, and integrate DVC
+    - new folder "/src/pipeline"
+    - more dynamic handling of config (research DVC docs for this)
+        - to automatically extend the date range
+    - scripts in /src/pipeline:
+        - prepare.py -> csv in data
+        - train.py -> ckpts
+            - proper handling of training from scratch
+            - uptraining protocol for lstm
+            - updated ckpt handling / experiment tracking
+        - validate.py -> results/validation.csv
+        - test.py -> results/test.csv & results/predictions.csv
+        - select.py -> results/selection.csv
+            - script to find the top 3 models
+        - forecast.py -> results/forecast.csv
+            - to retrain/uptrain the top 3 models anew with the total data
+        - recommend.py -> recommendation.csv        
+            - new script based on "recommendation_open.py" that recommends a stock
+            - should also have the OPTIONAL functionality (defined in config) of "recommendation_close.py"
+            - persist detailed results in a csv file
+    - refactor all scripts in /src (esp. cli & prediction.py) to keep files all clean
+        - goal: keep only cli.py in /src -> run all scripts for experimentation/development via cli
+        - all automated processes should run in a DVC pipeline (/src/pipeline)
+        - all other code in /src should be put either into cli.py or into utils
+2. Workflow automation
+    - pipeline: extend date range >> prepare.py >> train.py >> validate.py >> test.py >> select.py >> forecast.py >> recommend.py >> trading (see below) >> frontend (see below) >> update dvc & git (automate as well?)
+        - trading: (not automated):
+            - check the results in test.csv, selection.csv, forecast.csv & recommendation.csv
+            - perhaps also visualize the results
+            - briefly research / think about fundamentals (news about the stock)
+            - open/close a short/long position
+            - track the trade in a database
+        - frontend: ensure it is properly updated:
+            - especially validation.csv, test.csv, predictions.csv, forecast.csv, recommendation.csv, trades.csv, trading_statistics.csv
     - automated data updates with weekly training & new predictions every Sunday
-    - track average metrics over all tests (plot in frontend instead of performance.csv)
-    - run Docker Image (saved on dockerhub) serverless with Google Cloud Run
-2. (24.10.) update datasets -> retrain all models -> first investment based on recommendation_open.py
-3. serious modeling:
+3. (24.10.) update datasets -> retrain all models -> first investment based on recommendation_open.py
+4. serious modeling:
     - improve all model prototypes
+    - train with or without market index?
     - revisit my deep forecasting presentation to implement additional models
     - potential libraries: statsforecast, sktime
     - additional/alternative data sources and preprocessing
