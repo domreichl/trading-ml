@@ -16,14 +16,17 @@ from utils.file_handling import (
 )
 
 
-def fit_predict_arima(mts: MultipleTimeSeries, ckpt_dir: str = "arima") -> dict:
-    y_preds = {}
+def fit_arima(mts: MultipleTimeSeries, ckpt_dir: str) -> None:
     for i, ts_name in enumerate(mts.names):
-        model_name = f"arima_{ts_name}"
-        model = load_model_from_pickle_ckpt(ckpt_dir, model_name)
-        if model is None:
-            model = auto_arima(mts.x_train[-1, :, i])
-            save_model_to_pickle_ckpt(model, ckpt_dir, model_name)
+        model_name = f"{ckpt_dir}_{ts_name}"
+        model = auto_arima(mts.x_train[-1, :, i])
+        save_model_to_pickle_ckpt(model, ckpt_dir, model_name)
+
+
+def predict_arima(mts: MultipleTimeSeries, ckpt_dir: str) -> dict:
+    y_preds = {}
+    for ts_name in mts.names:
+        model = load_model_from_pickle_ckpt(ckpt_dir, f"{ckpt_dir}_{ts_name}")
         y_preds[ts_name] = model.predict(len(mts.y_test))
     return y_preds
 
@@ -161,16 +164,18 @@ def validate_moving_average(
     return float(np.mean(mae_lst)), float(np.mean(rmse_lst))
 
 
-def fit_predict_prophet(mts: MultipleTimeSeries, ckpt_dir: str = "prophet") -> dict:
-    y_preds = {}
+def fit_prophet(mts: MultipleTimeSeries, ckpt_dir: str) -> None:
     df = mts.get_train_df()
     for ts_name in mts.names:
         x = df[df["unique_id"] == ts_name].copy()
-        model_name = f"prophet_{ts_name}"
-        model = load_model_from_json_ckpt(ckpt_dir, model_name)
-        if model is None:
-            model = Prophet().fit(x)
-            save_model_to_json_ckpt(model, ckpt_dir, model_name)
+        model = Prophet().fit(x)
+        save_model_to_json_ckpt(model, ckpt_dir, f"{ckpt_dir}_{ts_name}")
+
+
+def predict_prophet(mts: MultipleTimeSeries, ckpt_dir: str) -> dict:
+    y_preds = {}
+    for ts_name in mts.names:
+        model = load_model_from_json_ckpt(ckpt_dir, f"{ckpt_dir}_{ts_name}")
         results = model.predict(
             model.make_future_dataframe(periods=len(mts.y_test), include_history=False)
         )

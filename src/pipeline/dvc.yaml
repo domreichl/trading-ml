@@ -2,7 +2,17 @@ stages:
   prepare:
     cmd: python prepare.py
     deps:
-      - ../config/data_config.py
       - prepare.py
+      - ../config/data_config.py
     outs:
       - ../../data/wiener_boerse.csv
+  train:
+    cmd: python train.py
+    deps:
+      - train.py
+      - ../config/model_config.py
+      - ../../data/wiener_boerse.csv
+    outs:
+      - ../../ckpts/arima
+      - ../../ckpts/lstm
+      - ../../ckpts/prophet

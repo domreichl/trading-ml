@@ -16,3 +16,34 @@ stages:
       hash: md5
       md5: 96b8711a53396327041c3b56e235ef90
       size: 3209421
+  train:
+    cmd: python train.py
+    deps:
+    - path: ../../data/wiener_boerse.csv
+      hash: md5
+      md5: 96b8711a53396327041c3b56e235ef90
+      size: 3209421
+    - path: ../config/model_config.py
+      hash: md5
+      md5: 3a11cd354fb7437dd0ea274e9e833ff4
+      size: 623
+    - path: train.py
+      hash: md5
+      md5: 6a62bbef942cd05a700f5a6c00134e1b
+      size: 797
+    outs:
+    - path: ../../ckpts/arima
+      hash: md5
+      md5: 710fbb33eea72187789202d0dbca1934.dir
+      size: 6568086
+      nfiles: 17
+    - path: ../../ckpts/lstm
+      hash: md5
+      md5: ec6eff06fa8f6947b54af3df6f1bb18a.dir
+      size: 7418210
+      nfiles: 5
+    - path: ../../ckpts/prophet
+      hash: md5
+      md5: a0bed6a1e23c4c73cc927f66fe857e7e.dir
+      size: 884086
+      nfiles: 17

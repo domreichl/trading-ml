@@ -14,6 +14,7 @@ from visualization import (
 )
 
 from pipeline.prepare import prepare_data
+from pipeline.train import train_model
 from utils.data_preprocessing import preprocess_data
 from utils.data_processing import get_df_from_predictions, get_forecast_df
 from utils.evaluation import compute_prediction_performances
@@ -32,6 +33,13 @@ def prepare():
 
 
 @cli.command()
+@click.argument("model_name")
+def train(model_name: str):
+    model_name += "_exp"
+    train_model(model_name, mts=preprocess_data())
+
+
+@cli.command()
 def backtest():
     run_backtests()
 
@@ -39,6 +47,7 @@ def backtest():
 @cli.command()
 @click.argument("model_name")
 def validate(model_name: str):
+    model_name += "_exp"
     mts = preprocess_data()
     mae, rmse = validate_model(model_name, mts)
     print(f"Validation results for {model_name}:")
@@ -49,6 +58,7 @@ def validate(model_name: str):
 @cli.command()
 @click.argument("model_name")
 def evaluate(model_name: str):
+    model_name += "_exp"
     mts = preprocess_data()
     returns_predicted, prices_predicted = generate_predictions(model_name, mts)
     df = compute_prediction_performances(
@@ -77,6 +87,7 @@ def plot_metrics(metrics_type: str):
 @click.argument("model_name")
 @click.argument("ts_name", required=False)
 def predict(model_name: str, ts_name: str = ""):
+    model_name += "_exp"
     mts = preprocess_data()
     returns_predicted, prices_predicted = generate_predictions(model_name, mts)
     df = get_df_from_predictions(
@@ -98,8 +109,9 @@ def predict(model_name: str, ts_name: str = ""):
 @click.argument("model_name")
 @click.argument("ts_name", required=False)
 def forecast(model_name: str, ts_name: str = ""):
+    model_name += "_exp"
     deep_learning = False
-    if model_name == "lstm":
+    if "lstm" in model_name:
         deep_learning = True
     mts = preprocess_data()
     mts.merge_features(for_deep_learning=deep_learning)
@@ -145,6 +157,7 @@ def recommend_close(position_type: str, ts_name: str):
 
 for cmd in [
     prepare,
+    train,
     backtest,
     validate,
     evaluate,

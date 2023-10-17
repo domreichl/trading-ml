@@ -3,9 +3,6 @@
     - scripts in /src/pipeline:
         - prepare.py -> csv in data
         - train.py -> ckpts
-            - proper handling of training from scratch
-            - uptraining protocol for lstm
-            - updated ckpt handling / experiment tracking
         - validate.py -> results/validation.csv
         - test.py -> results/test.csv & results/predictions.csv
         - select.py -> results/selection.csv
@@ -19,6 +16,7 @@
     - refactor all scripts in /src (esp. cli & prediction.py) to keep files all clean
         - goal: keep only cli.py in /src -> run all scripts for experimentation/development via cli
         - all other code in /src should be put either into cli.py or into utils
+    - update Readme (esp. for cli)
 2. Workflow automation
     - pipeline: extend date range >> prepare.py >> train.py >> validate.py >> test.py >> select.py >> forecast.py >> recommend.py >> trading (see below) >> frontend (see below) >> update dvc & git (automate as well?)
         - trading: (not automated):

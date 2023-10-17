@@ -11,7 +11,7 @@ from models.base import (
     validate_prophet,
 )
 from models.boosting import validate_boosting_model
-from models.lstms import get_lstm_model
+from models.lstms import load_lstm_model
 
 
 def validate_model(model_name: str, mts: MultipleTimeSeries) -> tuple[float, float]:
@@ -22,7 +22,7 @@ def validate_model(model_name: str, mts: MultipleTimeSeries) -> tuple[float, flo
     elif model_name == "LGBMRegressor":
         mae, rmse = validate_boosting_model(model_name, mts)
     elif model_name == "lstm":
-        model = get_lstm_model(model_name, mts)
+        model = load_lstm_model(model_name, mts)
         mae, rmse = model.validate()
     elif model_name == "moving_average":
         mae, rmse = validate_moving_average(mts, recursive=False)

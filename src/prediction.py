@@ -13,9 +13,9 @@ def generate_predictions(
     model_name: str, mts: MultipleTimeSeries, forecast: bool = False
 ) -> tuple[dict, dict]:
     if model_name in ["arima", "prod_arima"]:
-        from models.base import fit_predict_arima
+        from models.base import predict_arima
 
-        y_preds = fit_predict_arima(mts, ckpt_dir=model_name)
+        y_preds = predict_arima(mts, ckpt_dir=model_name)
     elif model_name in ["exponential_smoothing", "prod_exponential_smoothing"]:
         from models.base import fit_predict_exponential_smoothing
 
@@ -25,9 +25,9 @@ def generate_predictions(
 
         y_preds = fit_predict_boosting_model(model_name, mts)
     elif model_name in ["lstm", "prod_lstm"]:
-        from models.lstms import get_lstm_model
+        from models.lstms import load_lstm_model
 
-        model = get_lstm_model(model_name, mts)
+        model = load_lstm_model(model_name, mts)
         y_preds = model.predict()
     elif model_name in ["moving_average"]:
         from models.base import predict_moving_average
@@ -38,9 +38,9 @@ def generate_predictions(
 
         y_preds = predict_moving_average_recursive(mts)
     elif model_name in ["prophet", "prod_prophet"]:
-        from models.base import fit_predict_prophet
+        from models.base import predict_prophet
 
-        y_preds = fit_predict_prophet(mts, ckpt_dir=model_name)
+        y_preds = predict_prophet(mts, model_name)
     elif model_name in ["XGBRegressor", "prod_XGBRegressor"]:
         from models.boosting import fit_predict_boosting_model
 

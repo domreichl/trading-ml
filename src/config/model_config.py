@@ -13,6 +13,7 @@ model_config = {
         "prophet",
         "XGBRegressor",
     ],
+    "trainable": [0, 3, 6],
     "n_validations": 50,
     "seasonal_periods": 20,
     "n_epochs": 10,

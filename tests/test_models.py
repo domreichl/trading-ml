@@ -1,15 +1,18 @@
 import os
 
+from config.model_config import model_config
 from utils.data_classes import MultipleTimeSeries
 from utils.data_preprocessing import preprocess_data
 from utils.data_processing import stack_array_from_dict
 from utils.file_handling import load_csv_data
 from models.base import (
-    fit_predict_arima,
+    fit_arima,
+    predict_arima,
     fit_predict_exponential_smoothing,
     predict_moving_average,
     predict_moving_average_recursive,
-    fit_predict_prophet,
+    fit_prophet,
+    predict_prophet,
     validate_arima,
     validate_exponential_smoothing,
     validate_moving_average,
@@ -40,7 +43,10 @@ mts = UnitTestDataTrimmer(
 
 
 def test_base_fit_predict_arima():
-    y_preds = fit_predict_arima(mts, "test_arima")
+    ckpt_dir = "test_arima"
+    if not os.path.isdir(os.path.join(model_config["ckpt_dir"], ckpt_dir)):
+        fit_arima(mts, ckpt_dir)
+    y_preds = predict_arima(mts, ckpt_dir)
     assert stack_array_from_dict(y_preds, 1).shape == (10, 4)
     assert y_preds["AT0000937503"][6] > 0
 
@@ -85,7 +91,10 @@ def test_base_validate_moving_average():
 
 
 def test_base_fit_predict_prophet():
-    y_preds = fit_predict_prophet(mts, "test_prophet")
+    ckpt_dir = "test_prophet"
+    if not os.path.isdir(os.path.join(model_config["ckpt_dir"], ckpt_dir)):
+        fit_prophet(mts, ckpt_dir)
+    y_preds = predict_prophet(mts, ckpt_dir)
     assert stack_array_from_dict(y_preds, 1).shape == (10, 4)
     assert y_preds["AT0000937503"][6] > 0
 

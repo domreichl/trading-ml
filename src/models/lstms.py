@@ -66,11 +66,8 @@ class LSTMRegression:
         return float(np.mean(mae_lst)), float(np.mean(rmse_lst))
 
 
-def get_lstm_model(model_name: str, mts: MultipleTimeSeries) -> Model:
+def load_lstm_model(model_name: str, mts: MultipleTimeSeries) -> Model:
     model_path = os.path.join(model_config["ckpt_dir"], model_name)
     model = LSTMRegression(mts)
-    if os.path.isdir(model_path):
-        model.load(model_path)
-    else:
-        model.train().save(model_path)
+    model.load(model_path)
     return model
