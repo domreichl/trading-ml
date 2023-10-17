@@ -2,7 +2,7 @@ import optuna
 import pandas as pd
 
 from validation import validate_model
-from config.config import model_config, paths
+from config.model_config import model_config
 from utils.data_preprocessing import preprocess_data
 from utils.file_handling import write_csv_results
 
@@ -35,11 +35,7 @@ if __name__ == "__main__":
 
         def objective(trial):
             lbws = trial.suggest_int(hparam, 5, 2600, step=5)
-            mts = preprocess_data(
-                paths["csv"],
-                look_back_window_size=lbws,
-                include_stock_index=True,
-            )
+            mts = preprocess_data(look_back_window_size=lbws)
             _, rmse = validate_model(model_name, mts)
             return rmse
 

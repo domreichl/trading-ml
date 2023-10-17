@@ -6,7 +6,7 @@ from matplotlib import rcParams
 
 rcParams["figure.figsize"] = 20, 10
 
-from config.config import paths
+from config.paths import paths
 
 
 def plot_optimization_metrics() -> None:

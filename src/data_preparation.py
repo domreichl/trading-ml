@@ -4,19 +4,24 @@ import pandas as pd
 import numpy as np
 import yfinance as yf
 
-from config.config import data_config, paths
+from config.data_config import data_config
+from config.paths import paths
 
 
 def prepare_data():
+    dates = {
+        date_type: dt.datetime.strptime(
+            data_config[date_type], data_config["date_format"]
+        )
+        for date_type in ["start_date", "end_date"]
+    }
     df = download_data(
         data_config["data_source"],
-        data_config["start_date"],
-        data_config["end_date"],
+        dates["start_date"],
+        dates["end_date"],
         data_config["securities"],
     )
-    df = impute_missing_data(
-        df, get_weekdays(data_config["start_date"], data_config["end_date"])
-    )
+    df = impute_missing_data(df, get_weekdays(dates["start_date"], dates["end_date"]))
     df.to_csv(paths["csv"], sep=";", index=False)
 
 

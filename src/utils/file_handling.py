@@ -2,7 +2,7 @@ import os, json, pickle
 import pandas as pd
 from prophet.serialize import model_to_json, model_from_json
 
-from config.config import paths
+from config.paths import paths
 
 
 def write_csv_results(df: pd.DataFrame, filename: str) -> None:

@@ -1,12 +1,5 @@
 ## TODO
 1. rename & refactor files according to the pipeline below:
-    - look into DVC / Iterative Studio for experiment handling
-        - experiments being tied to commits would be great!
-        - DVC PIPELINE > PREFECT ?!??!?!?!
-    - install, configure, and integrate DVC
-    - new folder "/src/pipeline"
-    - more dynamic handling of config (research DVC docs for this)
-        - to automatically extend the date range
     - scripts in /src/pipeline:
         - prepare.py -> csv in data
         - train.py -> ckpts
@@ -25,7 +18,6 @@
             - persist detailed results in a csv file
     - refactor all scripts in /src (esp. cli & prediction.py) to keep files all clean
         - goal: keep only cli.py in /src -> run all scripts for experimentation/development via cli
-        - all automated processes should run in a DVC pipeline (/src/pipeline)
         - all other code in /src should be put either into cli.py or into utils
 2. Workflow automation
     - pipeline: extend date range >> prepare.py >> train.py >> validate.py >> test.py >> select.py >> forecast.py >> recommend.py >> trading (see below) >> frontend (see below) >> update dvc & git (automate as well?)

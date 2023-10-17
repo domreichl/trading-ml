@@ -6,7 +6,7 @@ from mlforecast import MLForecast
 from window_ops.rolling import rolling_mean, rolling_max, rolling_min
 from xgboost import XGBRegressor
 
-from config.config import model_config
+from config.model_config import model_config
 from utils.data_classes import MultipleTimeSeries
 from utils.evaluation import evaluate_return_predictions
 

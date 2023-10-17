@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import precision_recall_fscore_support
 
-from config.config import results_config
+from config.model_config import model_config
 from utils.data_processing import (
     get_signs_from_prices,
     stack_array_from_dict,
@@ -124,7 +124,7 @@ def process_metrics(
     target_name: str,
     model_name: str,
 ) -> pd.DataFrame:
-    performance = pd.DataFrame(columns=results_config["columns"])
+    performance = pd.DataFrame(columns=model_config["results_cols"])
     for name, score in metrics.items():
         performance.loc[len(performance)] = [
             model_name,

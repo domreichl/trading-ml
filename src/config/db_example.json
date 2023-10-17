@@ -1,7 +1,7 @@
 {
-    "USER": "",
-    "PW": "",
-    "HOST": "",
+    "USER": "username",
+    "PW": "password",
+    "HOST": "address",
     "PORT": "3306",
-    "SCHEMA": ""
+    "SCHEMA": "schema_name"
 }

@@ -2,7 +2,8 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 
-from config.config import data_config
+from config.data_config import data_config
+from config.paths import paths
 from utils.data_classes import MultipleTimeSeries
 
 
@@ -108,6 +109,8 @@ class DataPreprocessor:
 
 
 def preprocess_data(
-    path: str, look_back_window_size: int, include_stock_index: bool
+    path: str = paths["csv"],
+    look_back_window_size: int = data_config["look_back_window_size"],
+    include_stock_index: bool = True,
 ) -> MultipleTimeSeries:
     return DataPreprocessor(path, look_back_window_size, include_stock_index).get_mts()

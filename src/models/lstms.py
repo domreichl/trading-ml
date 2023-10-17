@@ -4,7 +4,8 @@ import tensorflow as tf
 from tensorflow.keras.models import Model, load_model
 from tensorflow.keras.layers import Input, Dense, Dropout, LSTM
 
-from config.config import data_config, model_config, paths
+from config.model_config import model_config
+from config.paths import paths
 from utils.data_classes import MultipleTimeSeries
 from utils.evaluation import evaluate_return_predictions
 

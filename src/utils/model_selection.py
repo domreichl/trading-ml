@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 
-from config.config import paths
+from config.paths import paths
 
 
 def pick_top_models(position_type: str) -> str:

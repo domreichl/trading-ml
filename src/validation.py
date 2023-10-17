@@ -1,6 +1,6 @@
 import pandas as pd
 
-from config.config import data_config, model_config, paths
+from config.model_config import model_config
 from models.base import (
     validate_arima,
     validate_exponential_smoothing,
@@ -38,11 +38,7 @@ def validate_model(model_name: str, mts: MultipleTimeSeries) -> tuple[float, flo
 
 
 if __name__ == "__main__":
-    mts = preprocess_data(
-        paths["csv"],
-        look_back_window_size=data_config["look_back_window_size"],
-        include_stock_index=True,
-    )
+    mts = preprocess_data()
     maes, rmses = [], []
     for model_name in model_config["names"]:
         print(

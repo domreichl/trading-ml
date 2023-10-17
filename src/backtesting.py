@@ -2,7 +2,6 @@ import random
 import numpy as np
 import pandas as pd
 
-from config.config import data_config, paths
 from utils.data_preprocessing import preprocess_data
 from utils.data_processing import stack_array_from_dict
 from utils.backtest_charts import (
@@ -14,11 +13,7 @@ from utils.file_handling import write_frontend_data
 
 
 def run_backtests(buy_price: float, buy_fee: float, start_year: int) -> None:
-    mts = preprocess_data(
-        paths["csv"],
-        look_back_window_size=data_config["look_back_window_size"],
-        include_stock_index=False,
-    )
+    mts = preprocess_data(include_stock_index=False)
     log_returns = stack_array_from_dict(mts.log_returns, 0)
     returns = np.exp(log_returns)
     visualize_averaged_yearly_log_returns(log_returns, start_year)
@@ -146,4 +141,4 @@ def weekly_trading(
 
 
 if __name__ == "__main__":
-    run_backtests(1000, 0.99, data_config["start_date"].year)
+    run_backtests(1000, 0.99, start_year=2000)

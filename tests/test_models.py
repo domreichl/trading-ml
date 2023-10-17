@@ -1,6 +1,5 @@
 import os
 
-from config.config import data_config
 from utils.data_classes import MultipleTimeSeries
 from utils.data_preprocessing import preprocess_data
 from utils.data_processing import stack_array_from_dict
@@ -25,11 +24,7 @@ class UnitTestDataTrimmer:
         self.test_data = os.path.join(os.path.dirname(__file__), "test_data.csv")
 
     def get_mts(self) -> MultipleTimeSeries:
-        mts = preprocess_data(
-            self.test_data,
-            data_config["look_back_window_size"],
-            include_stock_index=False,
-        )
+        mts = preprocess_data(path=self.test_data)
         mts.x_train = mts.x_train[-self.days_to_keep :]
         mts.y_train = mts.y_train[-self.days_to_keep :]
         mts.dates = mts.dates[

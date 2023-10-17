@@ -2,7 +2,6 @@ import os
 import numpy as np
 import datetime as dt
 
-from config.config import data_config
 from utils.data_preprocessing import preprocess_data
 from utils.data_processing import (
     stack_array_from_dict,
@@ -19,11 +18,7 @@ from utils.evaluation import (
 
 
 def test_data_classes_mts_merge_features():
-    mts = preprocess_data(
-        path=os.path.join(os.path.dirname(__file__), "test_data.csv"),
-        look_back_window_size=data_config["look_back_window_size"],
-        include_stock_index=True,
-    )
+    mts = preprocess_data(path=os.path.join(os.path.dirname(__file__), "test_data.csv"))
     assert mts.x_train.shape == (4929, 260, 4)
     assert mts.y_train.shape == (4929, 10, 4)
     mts.merge_features()
@@ -34,22 +29,14 @@ def test_data_classes_mts_merge_features():
 
 
 def test_data_classes_mts_merge_features_dl():
-    mts = preprocess_data(
-        path=os.path.join(os.path.dirname(__file__), "test_data.csv"),
-        look_back_window_size=data_config["look_back_window_size"],
-        include_stock_index=True,
-    )
+    mts = preprocess_data(path=os.path.join(os.path.dirname(__file__), "test_data.csv"))
     mts.merge_features(for_deep_learning=True)
     assert mts.x_train.shape == (4930, 260, 4)
     assert mts.y_train.shape == (4930, 10, 4)
 
 
 def test_data_classes_mts_get_forecast_dates():
-    mts = preprocess_data(
-        path=os.path.join(os.path.dirname(__file__), "test_data.csv"),
-        look_back_window_size=data_config["look_back_window_size"],
-        include_stock_index=True,
-    )
+    mts = preprocess_data(path=os.path.join(os.path.dirname(__file__), "test_data.csv"))
     forecast_dates = mts.get_forecast_dates()
     assert mts.dates[-1] == "2023-09-15"
     assert forecast_dates[0] == "2023-09-18"
@@ -57,11 +44,7 @@ def test_data_classes_mts_get_forecast_dates():
 
 
 def test_data_preprocessing():
-    mts = preprocess_data(
-        path=os.path.join(os.path.dirname(__file__), "test_data.csv"),
-        look_back_window_size=data_config["look_back_window_size"],
-        include_stock_index=True,
-    )
+    mts = preprocess_data(path=os.path.join(os.path.dirname(__file__), "test_data.csv"))
     assert round(mts.x_train[-1][-1][-1], 4) == 0.4173
     assert round(mts.y_train[0][0][0], 4) == 0.8725
     assert round(mts.x_test[-1][-1], 4) == 0.4042

@@ -5,8 +5,7 @@ from prophet import Prophet
 from sktime.forecasting.exp_smoothing import ExponentialSmoothing
 from sktime.forecasting.compose import EnsembleForecaster
 
-
-from config.config import model_config
+from config.model_config import model_config
 from utils.data_classes import MultipleTimeSeries
 from utils.evaluation import evaluate_return_predictions
 from utils.file_handling import (

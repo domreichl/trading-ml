@@ -4,7 +4,6 @@ import pandas as pd
 from sqlalchemy import create_engine
 from sklearn.metrics import accuracy_score
 
-from config.config import paths
 from utils.evaluation import compute_SMAPE, evaluate_sign_predictions
 from utils.file_handling import write_csv_results, write_frontend_data
 

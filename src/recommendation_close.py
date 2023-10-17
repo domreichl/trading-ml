@@ -2,7 +2,6 @@ import os, random
 import numpy as np
 import pandas as pd
 
-from config.config import data_config, paths
 from utils.data_preprocessing import preprocess_data
 from utils.data_processing import compute_predicted_return
 from utils.indicators import compute_market_signals, print_market_signals
@@ -50,11 +49,7 @@ def hold() -> bool:
 
 
 if __name__ == "__main__":
-    mts = preprocess_data(
-        paths["csv"],
-        look_back_window_size=data_config["look_back_window_size"],
-        include_stock_index=True,
-    )
+    mts = preprocess_data()
     ISIN = random.choice(list(mts.close_prices.keys()))
     current_price = mts.close_prices[ISIN][-1]
     for position_type in ["short", "long"]:
