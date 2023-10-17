@@ -1,0 +1,5 @@
+outs:
+- md5: 96b8711a53396327041c3b56e235ef90
+  size: 3209421
+  hash: md5
+  path: wiener_boerse_17ts_20000103-20230922.csv

@@ -10,7 +10,6 @@ authors = [{ name = "Dominic Reichl", email = "office@dominicreichl.com" }]
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "dvc==3.26.2",
     "click==8.1.7",
     "yfinance==0.2.20",
     "numpy==1.23.5",
@@ -29,6 +28,8 @@ dependencies = [
     "xgboost==2.0.0",
     "prophet==1.1.4",
     "optuna==3.3.0",
+    "dvc==3.26.2",
+    "dvc-gdrive==2.20.0",
     # "pandas-datareader==0.10.0",
     # "pandas-market-calendars==4.1.4",
     # "ta==0.10.2",
