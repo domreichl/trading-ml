@@ -3,6 +3,7 @@ import pandas as pd
 
 from utils.data_preprocessing import preprocess_data
 from utils.data_processing import compute_predicted_returns
+from utils.file_handling import load_csv_results
 from utils.indicators import compute_market_signals, print_market_signals
 from utils.model_selection import pick_top_models
 
@@ -15,7 +16,7 @@ def recommend_stock(
     buy_price: float = 1000,
 ) -> str:
     candidates = {}
-    forecast = pd.read_csv(os.path.join(paths["results"], "forecast.csv"))
+    forecast = load_csv_results("forecast")
     for model_name in top_models:
         predicted_returns = compute_predicted_returns(
             current_prices, forecast[forecast["Model"] == "prod_" + model_name]

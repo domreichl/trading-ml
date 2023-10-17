@@ -1,4 +1,4 @@
-import os, random
+import random
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -6,11 +6,11 @@ from matplotlib import rcParams
 
 rcParams["figure.figsize"] = 20, 10
 
-from config.paths import paths
+from utils.file_handling import load_csv_results
 
 
 def plot_optimization_metrics() -> None:
-    df = pd.read_csv(os.path.join(paths["results"], "optimization.csv"))
+    df = load_csv_results("optimization")
     barplot = sns.barplot(
         x="look_back_window_size", y="RMSE", hue="Model", data=df, palette="Oranges"
     )
@@ -22,7 +22,7 @@ def plot_optimization_metrics() -> None:
 
 
 def plot_validation_metrics() -> None:
-    df = pd.read_csv(os.path.join(paths["results"], "validation.csv"))
+    df = load_csv_results("validation")
     mae = df[["Model", "MAE"]].rename(columns={"MAE": "Score"})
     mae["Metric"] = "MAE"
     rmse = df[["Model", "RMSE"]].rename(columns={"RMSE": "Score"})
@@ -40,7 +40,7 @@ def plot_validation_metrics() -> None:
 
 
 def plot_prediction_metrics() -> None:
-    df = pd.read_csv(os.path.join(paths["results"], "performance.csv"))
+    df = load_csv_results("performance")
     fig, axs = plt.subplots(4, 1)
     barplot_cfg = {"x": "Model", "y": "Score", "hue": "Metric"}
     sns.barplot(
@@ -127,8 +127,8 @@ if __name__ == "__main__":
     plot_optimization_metrics()
     plot_validation_metrics()
     plot_prediction_metrics()
-    predictions = pd.read_csv(os.path.join(paths["results"], "predictions.csv"))
-    forecast = pd.read_csv(os.path.join(paths["results"], "forecast.csv"))
+    predictions = load_csv_results("predictions")
+    forecast = load_csv_results("forecast")
     ts_name = random.choice(list(predictions["ISIN"].unique()))
     plot_price_predictions(predictions[predictions["ISIN"] == ts_name])
     plot_price_forecast(forecast[forecast["ISIN"] == ts_name])

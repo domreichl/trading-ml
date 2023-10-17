@@ -1,7 +1,4 @@
-import os
-import pandas as pd
-
-from config.paths import paths
+from utils.file_handling import load_csv_results
 
 
 def pick_top_models(position_type: str) -> str:
@@ -11,7 +8,7 @@ def pick_top_models(position_type: str) -> str:
 
 
 def pick_top_models_validation(n: int = 5) -> list[str]:
-    validation = pd.read_csv(os.path.join(paths["results"], "validation.csv"))
+    validation = load_csv_results("validation")
     validation = validation[~validation["Model"].isin(["moving_average"])]
     validation.sort_values("RMSE", inplace=True)
     return list(validation["Model"][:n])
@@ -21,7 +18,7 @@ def pick_top_models_rating(
     top_models: list[str], position_type: str, n: int = 3
 ) -> list[str]:
     ratings = {}
-    performance = pd.read_csv(os.path.join(paths["results"], "performance.csv"))
+    performance = load_csv_results("performance")
     performance.drop(columns=["Target"], inplace=True)
     performance = performance[
         (performance["Model"].isin(top_models))

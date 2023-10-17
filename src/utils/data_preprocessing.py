@@ -3,18 +3,15 @@ import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 
 from config.data_config import data_config
-from config.paths import paths
 from utils.data_classes import MultipleTimeSeries
+from utils.file_handling import load_csv_data
 
 
 class DataPreprocessor:
     def __init__(
-        self,
-        path: str,
-        look_back_window_size: int,
-        include_stock_index: bool,
+        self, df: pd.DataFrame, look_back_window_size: int, include_stock_index: bool
     ):
-        self.df = pd.read_csv(path, sep=";")
+        self.df = df
         if not include_stock_index:
             self.df = self.df[self.df["ISIN"] != data_config["stock_index"]]
         self.dates = list(self.df["Date"].unique())
@@ -109,8 +106,8 @@ class DataPreprocessor:
 
 
 def preprocess_data(
-    path: str = paths["csv"],
+    df: pd.DataFrame = load_csv_data(),
     look_back_window_size: int = data_config["look_back_window_size"],
     include_stock_index: bool = True,
 ) -> MultipleTimeSeries:
-    return DataPreprocessor(path, look_back_window_size, include_stock_index).get_mts()
+    return DataPreprocessor(df, look_back_window_size, include_stock_index).get_mts()

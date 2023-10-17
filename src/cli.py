@@ -1,6 +1,5 @@
 import click, random
 
-from data_preparation import prepare_data
 from backtesting import run_backtests
 from prediction import generate_predictions
 from recommendation_close import recommend_close_position
@@ -14,6 +13,7 @@ from visualization import (
     plot_price_forecast,
 )
 
+from pipeline.prepare import prepare_data
 from utils.data_preprocessing import preprocess_data
 from utils.data_processing import get_df_from_predictions, get_forecast_df
 from utils.evaluation import compute_prediction_performances

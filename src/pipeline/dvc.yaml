@@ -1,0 +1,8 @@
+stages:
+  prepare:
+    cmd: python prepare.py
+    deps:
+      - ../config/data_config.py
+      - prepare.py
+    outs:
+      - ../../data/wiener_boerse.csv

@@ -1,9 +1,9 @@
-import os, random
+import random
 import numpy as np
-import pandas as pd
 
 from utils.data_preprocessing import preprocess_data
 from utils.data_processing import compute_predicted_return
+from utils.file_handling import load_csv_results
 from utils.indicators import compute_market_signals, print_market_signals
 from utils.model_selection import pick_top_models
 
@@ -11,7 +11,7 @@ from utils.model_selection import pick_top_models
 def recommend_close_position(
     ISIN: str, current_price: float, position_type: str
 ) -> bool:
-    forecast = pd.read_csv(os.path.join(paths["results"], "forecast.csv"))
+    forecast = load_csv_results("forecast")
     forecast = forecast[forecast["ISIN"] == ISIN]
     predicted_returns = []
     for model_name in pick_top_models(position_type):

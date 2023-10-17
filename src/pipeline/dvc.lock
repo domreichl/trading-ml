@@ -1,0 +1,18 @@
+schema: '2.0'
+stages:
+  prepare:
+    cmd: python prepare.py
+    deps:
+    - path: ../config/data_config.py
+      hash: md5
+      md5: 8ad27d32da05f4ccc001d743f3436259
+      size: 1528
+    - path: prepare.py
+      hash: md5
+      md5: b1bbc6770968cd2ee312cdedbbf141aa
+      size: 4713
+    outs:
+    - path: ../../data/wiener_boerse.csv
+      hash: md5
+      md5: 96b8711a53396327041c3b56e235ef90
+      size: 3209421

@@ -1,3 +1,7 @@
+import os
+
+root_dir = os.path.join(os.path.dirname(__file__), "..", "..")
+
 data_config = {
     "start_date": "2000-01-03",  # Monday
     "end_date": "2023-09-22",  # Friday
@@ -5,7 +9,6 @@ data_config = {
     "data_source": "wiener_boerse",  # 'wiener_boerse' (wienerboerse.at) or 'yfinance' (finance.yahoo.com)
     "look_back_window_size": 260,  # 52 weeks x 5 weekdays
     "test_days": 10,
-    "stock_index": "AT0000999982",
     "securities": {
         "AT0000999982": "ATX",
         "AT0000743059": "omv-ag-AT0000743059",
@@ -25,4 +28,7 @@ data_config = {
         "AT0000641352": "ca-immobilien-anlagen-ag-AT0000641352",
         "AT0000821103": "uniqa-insurance-group-ag-AT0000821103",
     },
+    "stock_index": "AT0000999982",
+    "data_dir": os.path.join(root_dir, "data"),
+    "frontend_data_dir": os.path.join(root_dir, "frontend", "data"),
 }

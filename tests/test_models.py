@@ -3,6 +3,7 @@ import os
 from utils.data_classes import MultipleTimeSeries
 from utils.data_preprocessing import preprocess_data
 from utils.data_processing import stack_array_from_dict
+from utils.file_handling import load_csv_data
 from models.base import (
     fit_predict_arima,
     fit_predict_exponential_smoothing,
@@ -19,12 +20,12 @@ from models.lstms import LSTMRegression
 
 
 class UnitTestDataTrimmer:
-    def __init__(self, days_to_keep: int):
+    def __init__(self, path: str, days_to_keep: int):
+        self.test_data = load_csv_data(path)
         self.days_to_keep = days_to_keep
-        self.test_data = os.path.join(os.path.dirname(__file__), "test_data.csv")
 
     def get_mts(self) -> MultipleTimeSeries:
-        mts = preprocess_data(path=self.test_data)
+        mts = preprocess_data(self.test_data)
         mts.x_train = mts.x_train[-self.days_to_keep :]
         mts.y_train = mts.y_train[-self.days_to_keep :]
         mts.dates = mts.dates[
@@ -33,7 +34,9 @@ class UnitTestDataTrimmer:
         return mts
 
 
-mts = UnitTestDataTrimmer(days_to_keep=25).get_mts()
+mts = UnitTestDataTrimmer(
+    os.path.join(os.path.dirname(__file__), "test_data.csv"), days_to_keep=25
+).get_mts()
 
 
 def test_base_fit_predict_arima():

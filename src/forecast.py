@@ -1,9 +1,7 @@
-import numpy as np
 import pandas as pd
 
 from prediction import generate_predictions
 from config.model_config import model_config
-from utils.data_classes import MultipleTimeSeries
 from utils.data_preprocessing import preprocess_data
 from utils.data_processing import get_forecast_df
 from utils.file_handling import write_csv_results, write_frontend_data

@@ -1,6 +1,6 @@
 import datetime as dt
 
-from data_preparation import download_data, impute_missing_data, get_weekdays
+from pipeline.prepare import download_data, impute_missing_data, get_weekdays
 
 
 test_config = {

@@ -5,7 +5,6 @@ from tensorflow.keras.models import Model, load_model
 from tensorflow.keras.layers import Input, Dense, Dropout, LSTM
 
 from config.model_config import model_config
-from config.paths import paths
 from utils.data_classes import MultipleTimeSeries
 from utils.evaluation import evaluate_return_predictions
 
@@ -68,7 +67,7 @@ class LSTMRegression:
 
 
 def get_lstm_model(model_name: str, mts: MultipleTimeSeries) -> Model:
-    model_path = os.path.join(paths["ckpts"], model_name)
+    model_path = os.path.join(model_config["ckpt_dir"], model_name)
     model = LSTMRegression(mts)
     if os.path.isdir(model_path):
         model.load(model_path)
