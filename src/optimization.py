@@ -1,7 +1,7 @@
 import optuna
 import pandas as pd
 
-from validation import validate_model
+from pipeline.validate import validate_model
 from config.model_config import model_config
 from utils.data_preprocessing import preprocess_data
 from utils.file_handling import write_csv_results

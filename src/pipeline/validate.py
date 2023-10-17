@@ -1,9 +1,6 @@
 import pandas as pd
 
 from config.model_config import model_config
-from utils.data_classes import MultipleTimeSeries
-from utils.data_preprocessing import preprocess_data
-from utils.file_handling import write_csv_results
 from models.base import (
     validate_arima,
     validate_exponential_smoothing,
@@ -12,6 +9,9 @@ from models.base import (
 )
 from models.boosting import validate_boosting_model
 from models.lstms import load_lstm_model
+from utils.data_classes import MultipleTimeSeries
+from utils.data_preprocessing import preprocess_data
+from utils.file_handling import write_csv_results
 
 
 def validate_model(model_name: str, mts: MultipleTimeSeries) -> tuple[float, float]:

@@ -1,6 +1,6 @@
 import numpy as np
 
-from backtesting import (
+from utils.backtests import (
     compute_expected_buy_and_hold_profits,
     compute_expected_weekly_trading_profits,
     buy_and_hold,

@@ -16,3 +16,12 @@ stages:
       - ../../ckpts/arima
       - ../../ckpts/lstm
       - ../../ckpts/prophet
+  validate:
+    cmd: python validate.py
+    deps:
+      - validate.py
+      - ../../ckpts/arima
+      - ../../ckpts/lstm
+      - ../../ckpts/prophet
+    outs:
+      - ../../results/validation.csv

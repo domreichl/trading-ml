@@ -1,10 +1,8 @@
 import click, random
 
-from backtesting import run_backtests
 from prediction import generate_predictions
 from recommendation_close import recommend_close_position
 from recommendation_open import recommend_stock
-from validation import validate_model
 from visualization import (
     plot_prediction_metrics,
     plot_optimization_metrics,
@@ -12,9 +10,10 @@ from visualization import (
     plot_validation_metrics,
     plot_price_forecast,
 )
-
 from pipeline.prepare import prepare_data
 from pipeline.train import train_model
+from pipeline.validate import validate_model
+from utils.backtests import run_backtests
 from utils.data_preprocessing import preprocess_data
 from utils.data_processing import get_df_from_predictions, get_forecast_df
 from utils.evaluation import compute_prediction_performances
@@ -28,6 +27,11 @@ def cli():
 
 
 @cli.command()
+def backtest():
+    run_backtests()
+
+
+@cli.command()
 def prepare():
     prepare_data()
 
@@ -37,11 +41,6 @@ def prepare():
 def train(model_name: str):
     model_name += "_exp"
     train_model(model_name, mts=preprocess_data())
-
-
-@cli.command()
-def backtest():
-    run_backtests()
 
 
 @cli.command()
@@ -156,9 +155,9 @@ def recommend_close(position_type: str, ts_name: str):
 
 
 for cmd in [
+    backtest,
     prepare,
     train,
-    backtest,
     validate,
     evaluate,
     plot_metrics,

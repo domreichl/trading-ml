@@ -1,9 +1,6 @@
 ## TODO
 1. rename & refactor files according to the pipeline below:
     - scripts in /src/pipeline:
-        - prepare.py -> csv in data
-        - train.py -> ckpts
-        - validate.py -> results/validation.csv
         - test.py -> results/test.csv & results/predictions.csv
         - select.py -> results/selection.csv
             - script to find the top 3 models
