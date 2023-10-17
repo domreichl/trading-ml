@@ -47,3 +47,30 @@ stages:
       md5: a0bed6a1e23c4c73cc927f66fe857e7e.dir
       size: 884086
       nfiles: 17
+  validate:
+    cmd: python validate.py
+    deps:
+    - path: ../../ckpts/arima
+      hash: md5
+      md5: 710fbb33eea72187789202d0dbca1934.dir
+      size: 6568086
+      nfiles: 17
+    - path: ../../ckpts/lstm
+      hash: md5
+      md5: ec6eff06fa8f6947b54af3df6f1bb18a.dir
+      size: 7418210
+      nfiles: 5
+    - path: ../../ckpts/prophet
+      hash: md5
+      md5: a0bed6a1e23c4c73cc927f66fe857e7e.dir
+      size: 884086
+      nfiles: 17
+    - path: validate.py
+      hash: md5
+      md5: 60e762b75bb006ff1099737ef8caedc1
+      size: 2011
+    outs:
+    - path: ../../results/validation.csv
+      hash: md5
+      md5: 35caf83db22347629f3c066cca4c8665
+      size: 455
