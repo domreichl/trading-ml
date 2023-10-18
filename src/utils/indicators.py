@@ -1,77 +1,40 @@
 import numpy as np
 
 
-def print_market_signals(top_stock: str, overbought: int, bullish: int) -> None:
-    print(f"\nThe market for {top_stock} is currently", end=" ")
-    if bullish > 0:
-        print("bullish and", end=" ")
-    elif bullish < 0:
-        print("bearish and", end=" ")
-    elif bullish == 0:
-        print("neutral and", end=" ")
-    if overbought > 0:
-        if overbought > 1:
-            print("very", end=" ")
-        print("overbought.")
-    elif overbought < 0:
-        if overbought < -1:
-            print("very", end=" ")
-        print("oversold.")
-    else:
-        print("neither overbought nor oversold.")
+def interpret_market_signals(top_stock: str, trend: int, state: int) -> tuple[str]:
+    trend_str = "neutral"
+    state_str = "neither overbought nor oversold"
+    if trend > 0:
+        trend_str = "bullish"
+    elif trend < 0:
+        trend_str = "bearish"
+    if state > 0:
+        state_str = "overbought"
+    elif state < 0:
+        state_str = "oversold"
+    if abs(state) > 1:
+        state_str = "very " + state_str
+    print(f"\nThe market for {top_stock} is currently {trend_str} and {state_str}.")
+    return trend_str, state_str
 
 
 def compute_market_signals(prices: np.array) -> tuple[int, int]:
-    """
-    overbought:
-        >0 = overbought: upward trend may reverse
-        <0 = oversold: downward trend may reverse
-        0 = no indication
-    bullish:
-        >0 = bullish: signal to open long, sell short
-        <0 = bearish: signal to sell long, open short
-        0 = neutral
-    """
-    overbought = 0
-    bullish = 0
+    trend = 0
+    state = 0
+
+    macdc = moving_average_convergence_divergence_crossover(prices)
+    trend += macdc
 
     fso = fast_stochastic_oscillator(prices)
     if fso > 80:
-        overbought += 1
+        state += 1
     elif fso < 20:
-        overbought -= 1
+        state -= 1
 
     bbb = bollinger_band_breakout(prices)
-    overbought += bbb
+    state += bbb
 
-    macdc = moving_average_convergence_divergence_crossover(prices)
-    bullish += macdc
-
-    return overbought, bullish
-
-
-def fast_stochastic_oscillator(prices: np.array, period: int = 14) -> int:
-    recent_period = prices[-period:]
-    high = max(recent_period)
-    low = min(recent_period)
-    current = prices[-1]
-    k = (current - low) / (high - low)
-    return round(k * 100)
-
-
-def bollinger_band_breakout(prices: np.array, period: int = 20) -> int:
-    recent_period = prices[-period:]
-    avg = np.mean(recent_period)
-    std = np.std(recent_period)
-    upper = avg + 2 * std
-    lower = avg - 2 * std
-    current = prices[-1]
-    breakout = 0
-    if current > upper:
-        breakout = 1
-    elif current < lower:
-        breakout = -1
-    return breakout
+    return trend, state
 
 
 def moving_average_convergence_divergence_crossover(
@@ -100,3 +63,27 @@ def exponential_moving_average(prices: np.array, period: int) -> np.array:
     for i in range(1, len(recent_period)):
         ema.append(alpha * recent_period[i] + (1 - alpha) * ema[-1])
     return np.array(ema)
+
+
+def fast_stochastic_oscillator(prices: np.array, period: int = 14) -> int:
+    recent_period = prices[-period:]
+    high = max(recent_period)
+    low = min(recent_period)
+    current = prices[-1]
+    k = (current - low) / (high - low)
+    return round(k * 100)
+
+
+def bollinger_band_breakout(prices: np.array, period: int = 20) -> int:
+    recent_period = prices[-period:]
+    avg = np.mean(recent_period)
+    std = np.std(recent_period)
+    upper = avg + 2 * std
+    lower = avg - 2 * std
+    current = prices[-1]
+    breakout = 0
+    if current > upper:
+        breakout = 1
+    elif current < lower:
+        breakout = -1
+    return breakout

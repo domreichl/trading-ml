@@ -1,6 +1,6 @@
-import os
+import os, pytest
 import numpy as np
-import datetime as dt
+import pandas as pd
 
 from utils.data_preprocessing import preprocess_data
 from utils.data_processing import (
@@ -16,6 +16,7 @@ from utils.evaluation import (
     process_metrics,
 )
 from utils.file_handling import load_csv_data
+from utils.trades import load_trades_from_database, compute_trading_results
 
 
 def test_data_classes_mts_merge_features():
@@ -135,3 +136,17 @@ def test_evaluation_process_metrics():
     performance = process_metrics(metrics, "someTarget", "someModel")
     assert len(performance) == 3
     assert int(performance["Score"].loc[performance["Metric"] == "MetricB"][1]) == 2
+
+
+@pytest.mark.skip(reason="might fail when IP changes")
+def test_trades_load_trades_from_database():
+    trades = load_trades_from_database()
+    assert len(trades) > 1
+
+
+def test_trades_compute_statistics():
+    statistics, performance = compute_trading_results(
+        pd.read_csv(os.path.join(os.path.dirname(__file__), "test_trades.csv"))
+    )
+    assert len(statistics) == 16
+    assert len(performance.columns) == 7

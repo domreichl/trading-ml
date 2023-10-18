@@ -7,35 +7,35 @@ from tensorflow.keras.layers import Input, Dense, Dropout, LSTM
 from config.model_config import model_config
 from utils.data_classes import MultipleTimeSeries
 from utils.evaluation import evaluate_return_predictions
+from utils.file_handling import get_ckpt_dir
 
 
 class LSTMRegression:
-    def __init__(self, mts: MultipleTimeSeries):
+    def __init__(self, mts: MultipleTimeSeries, dropout_rate: float = 0.3):
         self.mts = mts
         self.names = mts.names
         self.test_days = len(mts.y_test)
         self.look_back_window_size = mts.x_train.shape[1]
-        self.droput_rate = model_config["dropout_rate"]
         inputs = Input(shape=(self.look_back_window_size, len(self.names)))
         x = LSTM(260, return_sequences=True)(inputs)
-        x = Dropout(self.droput_rate)(x)
+        x = Dropout(dropout_rate)(x)
         x = LSTM(65)(x)
-        x = Dropout(self.droput_rate)(x)
+        x = Dropout(dropout_rate)(x)
         outputs = []
         for _ in range(len(self.names)):
             x_i = Dense(40)(x)
-            x_i = Dropout(self.droput_rate)(x_i)
+            x_i = Dropout(dropout_rate)(x_i)
             x_i = Dense(self.test_days)(x_i)
             outputs.append(x_i)
         self.model = Model(inputs=inputs, outputs=tf.stack(outputs, 2))
 
-    def train(self) -> Model:
+    def train(self, batch_size: int = 30, epochs: int = 10) -> Model:
         self.model.compile(loss="mean_squared_error", optimizer="adam")
         self.model.fit(
             self.mts.x_train,
             self.mts.y_train,
-            batch_size=model_config["batch_size"],
-            epochs=model_config["n_epochs"],
+            batch_size=batch_size,
+            epochs=epochs,
         )
         return self.model
 
@@ -67,7 +67,6 @@ class LSTMRegression:
 
 
 def load_lstm_model(model_name: str, mts: MultipleTimeSeries) -> Model:
-    model_path = os.path.join(model_config["ckpt_dir"], model_name)
     model = LSTMRegression(mts)
-    model.load(model_path)
+    model.load(get_ckpt_dir(model_name))
     return model

@@ -15,22 +15,20 @@ from utils.file_handling import write_csv_results
 
 
 def validate_model(model_name: str, mts: MultipleTimeSeries) -> tuple[float, float]:
-    if model_name == "arima":
+    if "arima" in model_name:
         mae, rmse = validate_arima(mts)
-    elif model_name == "exponential_smoothing":
+    elif "exponential_smoothing" in model_name:
         mae, rmse = validate_exponential_smoothing(mts)
-    elif model_name == "LGBMRegressor":
+    elif "LGBMRegressor" in model_name:
         mae, rmse = validate_boosting_model(model_name, mts)
-    elif model_name == "lstm":
+    elif "lstm" in model_name:
         model = load_lstm_model(model_name, mts)
         mae, rmse = model.validate()
-    elif model_name == "moving_average":
-        mae, rmse = validate_moving_average(mts, recursive=False)
-    elif model_name == "moving_average_recursive":
+    elif "moving_average_recursive" in model_name:
         mae, rmse = validate_moving_average(mts, recursive=True)
-    elif model_name == "prophet":
+    elif "prophet" in model_name:
         mae, rmse = validate_prophet(mts)
-    elif model_name == "XGBRegressor":
+    elif "XGBRegressor" in model_name:
         mae, rmse = validate_boosting_model(model_name, mts)
     else:
         raise Exception(f"Name '{model_name}' is not a valid model name.")
@@ -39,14 +37,16 @@ def validate_model(model_name: str, mts: MultipleTimeSeries) -> tuple[float, flo
 
 if __name__ == "__main__":
     mts = preprocess_data()
-    maes, rmses = [], []
+    models, maes, rmses = [], [], []
     for model_name in model_config["names"]:
+        model_name = "eval_" + model_name
         print(
             f"Validating {model_name} with {model_config['n_validations']} iterations on train set..."
         )
         mae, rmse = validate_model(model_name, mts)
+        models.append(model_name)
         maes.append(mae)
         rmses.append(rmse)
         print(f"Results for {model_name}: MAE={round(mae, 4)}, RMSE={round(rmse, 4)}")
-    results = pd.DataFrame({"Model": model_config["names"], "MAE": maes, "RMSE": rmses})
+    results = pd.DataFrame({"Model": models, "MAE": maes, "RMSE": rmses})
     write_csv_results(results, "validation")

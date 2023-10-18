@@ -11,27 +11,26 @@
 5. Install project: `python -m pip install -e .`
 
 ### Usage
-1. Specify parameters for data processing and model training in *config.py*
+1. Specify parameters in src/config/
 2. Download & preprocess data: `trading-ml prepare`
-3. Explore trading strategies: `trading-ml backtest`
-4. Execute model scripts:
-    - `trading-ml train [model_name]`
-    - `trading-ml validate [model_name]`
-    - `trading-ml test [model_name]`
-5. Plot performance metrics:
+3. Train a model: `trading-ml train [model_name]`
+4. Validate a model on the train set: `trading-ml validate [model_name]`
+5. Evaluate a model on the test set: `trading-ml test [model_name]`
+6. Generate test set predictions: `trading-ml predict [model_name] [ISIN]`
+7. Generate an out-of-sample forecast: `trading-ml forecast [model_name] [ISIN]`
+8. Get a trading recommendation:
+    - `trading-ml recommend-open [position_type] [optimize]`
+    - `trading-ml recommend-close [position_type] [ISIN]`
+9. Plot performance metrics:
     - `trading-ml plot-metrics optimization`
     - `trading-ml plot-metrics validation`
     - `trading-ml plot-metrics evaluation`
-6. Generate predictions (test set) or a forecast (out-of-sample):
-    - `trading-ml predict [model_name] [ISIN]`
-    - `trading-ml forecast [model_name] [ISIN]`
-7. Get trading recommendation:
-    - `trading-ml recommend-open [position_type] [optimize]`
-    - `trading-ml recommend-close [position_type] [ISIN]`
+10. Explore trading strategies: `trading-ml backtest`
+11. Fetch trades to compute statistics: `trading-ml fetch-trades`
 
 ### Parameters
-- [model_name] ∈ {src/config/config.py/model_config/names}
-- [ISIN] ∈ {src/config/config.py/data_config/securities}
+- [model_name] ∈ {src/config/model_config.py/model_config/names}
+- [ISIN] ∈ {src/config/data_config.py/data_config/securities}
 - [position_type] ∈ {short, long}
 - [optimize] ∈ {risk, return}
 

@@ -5,8 +5,8 @@ stages:
     deps:
     - path: ../config/data_config.py
       hash: md5
-      md5: 8ad27d32da05f4ccc001d743f3436259
-      size: 1528
+      md5: e3d29a26b4289334428244c07bf90b0c
+      size: 1256
     - path: prepare.py
       hash: md5
       md5: b1bbc6770968cd2ee312cdedbbf141aa
@@ -25,52 +25,122 @@ stages:
       size: 3209421
     - path: ../config/model_config.py
       hash: md5
-      md5: 3a11cd354fb7437dd0ea274e9e833ff4
-      size: 623
+      md5: e6d140f69263654f4d5e5519ff079a10
+      size: 347
     - path: train.py
       hash: md5
-      md5: 6a62bbef942cd05a700f5a6c00134e1b
-      size: 797
+      md5: 37a293bf934ef5d63a4d7989b034e7ea
+      size: 859
     outs:
-    - path: ../../ckpts/arima
+    - path: ../../ckpts/eval
       hash: md5
-      md5: 710fbb33eea72187789202d0dbca1934.dir
-      size: 6568086
-      nfiles: 17
-    - path: ../../ckpts/lstm
-      hash: md5
-      md5: ec6eff06fa8f6947b54af3df6f1bb18a.dir
-      size: 7418210
-      nfiles: 5
-    - path: ../../ckpts/prophet
-      hash: md5
-      md5: a0bed6a1e23c4c73cc927f66fe857e7e.dir
-      size: 884086
-      nfiles: 17
+      md5: ac1b4254e305a8a671a3b0c412425734.dir
+      size: 14870384
+      nfiles: 39
   validate:
     cmd: python validate.py
     deps:
-    - path: ../../ckpts/arima
+    - path: ../../ckpts/eval
       hash: md5
-      md5: 710fbb33eea72187789202d0dbca1934.dir
-      size: 6568086
-      nfiles: 17
-    - path: ../../ckpts/lstm
-      hash: md5
-      md5: ec6eff06fa8f6947b54af3df6f1bb18a.dir
-      size: 7418210
-      nfiles: 5
-    - path: ../../ckpts/prophet
-      hash: md5
-      md5: a0bed6a1e23c4c73cc927f66fe857e7e.dir
-      size: 884086
-      nfiles: 17
+      md5: ac1b4254e305a8a671a3b0c412425734.dir
+      size: 14870384
+      nfiles: 39
     - path: validate.py
       hash: md5
-      md5: 60e762b75bb006ff1099737ef8caedc1
-      size: 2011
+      md5: ceff6178ba2f72d1c62537d9e513ed7a
+      size: 1977
     outs:
     - path: ../../results/validation.csv
       hash: md5
-      md5: 35caf83db22347629f3c066cca4c8665
-      size: 455
+      md5: d1e83a5983aec26a96b3d50b4687b8f9
+      size: 435
+  test:
+    cmd: python test.py
+    deps:
+    - path: ../../ckpts/eval
+      hash: md5
+      md5: ac1b4254e305a8a671a3b0c412425734.dir
+      size: 14870384
+      nfiles: 39
+    - path: test.py
+      hash: md5
+      md5: cef2969e27a922ef91b7de2d21f7a852
+      size: 1775
+    outs:
+    - path: ../../frontend/data/test_performance.csv
+      hash: md5
+      md5: 6038f43f60e7526908d88a8531e72c52
+      size: 2324
+    - path: ../../frontend/data/test_predictions.csv
+      hash: md5
+      md5: 923061147312c3ea98a6dc87e41c1c67
+      size: 64284
+    - path: ../../results/test_performance.csv
+      hash: md5
+      md5: 6038f43f60e7526908d88a8531e72c52
+      size: 2324
+    - path: ../../results/test_predictions.csv
+      hash: md5
+      md5: ab8644b29f651684b182b8871d54a1a6
+      size: 107912
+  select:
+    cmd: python select.py
+    deps:
+    - path: ../../results/test_performance.csv
+      hash: md5
+      md5: 6038f43f60e7526908d88a8531e72c52
+      size: 2324
+    - path: ../../results/validation.csv
+      hash: md5
+      md5: d1e83a5983aec26a96b3d50b4687b8f9
+      size: 435
+    - path: select.py
+      hash: md5
+      md5: a9820aa59880e0b91e74462c03d4fe94
+      size: 2353
+    outs:
+    - path: ../../results/selection.csv
+      hash: md5
+      md5: 13b3a91ac3fc1109f15468a3a686afb1
+      size: 179
+  forecast:
+    cmd: python forecast.py
+    deps:
+    - path: ../../results/selection.csv
+      hash: md5
+      md5: 13b3a91ac3fc1109f15468a3a686afb1
+      size: 179
+    - path: forecast.py
+      hash: md5
+      md5: 52aa1b39b686ad6f3fb2763fc650f4e4
+      size: 1407
+    outs:
+    - path: ../../ckpts/prod
+      hash: md5
+      md5: 6ec544fe3b663e80d77f0eb4c6d037fe.dir
+      size: 6455007
+      nfiles: 34
+    - path: ../../results/forecast.csv
+      hash: md5
+      md5: 607d89cfcd95d748bf15b6d9f5e865df
+      size: 45609
+  recommend:
+    cmd: python recommend.py
+    deps:
+    - path: ../../results/forecast.csv
+      hash: md5
+      md5: 607d89cfcd95d748bf15b6d9f5e865df
+      size: 45609
+    - path: ../utils/file_handling.py
+      hash: md5
+      md5: c844ac377f1078389967907dfc9e38e4
+      size: 3470
+    - path: recommend.py
+      hash: md5
+      md5: 2260a1343aa7e5ffaa969d1537dfe08a
+      size: 1413
+    outs:
+    - path: ../../results/recommendation.json
+      hash: md5
+      md5: b7ff75f7e81f440c422a15c66d61d977
+      size: 1247

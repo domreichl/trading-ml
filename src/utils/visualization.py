@@ -1,4 +1,3 @@
-import random
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -39,8 +38,8 @@ def plot_validation_metrics() -> None:
     plt.show()
 
 
-def plot_prediction_metrics() -> None:
-    df = load_csv_results("performance")
+def plot_test_performance() -> None:
+    df = load_csv_results("test_performance")
     fig, axs = plt.subplots(4, 1)
     barplot_cfg = {"x": "Model", "y": "Score", "hue": "Metric"}
     sns.barplot(
@@ -121,14 +120,3 @@ def plot_price_forecast(df: pd.DataFrame) -> None:
         f"Stock Price Forecast for {ts_name} over the next {df['Date'].nunique()} Business Days"
     )
     plt.show()
-
-
-if __name__ == "__main__":
-    plot_optimization_metrics()
-    plot_validation_metrics()
-    plot_prediction_metrics()
-    predictions = load_csv_results("predictions")
-    forecast = load_csv_results("forecast")
-    ts_name = random.choice(list(predictions["ISIN"].unique()))
-    plot_price_predictions(predictions[predictions["ISIN"] == ts_name])
-    plot_price_forecast(forecast[forecast["ISIN"] == ts_name])

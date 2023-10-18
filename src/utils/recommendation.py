@@ -1,11 +1,9 @@
-import os
+import numpy as np
 import pandas as pd
 
-from utils.data_preprocessing import preprocess_data
-from utils.data_processing import compute_predicted_returns
+from pipeline.select import pick_top_models
+from utils.data_processing import compute_predicted_return, compute_predicted_returns
 from utils.file_handling import load_csv_results
-from utils.indicators import compute_market_signals, print_market_signals
-from utils.model_selection import pick_top_models
 
 
 def recommend_stock(
@@ -19,7 +17,8 @@ def recommend_stock(
     forecast = load_csv_results("forecast")
     for model_name in top_models:
         predicted_returns = compute_predicted_returns(
-            current_prices, forecast[forecast["Model"] == "prod_" + model_name]
+            current_prices,
+            forecast[forecast["Model"] == model_name],
         )
         candidates[model_name] = pick_top_stock_candidates(
             predicted_returns, position_type
@@ -35,7 +34,7 @@ def recommend_stock(
         print(
             f" - Predicted gross profit when trading {buy_price}€: {round(buy_price*predicted_return-buy_price, 2)}€"
         )
-    return top_stock
+    return top_stock, predicted_return, model_agreement
 
 
 def pick_top_stock_candidates(
@@ -84,14 +83,41 @@ def pick_top_stock(candidates: dict, position_type: str, optimize: str) -> tuple
     return ISIN, predicted_return, model_agreement
 
 
-if __name__ == "__main__":
-    mts = preprocess_data()
-    current_prices = {ISIN: cp[-1] for ISIN, cp in mts.close_prices.items()}
-    for position_type in ["short", "long"]:
-        top_models = pick_top_models(position_type)
-        for optimize in ["risk", "return"]:
-            top_stock = recommend_stock(
-                top_models, current_prices, position_type, optimize
+def recommend_close_position(
+    ISIN: str, current_price: float, position_type: str
+) -> bool:
+    forecast = load_csv_results("forecast")
+    forecast = forecast[forecast["ISIN"] == ISIN]
+    predicted_returns = []
+    for model_name in pick_top_models(position_type, prod=True):
+        predicted_returns.append(
+            compute_predicted_return(
+                current_price, forecast[forecast["Model"] == "prod_" + model_name]
             )
-            overbought, bullish = compute_market_signals(mts.close_prices[top_stock])
-            print_market_signals(top_stock, overbought, bullish)
+        )
+    predicted_returns = np.array(predicted_returns)
+    negative_return = len(predicted_returns[predicted_returns < 1.0])
+    print(
+        f"\n{negative_return}/{len(predicted_returns)} top models predict a negative return."
+    )
+    if negative_return / len(predicted_returns) > 0.5:
+        if position_type == "long":
+            recommendation = close()
+        elif position_type == "short":
+            recommendation = hold()
+    else:
+        if position_type == "long":
+            recommendation = hold()
+        elif position_type == "short":
+            recommendation = close()
+    return recommendation
+
+
+def close() -> bool:
+    print("You should therefore close the position.")
+    return True
+
+
+def hold() -> bool:
+    print("You should therefore hold the position.")
+    return False

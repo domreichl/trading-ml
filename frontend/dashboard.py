@@ -18,7 +18,7 @@ data_dir = os.path.join(os.path.dirname(__file__), "data")
 predictions = pd.read_csv(os.path.join(data_dir, "predictions.csv"))
 performance = pd.read_csv(os.path.join(data_dir, "performance.csv"))
 trades = pd.read_csv(os.path.join(data_dir, "trades.csv")).drop(columns=["ID"])
-trading_statistics = pd.read_csv(os.path.join(data_dir, "trading_statistics.csv"))
+trades_statistics = pd.read_csv(os.path.join(data_dir, "trades_statistics.csv"))
 backtest = pd.read_csv(os.path.join(data_dir, "backtest.csv"))
 
 
@@ -84,7 +84,7 @@ st.plotly_chart(
 
 # TRADES
 st.title("Trading Statistics")
-ts = dict(zip(trading_statistics["Statistic"], trading_statistics["Value"]))
+ts = dict(zip(trades_statistics["Statistic"], trades_statistics["Value"]))
 counts = pd.DataFrame(
     {
         "trades": [f"{int(ts['N_TRADES'])} Trades"] * 2,

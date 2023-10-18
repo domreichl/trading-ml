@@ -1,15 +1,18 @@
-from utils.file_handling import load_csv_results
+import pandas as pd
+
+from utils.file_handling import load_csv_results, write_csv_results
 
 
-def pick_top_models(position_type: str) -> str:
+def pick_top_models(position_type: str, prod: bool = False) -> str:
     top_models = pick_top_models_validation()
     top_models = pick_top_models_rating(top_models, position_type)
+    if prod:
+        top_models = [name.replace("eval_", "prod_") for name in top_models]
     return top_models
 
 
 def pick_top_models_validation(n: int = 5) -> list[str]:
     validation = load_csv_results("validation")
-    validation = validation[~validation["Model"].isin(["moving_average"])]
     validation.sort_values("RMSE", inplace=True)
     return list(validation["Model"][:n])
 
@@ -18,7 +21,7 @@ def pick_top_models_rating(
     top_models: list[str], position_type: str, n: int = 3
 ) -> list[str]:
     ratings = {}
-    performance = load_csv_results("performance")
+    performance = load_csv_results("test_performance")
     performance.drop(columns=["Target"], inplace=True)
     performance = performance[
         (performance["Model"].isin(top_models))
@@ -47,3 +50,14 @@ def pick_top_models_rating(
     [print(f" [{i+1}] {k}: {v}") for i, (k, v) in enumerate(sorted_ratings.items())]
     top_models = list(sorted_ratings.keys())[:n]
     return top_models
+
+
+if __name__ == "__main__":
+    position_types, top_models, ranks = [], [], []
+    for position_type in ["long", "short"]:
+        for i, top_model in enumerate(pick_top_models(position_type)):
+            position_types.append(position_type)
+            top_models.append(top_model)
+            ranks.append(i + 1)
+    df = pd.DataFrame({"Position": position_types, "Rank": ranks, "Model": top_models})
+    write_csv_results(df, "selection")

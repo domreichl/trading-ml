@@ -10,16 +10,18 @@ from utils.file_handling import write_csv_results, write_frontend_data
 
 def get_and_process_trades() -> None:
     trades = load_trades_from_database()
-    write_csv_results(trades, "trades")
-    write_frontend_data(trades, "trades")
     statistics, performance = compute_trading_results(trades)
-    write_csv_results(statistics, "trading_statistics")
-    write_csv_results(performance, "trading_performance")
-    write_frontend_data(statistics, "trading_statistics")
+    write_csv_results(trades, "trades")
+    write_csv_results(statistics, "trades_statistics")
+    write_csv_results(performance, "trades_performance")
+    write_frontend_data(trades, "trades")
+    write_frontend_data(statistics, "trades_statistics")
 
 
 def load_trades_from_database() -> pd.DataFrame:
-    db = json.load(open(os.path.join(os.path.dirname(__file__), "config", "db.json")))
+    db = json.load(
+        open(os.path.join(os.path.dirname(__file__), "..", "config", "db.json"))
+    )
     conn_str = f"mysql+pymysql://{db['USER']}:{db['PW']}@{db['HOST']}:{db['PORT']}/{db['SCHEMA']}"
     with create_engine(conn_str).connect() as conn:
         trades = pd.read_sql("select * from trades", con=conn)
@@ -98,7 +100,3 @@ def compute_trading_performance(df: pd.DataFrame) -> pd.DataFrame:
     performance = pd.DataFrame(performance).transpose()
     performance = performance.reset_index(names="Model")
     return performance
-
-
-if __name__ == "__main__":
-    get_and_process_trades()
