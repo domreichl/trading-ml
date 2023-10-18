@@ -29,8 +29,6 @@ stages:
     outs:
       - ../../results/test_performance.csv
       - ../../results/test_predictions.csv
-      - ../../frontend/data/test_performance.csv
-      - ../../frontend/data/test_predictions.csv
   select:
     cmd: python select.py
     deps:
