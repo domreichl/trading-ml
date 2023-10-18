@@ -15,8 +15,8 @@ st.set_page_config(
 
 # DATA
 data_dir = os.path.join(os.path.dirname(__file__), "data")
-predictions = pd.read_csv(os.path.join(data_dir, "predictions.csv"))
-performance = pd.read_csv(os.path.join(data_dir, "performance.csv"))
+predictions = pd.read_csv(os.path.join(data_dir, "test_predictions.csv"))
+performance = pd.read_csv(os.path.join(data_dir, "test_performance.csv"))
 trades = pd.read_csv(os.path.join(data_dir, "trades.csv")).drop(columns=["ID"])
 trades_statistics = pd.read_csv(os.path.join(data_dir, "trades_statistics.csv"))
 backtest = pd.read_csv(os.path.join(data_dir, "backtest.csv"))
