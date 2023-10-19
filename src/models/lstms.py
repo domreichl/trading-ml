@@ -7,7 +7,7 @@ from tensorflow.keras.layers import Input, Dense, Dropout, LSTM
 from utils.config import Config
 from utils.data_classes import MultipleTimeSeries
 from utils.evaluation import evaluate_return_predictions
-from utils.file_handling import get_ckpt_dir
+from utils.file_handling import CkptHandler
 
 
 class LSTMRegression:
@@ -68,5 +68,5 @@ class LSTMRegression:
 
 def load_lstm_model(model_name: str, mts: MultipleTimeSeries) -> Model:
     model = LSTMRegression(mts)
-    model.load(get_ckpt_dir(model_name))
+    model.load(CkptHandler().get_ckpt_dir(model_name))
     return model

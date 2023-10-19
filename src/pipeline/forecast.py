@@ -4,15 +4,16 @@ from pipeline.train import train_model
 from utils.config import Config
 from utils.data_preprocessing import preprocess_data
 from utils.data_processing import get_forecast_df
-from utils.file_handling import reset_dir, load_csv_results, write_csv_results
+from utils.file_handling import ResultsHandler, CkptHandler
 from utils.prediction import generate_predictions
 
 
 if __name__ == "__main__":
     predictions = []
-    reset_dir("prod")
+    rh = ResultsHandler()
+    CkptHandler().reset_dir("prod")
     cfg = Config()
-    selected = load_csv_results("selection")["Model"].unique()
+    selected = rh.load_csv_results("selection")["Model"].unique()
     for model_name, model_cfg in cfg.models.items():
         if "eval_" + model_name not in selected:
             continue
@@ -37,4 +38,4 @@ if __name__ == "__main__":
             )
         )
     predictions = pd.concat(predictions)
-    write_csv_results(predictions, "forecast")
+    rh.write_csv_results(predictions, "forecast")

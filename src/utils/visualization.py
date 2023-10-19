@@ -5,11 +5,11 @@ from matplotlib import rcParams
 
 rcParams["figure.figsize"] = 20, 10
 
-from utils.file_handling import load_csv_results
+from utils.file_handling import ResultsHandler
 
 
 def plot_optimization_metrics() -> None:
-    df = load_csv_results("optimization")
+    df = ResultsHandler().load_csv_results("optimization")
     barplot = sns.barplot(
         x="look_back_window_size", y="RMSE", hue="Model", data=df, palette="Oranges"
     )
@@ -21,7 +21,7 @@ def plot_optimization_metrics() -> None:
 
 
 def plot_validation_metrics() -> None:
-    df = load_csv_results("validation")
+    df = ResultsHandler().load_csv_results("validation")
     mae = df[["Model", "MAE"]].rename(columns={"MAE": "Score"})
     mae["Metric"] = "MAE"
     rmse = df[["Model", "RMSE"]].rename(columns={"RMSE": "Score"})
@@ -39,7 +39,7 @@ def plot_validation_metrics() -> None:
 
 
 def plot_test_performance() -> None:
-    df = load_csv_results("test_performance")
+    df = ResultsHandler().load_csv_results("test_performance")
     fig, axs = plt.subplots(4, 1)
     barplot_cfg = {"x": "Model", "y": "Score", "hue": "Metric"}
     sns.barplot(

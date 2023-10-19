@@ -7,24 +7,19 @@ from sktime.forecasting.compose import EnsembleForecaster
 
 from utils.data_classes import MultipleTimeSeries
 from utils.evaluation import evaluate_return_predictions
-from utils.file_handling import (
-    save_model_to_pickle_ckpt,
-    load_model_from_pickle_ckpt,
-    save_model_to_json_ckpt,
-    load_model_from_json_ckpt,
-)
+from utils.file_handling import CkptHandler
 
 
 def fit_arima(mts: MultipleTimeSeries, model_name: str) -> None:
     for i, ts_name in enumerate(mts.names):
         model = auto_arima(mts.x_train[-1, :, i])
-        save_model_to_pickle_ckpt(model, f"{model_name}_{ts_name}")
+        CkptHandler().save_model_to_pickle_ckpt(model, f"{model_name}_{ts_name}")
 
 
 def predict_arima(mts: MultipleTimeSeries, model_name: str) -> dict:
     y_preds = {}
     for ts_name in mts.names:
-        model = load_model_from_pickle_ckpt(f"{model_name}_{ts_name}")
+        model = CkptHandler().load_model_from_pickle_ckpt(f"{model_name}_{ts_name}")
         y_preds[ts_name] = model.predict(len(mts.y_test))
     return y_preds
 
@@ -161,13 +156,13 @@ def fit_prophet(mts: MultipleTimeSeries, model_name: str) -> None:
     for ts_name in mts.names:
         x = df[df["unique_id"] == ts_name].copy()
         model = Prophet().fit(x)
-        save_model_to_json_ckpt(model, f"{model_name}_{ts_name}")
+        CkptHandler().save_model_to_json_ckpt(model, f"{model_name}_{ts_name}")
 
 
 def predict_prophet(mts: MultipleTimeSeries, model_name: str) -> dict:
     y_preds = {}
     for ts_name in mts.names:
-        model = load_model_from_json_ckpt(f"{model_name}_{ts_name}")
+        model = CkptHandler().load_model_from_json_ckpt(f"{model_name}_{ts_name}")
         results = model.predict(
             model.make_future_dataframe(periods=len(mts.y_test), include_history=False)
         )

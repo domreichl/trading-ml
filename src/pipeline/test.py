@@ -5,12 +5,13 @@ from utils.data_preprocessing import preprocess_data
 from utils.data_processing import get_df_from_predictions
 from utils.evaluation import compute_prediction_performances
 from utils.prediction import generate_predictions
-from utils.file_handling import write_csv_results, write_frontend_data
+from utils.file_handling import ResultsHandler
 
 
 if __name__ == "__main__":
     mts = preprocess_data()
     cfg = Config()
+    rh = ResultsHandler()
     returns_actual = mts.get_test_returns()
     prices_actual = mts.get_test_prices()
     dates = mts.get_test_dates()
@@ -42,9 +43,9 @@ if __name__ == "__main__":
         )
     performance = pd.concat(performance)
     predictions = pd.concat(predictions)
-    write_csv_results(performance, "test_performance")
-    write_csv_results(predictions, "test_predictions")
-    write_frontend_data(performance, "test_performance")
-    write_frontend_data(
+    rh.write_csv_results(performance, "test_performance")
+    rh.write_csv_results(predictions, "test_predictions")
+    rh.write_frontend_data(performance, "test_performance")
+    rh.write_frontend_data(
         predictions.drop(columns=["Return", "ReturnPredicted"]), "test_predictions"
     )

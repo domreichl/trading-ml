@@ -11,7 +11,7 @@ from models.lstms import load_lstm_model
 from utils.config import Config
 from utils.data_classes import MultipleTimeSeries
 from utils.data_preprocessing import preprocess_data
-from utils.file_handling import write_csv_results
+from utils.file_handling import ResultsHandler
 
 
 def validate_model(
@@ -52,4 +52,4 @@ if __name__ == "__main__":
         rmses.append(rmse)
         print(f"Results for {model_name}: MAE={round(mae, 4)}, RMSE={round(rmse, 4)}")
     results = pd.DataFrame({"Model": models, "MAE": maes, "RMSE": rmses})
-    write_csv_results(results, "validation")
+    ResultsHandler().write_csv_results(results, "validation")

@@ -3,7 +3,7 @@ import pandas as pd
 
 from pipeline.select import pick_top_models
 from utils.data_processing import compute_predicted_return, compute_predicted_returns
-from utils.file_handling import load_csv_results
+from utils.file_handling import ResultsHandler
 
 
 def recommend_stock(
@@ -14,7 +14,7 @@ def recommend_stock(
     buy_price: float = 1000,
 ) -> str:
     candidates = {}
-    forecast = load_csv_results("forecast")
+    forecast = ResultsHandler().load_csv_results("forecast")
     for model_name in top_models:
         predicted_returns = compute_predicted_returns(
             current_prices,
@@ -86,7 +86,7 @@ def pick_top_stock(candidates: dict, position_type: str, optimize: str) -> tuple
 def recommend_close_position(
     ISIN: str, current_price: float, position_type: str
 ) -> bool:
-    forecast = load_csv_results("forecast")
+    forecast = ResultsHandler().load_csv_results("forecast")
     forecast = forecast[forecast["ISIN"] == ISIN]
     predicted_returns = []
     for model_name in pick_top_models(position_type, prod=True):

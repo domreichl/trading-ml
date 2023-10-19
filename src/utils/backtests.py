@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 from utils.data_preprocessing import preprocess_data
 from utils.data_processing import stack_array_from_dict
-from utils.file_handling import write_frontend_data
+from utils.file_handling import ResultsHandler
 
 
 def run_backtests(
@@ -19,7 +19,7 @@ def run_backtests(
     profits_bh = compute_expected_buy_and_hold_profits(returns, buy_price, buy_fee)
     visualize_expected_buy_and_hold_profits(*profits_bh, buy_price)
     profits_wt = compute_expected_weekly_trading_profits(returns, buy_price, buy_fee)
-    write_frontend_data(profits_wt, "backtest")
+    ResultsHandler().write_frontend_data(profits_wt, "backtest")
     visualize_expected_weekly_trading_profits(profits_wt, buy_price)
 
 

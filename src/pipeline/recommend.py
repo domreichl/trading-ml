@@ -2,7 +2,7 @@ import pandas as pd
 
 from pipeline.select import pick_top_models
 from utils.data_preprocessing import preprocess_data
-from utils.file_handling import write_json_results
+from utils.file_handling import ResultsHandler
 from utils.indicators import compute_market_signals, interpret_market_signals
 from utils.recommendation import recommend_stock
 
@@ -31,4 +31,4 @@ if __name__ == "__main__":
                 "Market State": trend,
                 "Market Trend": state,
             }
-    write_json_results(results, "recommendation")
+    ResultsHandler().write_json_results(results, "recommendation")

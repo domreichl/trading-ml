@@ -4,14 +4,14 @@ import pandas as pd
 import numpy as np
 
 from utils.config import Config
-from utils.file_handling import write_csv_data
+from utils.file_handling import DataHandler
 
 
 def prepare_data():
     cfg = Config()
     df = download_data(cfg.start_date, cfg.end_date, cfg.securities)
     df = impute_missing_data(df, get_weekdays(cfg.start_date, cfg.end_date))
-    write_csv_data(df)
+    DataHandler().write_csv_data(df)
 
 
 def download_data(

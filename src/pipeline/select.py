@@ -1,6 +1,6 @@
 import pandas as pd
 
-from utils.file_handling import load_csv_results, write_csv_results
+from utils.file_handling import ResultsHandler
 
 
 def pick_top_models(position_type: str, prod: bool = False) -> str:
@@ -12,7 +12,7 @@ def pick_top_models(position_type: str, prod: bool = False) -> str:
 
 
 def pick_top_models_validation(n: int = 5) -> list[str]:
-    validation = load_csv_results("validation")
+    validation = ResultsHandler().load_csv_results("validation")
     validation.sort_values("RMSE", inplace=True)
     return list(validation["Model"][:n])
 
@@ -21,7 +21,7 @@ def pick_top_models_rating(
     top_models: list[str], position_type: str, n: int = 3
 ) -> list[str]:
     ratings = {}
-    performance = load_csv_results("test_performance")
+    performance = ResultsHandler().load_csv_results("test_performance")
     performance.drop(columns=["Target"], inplace=True)
     performance = performance[
         (performance["Model"].isin(top_models))
@@ -60,4 +60,4 @@ if __name__ == "__main__":
             top_models.append(top_model)
             ranks.append(i + 1)
     df = pd.DataFrame({"Position": position_types, "Rank": ranks, "Model": top_models})
-    write_csv_results(df, "selection")
+    ResultsHandler().write_csv_results(df, "selection")

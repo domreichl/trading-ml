@@ -5,7 +5,7 @@ from sklearn.preprocessing import MinMaxScaler
 
 from utils.config import Config
 from utils.data_classes import MultipleTimeSeries
-from utils.file_handling import load_csv_data
+from utils.file_handling import DataHandler
 
 
 class DataPreprocessor:
@@ -103,7 +103,7 @@ class DataPreprocessor:
 
 
 def preprocess_data(
-    df: pd.DataFrame = load_csv_data(),
+    df: pd.DataFrame = DataHandler().load_csv_data(),
     cfg: Config = Config(),
 ) -> MultipleTimeSeries:
     return DataPreprocessor(df, cfg).get_mts()

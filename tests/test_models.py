@@ -3,7 +3,7 @@ import os
 from utils.data_classes import MultipleTimeSeries
 from utils.data_preprocessing import preprocess_data
 from utils.data_processing import stack_array_from_dict
-from utils.file_handling import load_csv_data, get_ckpt_dir
+from utils.file_handling import DataHandler, CkptHandler
 from models.base import (
     fit_arima,
     predict_arima,
@@ -23,7 +23,7 @@ from models.lstms import LSTMRegression
 
 class UnitTestDataTrimmer:
     def __init__(self, path: str, days_to_keep: int):
-        self.test_data = load_csv_data(path)
+        self.test_data = DataHandler().load_csv_data(path)
         self.days_to_keep = days_to_keep
 
     def get_mts(self) -> MultipleTimeSeries:
@@ -43,7 +43,7 @@ mts = UnitTestDataTrimmer(
 
 def test_base_fit_predict_arima():
     model_name = "test_arima"
-    if not os.path.isdir(get_ckpt_dir(model_name)):
+    if not os.path.isdir(CkptHandler().get_ckpt_dir(model_name)):
         fit_arima(mts, model_name)
     y_preds = predict_arima(mts, model_name)
     assert stack_array_from_dict(y_preds, 1).shape == (10, 4)
@@ -91,7 +91,7 @@ def test_base_validate_moving_average():
 
 def test_base_fit_predict_prophet():
     model_name = "test_prophet"
-    if not os.path.isdir(get_ckpt_dir(model_name)):
+    if not os.path.isdir(CkptHandler().get_ckpt_dir(model_name)):
         fit_prophet(mts, model_name)
     y_preds = predict_prophet(mts, model_name)
     assert stack_array_from_dict(y_preds, 1).shape == (10, 4)

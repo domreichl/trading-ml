@@ -5,17 +5,18 @@ from sqlalchemy import create_engine
 from sklearn.metrics import accuracy_score
 
 from utils.evaluation import compute_SMAPE, evaluate_sign_predictions
-from utils.file_handling import write_csv_results, write_frontend_data
+from utils.file_handling import ResultsHandler
 
 
 def get_and_process_trades() -> None:
+    rh = ResultsHandler()
     trades = load_trades_from_database()
     statistics, performance = compute_trading_results(trades)
-    write_csv_results(trades, "trades")
-    write_csv_results(statistics, "trades_statistics")
-    write_csv_results(performance, "trades_performance")
-    write_frontend_data(trades, "trades")
-    write_frontend_data(statistics, "trades_statistics")
+    rh.write_csv_results(trades, "trades")
+    rh.write_csv_results(statistics, "trades_statistics")
+    rh.write_csv_results(performance, "trades_performance")
+    rh.write_frontend_data(trades, "trades")
+    rh.write_frontend_data(statistics, "trades_statistics")
 
 
 def load_trades_from_database() -> pd.DataFrame:
