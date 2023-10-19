@@ -27,10 +27,11 @@
     - `trading-ml plot-metrics evaluation`
 10. Explore trading strategies: `trading-ml backtest`
 11. Fetch trades to compute statistics: `trading-ml fetch-trades`
+12. Run production workflow: `dvc repro` in src/pipeline
 
 ### Parameters
-- [model_name] ∈ config.yaml/models
-- [ISIN] ∈ config.yaml/securities
+- [model_name] ∈ config.yaml:models
+- [ISIN] ∈ config.yaml:securities
 - [position_type] ∈ {short, long}
 - [optimize] ∈ {risk, return}
 
