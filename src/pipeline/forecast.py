@@ -1,7 +1,7 @@
 import pandas as pd
 
-from config.model_config import model_config
 from pipeline.train import train_model
+from utils.config import Config
 from utils.data_preprocessing import preprocess_data
 from utils.data_processing import get_forecast_df
 from utils.file_handling import reset_dir, load_csv_results, write_csv_results
@@ -11,8 +11,9 @@ from utils.prediction import generate_predictions
 if __name__ == "__main__":
     predictions = []
     reset_dir("prod")
+    cfg = Config()
     selected = load_csv_results("selection")["Model"].unique()
-    for i, model_name in enumerate(model_config["names"]):
+    for model_name, model_cfg in cfg.models.items():
         if "eval_" + model_name not in selected:
             continue
         model_name = "prod_" + model_name
@@ -22,7 +23,7 @@ if __name__ == "__main__":
             deep_learning = True
         mts = preprocess_data()
         mts.merge_features(for_deep_learning=deep_learning)
-        if i in model_config["trainable"]:
+        if model_cfg["store_ckpt"]:
             train_model(model_name, mts)
         returns_predicted, prices_predicted = generate_predictions(
             model_name, mts, forecast=True

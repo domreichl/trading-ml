@@ -1,6 +1,6 @@
 import pandas as pd
 
-from config.model_config import model_config
+from utils.config import Config
 from utils.data_preprocessing import preprocess_data
 from utils.data_processing import get_df_from_predictions
 from utils.evaluation import compute_prediction_performances
@@ -10,12 +10,13 @@ from utils.file_handling import write_csv_results, write_frontend_data
 
 if __name__ == "__main__":
     mts = preprocess_data()
+    cfg = Config()
     returns_actual = mts.get_test_returns()
     prices_actual = mts.get_test_prices()
     dates = mts.get_test_dates()
     naive_errors = mts.get_naive_errors()
     performance, predictions = [], []
-    for model_name in model_config["names"]:
+    for model_name in cfg.model_names:
         model_name = "eval_" + model_name
         print(f"Computing predictions with model '{model_name}'")
         returns_predicted, prices_predicted = generate_predictions(model_name, mts)

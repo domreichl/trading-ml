@@ -5,7 +5,6 @@ from prophet import Prophet
 from sktime.forecasting.exp_smoothing import ExponentialSmoothing
 from sktime.forecasting.compose import EnsembleForecaster
 
-from config.model_config import model_config
 from utils.data_classes import MultipleTimeSeries
 from utils.evaluation import evaluate_return_predictions
 from utils.file_handling import (
@@ -30,9 +29,7 @@ def predict_arima(mts: MultipleTimeSeries, model_name: str) -> dict:
     return y_preds
 
 
-def validate_arima(
-    mts: MultipleTimeSeries, n_validations: int = model_config["n_validations"]
-) -> tuple[float, float]:
+def validate_arima(mts: MultipleTimeSeries, n_validations: int) -> tuple[float, float]:
     test_days = len(mts.y_test)
     mae_lst, rmse_lst = [], []
     for i, ts_name in enumerate(mts.names):
@@ -60,7 +57,7 @@ def fit_predict_exponential_smoothing(mts: MultipleTimeSeries) -> dict:
 
 
 def validate_exponential_smoothing(
-    mts: MultipleTimeSeries, n_validations: int = model_config["n_validations"]
+    mts: MultipleTimeSeries, n_validations: int
 ) -> tuple[float, float]:
     test_days = len(mts.y_test)
     model = load_exponential_smoothing()
@@ -81,9 +78,7 @@ def validate_exponential_smoothing(
     return float(np.mean(mae_lst)), float(np.mean(rmse_lst))
 
 
-def load_exponential_smoothing(
-    seasonal_periods: int = model_config["seasonal_periods"],
-) -> EnsembleForecaster:
+def load_exponential_smoothing(seasonal_periods: int = 20) -> EnsembleForecaster:
     model = EnsembleForecaster(
         [
             ("ses", ExponentialSmoothing(sp=seasonal_periods)),
@@ -139,9 +134,7 @@ def predict_moving_average_recursive(mts: MultipleTimeSeries, idx: int = -1) -> 
 
 
 def validate_moving_average(
-    mts: MultipleTimeSeries,
-    recursive: bool,
-    n_validations: int = model_config["n_validations"],
+    mts: MultipleTimeSeries, n_validations: int, recursive: bool
 ) -> tuple[float, float]:
     test_days = len(mts.y_test)
     mae_lst, rmse_lst = [], []
@@ -182,9 +175,7 @@ def predict_prophet(mts: MultipleTimeSeries, model_name: str) -> dict:
     return y_preds
 
 
-def validate_prophet(
-    mts: MultipleTimeSeries, n_validations: int = model_config["n_validations"]
-) -> dict:
+def validate_prophet(mts: MultipleTimeSeries, n_validations: int) -> dict:
     test_days = len(mts.y_test)
     mae_lst, rmse_lst = [], []
     for i, ts_name in enumerate(mts.names):

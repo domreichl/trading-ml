@@ -11,7 +11,7 @@
 5. Install project: `python -m pip install -e .`
 
 ### Usage
-1. Specify parameters in src/config/
+1. Update *config.yaml*
 2. Download & preprocess data: `trading-ml prepare`
 3. Train a model: `trading-ml train [model_name]`
 4. Validate a model on the train set: `trading-ml validate [model_name]`
@@ -29,8 +29,8 @@
 11. Fetch trades to compute statistics: `trading-ml fetch-trades`
 
 ### Parameters
-- [model_name] ∈ {src/config/model_config.py/model_config/names}
-- [ISIN] ∈ {src/config/data_config.py/data_config/securities}
+- [model_name] ∈ config.yaml/models
+- [ISIN] ∈ config.yaml/securities
 - [position_type] ∈ {short, long}
 - [optimize] ∈ {risk, return}
 

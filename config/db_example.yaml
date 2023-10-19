@@ -1,0 +1,5 @@
+USER: username
+PW: password
+HOST: address
+PORT: 3306
+SCHEMA: schema_name

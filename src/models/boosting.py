@@ -6,7 +6,7 @@ from mlforecast import MLForecast
 from window_ops.rolling import rolling_mean, rolling_max, rolling_min
 from xgboost import XGBRegressor
 
-from config.model_config import model_config
+from utils.config import Config
 from utils.data_classes import MultipleTimeSeries
 from utils.evaluation import evaluate_return_predictions
 
@@ -53,7 +53,7 @@ def fit_predict_boosting_model(model_name: str, mts: MultipleTimeSeries) -> dict
 def validate_boosting_model(
     model_name: str,
     mts: MultipleTimeSeries,
-    n_validations: int = model_config["n_validations"],
+    n_validations: int = Config().n_validations,
 ) -> tuple[float, float]:
     if "LGBMRegressor" in model_name:
         model = load_lightgbm()

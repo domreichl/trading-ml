@@ -11,7 +11,6 @@ test_config = {
 
 def test_data_preparation_wiener_boerse():
     df = download_data(
-        "wiener_boerse",
         test_config["start_date"],
         test_config["end_date"],
         {
@@ -28,18 +27,3 @@ def test_data_preparation_wiener_boerse():
         df, get_weekdays(test_config["start_date"], test_config["end_date"])
     )
     assert len(df[df["Date"] == date_to_impute]) == 2
-
-
-def test_data_preparation_yfinance():
-    df = download_data(
-        "yfinance",
-        test_config["start_date"],
-        test_config["end_date"] + dt.timedelta(days=1),
-        {
-            "AT0000743059": "omv-ag-AT0000743059",
-            "AT0000937503": "voestalpine-ag-AT0000937503",
-        },
-    )
-    print(df)
-    assert len(df) == 2 * 5
-    assert len(df.columns) == 3

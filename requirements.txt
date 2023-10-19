@@ -4,166 +4,537 @@
 #
 #    pip-compile pyproject.toml
 #
-absl-py==1.4.0
+absl-py==2.0.0
     # via
     #   tensorboard
     #   tensorflow-cpu
+aiohttp==3.8.6
+    # via
+    #   aiohttp-retry
+    #   fsspec
+aiohttp-retry==2.8.3
+    # via dvc-http
+aiosignal==1.3.1
+    # via aiohttp
+altair==5.1.2
+    # via streamlit
+amqp==5.1.1
+    # via kombu
+antlr4-python3-runtime==4.9.3
+    # via
+    #   hydra-core
+    #   omegaconf
 appdirs==1.4.4
-    # via yfinance
+    # via
+    #   iterative-telemetry
+    #   pydrive2
 astunparse==1.6.3
     # via tensorflow-cpu
-beautifulsoup4==4.12.2
-    # via yfinance
+async-timeout==4.0.3
+    # via aiohttp
+asyncssh==2.14.0
+    # via scmrepo
+atpublic==4.0
+    # via flufl-lock
+attrs==23.1.0
+    # via
+    #   aiohttp
+    #   dvc-data
+    #   jsonschema
+    #   referencing
+    #   sqltrie
+billiard==4.1.0
+    # via celery
+blinker==1.6.3
+    # via streamlit
 cachetools==5.3.1
-    # via google-auth
+    # via
+    #   google-auth
+    #   streamlit
+celery==5.3.4
+    # via dvc-task
 certifi==2023.7.22
     # via requests
-cffi==1.15.1
-    # via cryptography
-charset-normalizer==3.2.0
-    # via requests
-click==8.1.0
-    # via trading-ml (pyproject.toml)
+cffi==1.16.0
+    # via
+    #   cryptography
+    #   pygit2
+charset-normalizer==3.3.0
+    # via
+    #   aiohttp
+    #   requests
+click==8.1.7
+    # via
+    #   celery
+    #   click-didyoumean
+    #   click-plugins
+    #   click-repl
+    #   streamlit
+    #   trading-ml (pyproject.toml)
+    #   typer
+click-didyoumean==0.3.0
+    # via celery
+click-plugins==1.1.1
+    # via celery
+click-repl==0.3.0
+    # via celery
+cmdstanpy==1.2.0
+    # via prophet
+colorama==0.4.6
+    # via dvc
+configobj==5.0.8
+    # via dvc
 contourpy==1.1.1
     # via matplotlib
-cryptography==41.0.3
-    # via yfinance
-cycler==0.11.0
+convertdate==2.4.0
+    # via prophet
+cryptography==41.0.4
+    # via
+    #   asyncssh
+    #   pyopenssl
+cycler==0.12.1
     # via matplotlib
+cython==3.0.4
+    # via pmdarima
+dictdiffer==0.9.0
+    # via dvc-data
+diskcache==5.6.3
+    # via dvc-data
+distro==1.8.0
+    # via
+    #   dvc
+    #   iterative-telemetry
+dpath==2.1.6
+    # via dvc
+dulwich==0.21.6
+    # via
+    #   dvc-studio-client
+    #   scmrepo
+dvc==3.26.2
+    # via
+    #   dvc-gdrive
+    #   trading-ml (pyproject.toml)
+dvc-data==2.18.1
+    # via dvc
+dvc-gdrive==2.20.0
+    # via trading-ml (pyproject.toml)
+dvc-http==2.30.2
+    # via dvc
+dvc-objects==1.0.1
+    # via dvc-data
+dvc-render==0.6.0
+    # via dvc
+dvc-studio-client==0.15.0
+    # via dvc
+dvc-task==0.3.0
+    # via dvc
+entrypoints==0.4
+    # via gto
+ephem==4.1.5
+    # via lunarcalendar
+filelock==3.12.4
+    # via iterative-telemetry
 flatbuffers==23.5.26
     # via tensorflow-cpu
-fonttools==4.42.1
+flatten-dict==0.4.2
+    # via dvc
+flufl-lock==7.1.1
+    # via dvc
+fonttools==4.43.1
     # via matplotlib
-frozendict==2.3.8
-    # via yfinance
+frozenlist==1.4.0
+    # via
+    #   aiohttp
+    #   aiosignal
+fsspec[http]==2023.9.2
+    # via
+    #   dvc-http
+    #   dvc-objects
+    #   pydrive2
+    #   scmrepo
+funcy==2.0
+    # via
+    #   dvc
+    #   dvc-data
+    #   dvc-objects
+    #   dvc-task
+    #   gto
+    #   pydrive2
+    #   scmrepo
 gast==0.4.0
     # via tensorflow-cpu
-google-auth==2.23.0
+gitdb==4.0.10
+    # via gitpython
+gitpython==3.1.40
     # via
+    #   scmrepo
+    #   streamlit
+google-api-core==2.12.0
+    # via google-api-python-client
+google-api-python-client==2.104.0
+    # via pydrive2
+google-auth==2.23.3
+    # via
+    #   google-api-core
+    #   google-api-python-client
+    #   google-auth-httplib2
     #   google-auth-oauthlib
     #   tensorboard
+google-auth-httplib2==0.1.1
+    # via google-api-python-client
 google-auth-oauthlib==1.0.0
     # via tensorboard
 google-pasta==0.2.0
     # via tensorflow-cpu
-greenlet==2.0.2
+googleapis-common-protos==1.61.0
+    # via google-api-core
+grandalf==0.8
+    # via dvc
+greenlet==3.0.0
     # via sqlalchemy
-grpcio==1.58.0
+grpcio==1.59.0
     # via
     #   tensorboard
     #   tensorflow-cpu
-h5py==3.9.0
+gto==1.4.0
+    # via dvc
+h5py==3.10.0
     # via tensorflow-cpu
-html5lib==1.1
-    # via yfinance
+holidays==0.35
+    # via prophet
+httplib2==0.22.0
+    # via
+    #   google-api-python-client
+    #   google-auth-httplib2
+    #   oauth2client
+hydra-core==1.3.2
+    # via dvc
 idna==3.4
-    # via requests
+    # via
+    #   requests
+    #   yarl
+importlib-metadata==6.8.0
+    # via streamlit
+importlib-resources==6.1.0
+    # via prophet
 iniconfig==2.0.0
     # via pytest
+iterative-telemetry==0.0.8
+    # via dvc
+jinja2==3.1.2
+    # via
+    #   altair
+    #   pydeck
 joblib==1.3.2
-    # via scikit-learn
+    # via
+    #   pmdarima
+    #   scikit-learn
+jsonschema==4.19.1
+    # via altair
+jsonschema-specifications==2023.7.1
+    # via jsonschema
 keras==2.13.1
     # via tensorflow-cpu
 kiwisolver==1.4.5
     # via matplotlib
+kombu==5.3.2
+    # via
+    #   celery
+    #   dvc-task
 libclang==16.0.6
     # via tensorflow-cpu
-lxml==4.9.3
-    # via yfinance
-markdown==3.4.4
+lightgbm==4.1.0
+    # via trading-ml (pyproject.toml)
+llvmlite==0.41.1
+    # via numba
+lunarcalendar==0.0.9
+    # via prophet
+markdown==3.5
     # via tensorboard
+markdown-it-py==3.0.0
+    # via rich
 markupsafe==2.1.3
-    # via werkzeug
+    # via
+    #   jinja2
+    #   werkzeug
 matplotlib==3.7.2
     # via
+    #   prophet
     #   seaborn
     #   trading-ml (pyproject.toml)
-multitasking==0.0.11
-    # via yfinance
+mdurl==0.1.2
+    # via markdown-it-py
+mlforecast==0.9.3
+    # via trading-ml (pyproject.toml)
+multidict==6.0.4
+    # via
+    #   aiohttp
+    #   yarl
+networkx==3.2
+    # via dvc
+numba==0.58.1
+    # via
+    #   mlforecast
+    #   window-ops
 numpy==1.23.5
     # via
+    #   altair
+    #   cmdstanpy
     #   contourpy
     #   h5py
+    #   lightgbm
     #   matplotlib
+    #   numba
     #   opt-einsum
     #   pandas
+    #   patsy
+    #   pmdarima
+    #   prophet
+    #   pyarrow
+    #   pydeck
     #   scikit-learn
     #   scipy
     #   seaborn
+    #   sktime
+    #   stanio
+    #   statsmodels
+    #   streamlit
     #   tensorboard
     #   tensorflow-cpu
     #   trading-ml (pyproject.toml)
-    #   yfinance
+    #   window-ops
+    #   xgboost
+oauth2client==4.1.3
+    # via pydrive2
 oauthlib==3.2.2
     # via requests-oauthlib
+omegaconf==2.3.0
+    # via hydra-core
 opt-einsum==3.3.0
     # via tensorflow-cpu
-packaging==23.1
+orjson==3.9.9
+    # via sqltrie
+packaging==23.2
     # via
+    #   altair
+    #   dvc
+    #   dvc-objects
+    #   hydra-core
     #   matplotlib
+    #   plotly
     #   pytest
+    #   sktime
+    #   statsmodels
+    #   streamlit
     #   tensorflow-cpu
 pandas==2.0.2
     # via
+    #   altair
+    #   cmdstanpy
+    #   mlforecast
+    #   pmdarima
+    #   prophet
     #   seaborn
+    #   sktime
+    #   statsmodels
+    #   streamlit
     #   trading-ml (pyproject.toml)
-    #   yfinance
-pillow==10.0.1
-    # via matplotlib
+pathspec==0.11.2
+    # via
+    #   dvc
+    #   scmrepo
+patsy==0.5.3
+    # via statsmodels
+pillow==10.1.0
+    # via
+    #   matplotlib
+    #   streamlit
+platformdirs==3.11.0
+    # via dvc
+plotly==5.17.0
+    # via trading-ml (pyproject.toml)
 pluggy==1.3.0
     # via pytest
-protobuf==4.24.3
+pmdarima==2.0.3
+    # via trading-ml (pyproject.toml)
+prompt-toolkit==3.0.39
+    # via click-repl
+prophet==1.1.4
+    # via trading-ml (pyproject.toml)
+protobuf==4.24.4
     # via
+    #   google-api-core
+    #   googleapis-common-protos
+    #   streamlit
     #   tensorboard
     #   tensorflow-cpu
+psutil==5.9.6
+    # via
+    #   dvc
+    #   flufl-lock
+pyarrow==13.0.0
+    # via streamlit
 pyasn1==0.5.0
     # via
+    #   oauth2client
     #   pyasn1-modules
     #   rsa
 pyasn1-modules==0.3.0
-    # via google-auth
+    # via
+    #   google-auth
+    #   oauth2client
 pycparser==2.21
     # via cffi
+pydantic==1.10.13
+    # via gto
+pydeck==0.8.1b0
+    # via streamlit
+pydot==1.4.2
+    # via dvc
+pydrive2[fsspec]==1.17.0
+    # via dvc-gdrive
+pygit2==1.13.1
+    # via scmrepo
+pygments==2.16.1
+    # via rich
+pygtrie==2.5.0
+    # via
+    #   dvc
+    #   dvc-data
+    #   scmrepo
+    #   sqltrie
+pymeeus==0.5.12
+    # via convertdate
 pymysql==1.1.0
     # via trading-ml (pyproject.toml)
+pyopenssl==23.2.0
+    # via pydrive2
 pyparsing==3.0.9
-    # via matplotlib
+    # via
+    #   dvc
+    #   grandalf
+    #   httplib2
+    #   matplotlib
+    #   pydot
 pytest==7.4.0
     # via trading-ml (pyproject.toml)
 python-dateutil==2.8.2
     # via
+    #   celery
+    #   holidays
+    #   lunarcalendar
     #   matplotlib
     #   pandas
+    #   prophet
+    #   streamlit
 pytz==2023.3.post1
     # via
+    #   lunarcalendar
     #   pandas
-    #   yfinance
+pyyaml==6.0.1
+    # via
+    #   omegaconf
+    #   pydrive2
+referencing==0.30.2
+    # via
+    #   jsonschema
+    #   jsonschema-specifications
 requests==2.31.0
     # via
+    #   dvc
+    #   dvc-studio-client
+    #   fsspec
+    #   google-api-core
+    #   iterative-telemetry
     #   requests-oauthlib
+    #   streamlit
     #   tensorboard
-    #   yfinance
 requests-oauthlib==1.3.1
     # via google-auth-oauthlib
+rich==13.6.0
+    # via
+    #   dvc
+    #   gto
+    #   streamlit
+rpds-py==0.10.6
+    # via
+    #   jsonschema
+    #   referencing
 rsa==4.9
-    # via google-auth
+    # via
+    #   google-auth
+    #   oauth2client
+ruamel-yaml==0.17.38
+    # via
+    #   dvc
+    #   gto
+ruamel-yaml-clib==0.2.8
+    # via ruamel-yaml
+scikit-base==0.5.2
+    # via sktime
 scikit-learn==1.3.0
-    # via trading-ml (pyproject.toml)
-scipy==1.11.2
-    # via scikit-learn
+    # via
+    #   mlforecast
+    #   pmdarima
+    #   sktime
+    #   trading-ml (pyproject.toml)
+scipy==1.11.3
+    # via
+    #   lightgbm
+    #   pmdarima
+    #   scikit-learn
+    #   sktime
+    #   statsmodels
+    #   xgboost
+scmrepo==1.4.0
+    # via
+    #   dvc
+    #   gto
 seaborn==0.12.2
     # via trading-ml (pyproject.toml)
+semver==3.0.2
+    # via gto
+shortuuid==1.0.11
+    # via
+    #   dvc
+    #   dvc-data
+    #   dvc-objects
+    #   dvc-task
+    #   scmrepo
+shtab==1.6.4
+    # via dvc
 six==1.16.0
     # via
     #   astunparse
+    #   configobj
+    #   flatten-dict
     #   google-pasta
-    #   html5lib
+    #   oauth2client
+    #   patsy
     #   python-dateutil
     #   tensorflow-cpu
-soupsieve==2.5
-    # via beautifulsoup4
+sktime==0.23.0
+    # via trading-ml (pyproject.toml)
+smmap==5.0.1
+    # via gitdb
 sqlalchemy==2.0.21
     # via trading-ml (pyproject.toml)
+sqltrie==0.8.0
+    # via dvc-data
+stanio==0.3.0
+    # via cmdstanpy
+statsmodels==0.14.0
+    # via pmdarima
+streamlit==1.27.2
+    # via trading-ml (pyproject.toml)
+tabulate==0.9.0
+    # via
+    #   dvc
+    #   gto
+tenacity==8.2.3
+    # via
+    #   plotly
+    #   streamlit
 tensorboard==2.13.0
     # via tensorflow-cpu
 tensorboard-data-server==0.7.1
@@ -178,28 +549,78 @@ termcolor==2.3.0
     # via tensorflow-cpu
 threadpoolctl==3.2.0
     # via scikit-learn
+toml==0.10.2
+    # via streamlit
+tomlkit==0.12.1
+    # via dvc
+toolz==0.12.0
+    # via altair
+tornado==6.3.3
+    # via streamlit
+tqdm==4.66.1
+    # via
+    #   cmdstanpy
+    #   dvc
+    #   dvc-objects
+    #   prophet
+    #   pydrive2
+typer==0.9.0
+    # via gto
 typing-extensions==4.5.0
     # via
+    #   asyncssh
+    #   dvc-objects
+    #   pydantic
     #   sqlalchemy
+    #   streamlit
     #   tensorflow-cpu
+    #   typer
 tzdata==2023.3
-    # via pandas
-urllib3==1.26.16
     # via
-    #   google-auth
+    #   celery
+    #   pandas
+tzlocal==5.1
+    # via streamlit
+uritemplate==4.1.1
+    # via google-api-python-client
+urllib3==2.0.7
+    # via
+    #   dulwich
+    #   pmdarima
     #   requests
-webencodings==0.5.1
-    # via html5lib
-werkzeug==2.3.7
+validators==0.22.0
+    # via streamlit
+vine==5.0.0
+    # via
+    #   amqp
+    #   celery
+    #   kombu
+voluptuous==0.13.1
+    # via
+    #   dvc
+    #   dvc-studio-client
+watchdog==3.0.0
+    # via streamlit
+wcwidth==0.2.8
+    # via prompt-toolkit
+werkzeug==3.0.0
     # via tensorboard
 wheel==0.41.2
     # via
     #   astunparse
     #   tensorboard
+window-ops==0.0.14
+    # via mlforecast
 wrapt==1.15.0
     # via tensorflow-cpu
-yfinance==0.2.20
+xgboost==2.0.0
     # via trading-ml (pyproject.toml)
+yarl==1.9.2
+    # via aiohttp
+zc-lockfile==3.0.post1
+    # via dvc
+zipp==3.17.0
+    # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools

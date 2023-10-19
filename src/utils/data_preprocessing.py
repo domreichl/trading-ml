@@ -1,27 +1,23 @@
+import yaml
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 
-from config.data_config import data_config
-from config.model_config import model_config
+from utils.config import Config
 from utils.data_classes import MultipleTimeSeries
 from utils.file_handling import load_csv_data
 
 
 class DataPreprocessor:
-    def __init__(
-        self, df: pd.DataFrame, look_back_window_size: int, include_stock_index: bool
-    ):
+    def __init__(self, df: pd.DataFrame, cfg: Config):
         self.df = df
-        if not include_stock_index:
-            self.df = self.df[self.df["ISIN"] != data_config["stock_index"]]
         self.dates = list(self.df["Date"].unique())
         self.securities = list(self.df["ISIN"].unique())
         self.ts_count = len(self.securities)
         self.total_days = len(self.df) // self.ts_count
-        self.look_back_window_size = look_back_window_size
+        self.look_back_window_size = cfg.look_back_window_size
         self.time_steps = self.total_days - self.look_back_window_size
-        self.test_days = model_config["test_days"]
+        self.test_days = cfg.test_days
         self.train_days = self.time_steps - self.test_days
         self.scaler = None
         self.compute_log_returns()
@@ -108,7 +104,6 @@ class DataPreprocessor:
 
 def preprocess_data(
     df: pd.DataFrame = load_csv_data(),
-    look_back_window_size: int = model_config["look_back_window_size"],
-    include_stock_index: bool = True,
+    cfg: Config = Config(),
 ) -> MultipleTimeSeries:
-    return DataPreprocessor(df, look_back_window_size, include_stock_index).get_mts()
+    return DataPreprocessor(df, cfg).get_mts()

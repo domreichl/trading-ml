@@ -1,6 +1,5 @@
 import os
 
-from config.model_config import model_config
 from utils.data_classes import MultipleTimeSeries
 from utils.data_preprocessing import preprocess_data
 from utils.data_processing import stack_array_from_dict

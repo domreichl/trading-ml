@@ -2,12 +2,13 @@ import os, shutil, json, pickle
 import pandas as pd
 from prophet.serialize import model_to_json, model_from_json
 
-from config.data_config import data_config
+from utils.config import Config
 
 
+CONFIG = Config()
 ROOT_DIR = os.path.join(os.path.dirname(__file__), "..", "..")
 DATA_DIR = os.path.join(ROOT_DIR, "data")
-CSV_DATA_PATH = os.path.join(DATA_DIR, data_config["data_source"] + ".csv")
+CSV_DATA_PATH = os.path.join(DATA_DIR, CONFIG.data_source + ".csv")
 FRONTEND_DATA_DIR = os.path.join(ROOT_DIR, "frontend", "data")
 CKPTS_DIR = os.path.join(ROOT_DIR, "ckpts")
 RESULTS_DIR = os.path.join(ROOT_DIR, "results")
@@ -43,7 +44,7 @@ def write_json_results(content: dict, file_name: str) -> None:
 
 
 def get_ckpt_dir(name: str) -> str:
-    for prefix in ["cli_", "eval_", "prod_", "test_"]:
+    for prefix in Config().ckpt_types:
         if name.startswith(prefix):
             subdir = prefix.rstrip("_")
             subdir2 = name.replace(prefix, "").split("_")[0]

@@ -4,7 +4,7 @@ import tensorflow as tf
 from tensorflow.keras.models import Model, load_model
 from tensorflow.keras.layers import Input, Dense, Dropout, LSTM
 
-from config.model_config import model_config
+from utils.config import Config
 from utils.data_classes import MultipleTimeSeries
 from utils.evaluation import evaluate_return_predictions
 from utils.file_handling import get_ckpt_dir
@@ -47,7 +47,7 @@ class LSTMRegression:
         return {ts_name: predictions[:, i] for i, ts_name in enumerate(self.names)}
 
     def validate(
-        self, n_validations: int = model_config["n_validations"]
+        self, n_validations: int = Config().n_validations
     ) -> tuple[float, float]:
         test_days = len(self.mts.y_test)
         mae_lst, rmse_lst = [], []

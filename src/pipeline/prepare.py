@@ -2,58 +2,34 @@ import urllib.request
 import datetime as dt
 import pandas as pd
 import numpy as np
-import yfinance as yf
 
-from config.data_config import data_config
+from utils.config import Config
 from utils.file_handling import write_csv_data
 
 
 def prepare_data():
-    dates = {
-        date_type: dt.datetime.strptime(
-            data_config[date_type], data_config["date_format"]
-        )
-        for date_type in ["start_date", "end_date"]
-    }
-    df = download_data(
-        data_config["data_source"],
-        dates["start_date"],
-        dates["end_date"],
-        data_config["securities"],
-    )
-    df = impute_missing_data(df, get_weekdays(dates["start_date"], dates["end_date"]))
+    cfg = Config()
+    df = download_data(cfg.start_date, cfg.end_date, cfg.securities)
+    df = impute_missing_data(df, get_weekdays(cfg.start_date, cfg.end_date))
     write_csv_data(df)
 
 
 def download_data(
-    data_source: str, start_date: dt.datetime, end_date: dt.datetime, securities: dict
+    start_date: dt.datetime, end_date: dt.datetime, securities: dict
 ) -> pd.DataFrame:
-    """downloads stock price data and returns it as a dataframe;
-    data_source: {'wiener_boerse' (wienerboerse.at), 'yfinance' (finance.yahoo.com via API)};
-    securities: 17 ISINs incl. 16 perennial Austrian stocks + ATX index
-    """
-
     dfs = []
     columns = ["ISIN", "Date", "Close"]
     for isin, security in securities.items():
-        if data_source == "wiener_boerse":
-            date_format = "%d.%m.%Y"
-            if isin == data_config["stock_index"]:
-                url = f"https://www.wienerborse.at/indizes/aktuelle-indexwerte/historische-daten/?ISIN=AT0000999982&ID_NOTATION=92866&c7012%5BDATETIME_TZ_END_RANGE%5D={end_date.strftime(date_format)}&c7012%5BDATETIME_TZ_START_RANGE%5D={start_date.strftime(date_format)}&c7012%5BDOWNLOAD%5D=csv"
-            else:
-                url = f"https://www.wienerborse.at/aktien-prime-market/{security}/historische-daten/?c48840%5BDOWNLOAD%5D=csv&c48840%5BDATETIME_TZ_END_RANGE%5D={end_date.strftime(date_format)}&c48840%5BDATETIME_TZ_START_RANGE%5D={start_date.strftime(date_format)}T00%3A00%3A00%2B01%3A00"
-            with urllib.request.urlopen(url) as csv_file:
-                df = pd.read_csv(csv_file, sep=";")
-                df["ISIN"] = isin
-                df["Date"] = pd.to_datetime(df["Datum"], format=date_format)
-                df["Close"] = df["Schlusspreis"].str.replace(",", ".").astype(float)
-                dfs.append(df[columns])
-        elif data_source == "yfinance":
-            if isin == data_config["stock_index"]:
-                continue  # index not in yfinance
-            df = yf.Ticker(isin).history(start=start_date, end=end_date).reset_index()
-            df["Date"] = pd.to_datetime(df["Date"].dt.date)
+        date_format = "%d.%m.%Y"
+        if security == "ATX":
+            url = f"https://www.wienerborse.at/indizes/aktuelle-indexwerte/historische-daten/?ISIN=AT0000999982&ID_NOTATION=92866&c7012%5BDATETIME_TZ_END_RANGE%5D={end_date.strftime(date_format)}&c7012%5BDATETIME_TZ_START_RANGE%5D={start_date.strftime(date_format)}&c7012%5BDOWNLOAD%5D=csv"
+        else:
+            url = f"https://www.wienerborse.at/aktien-prime-market/{security}/historische-daten/?c48840%5BDOWNLOAD%5D=csv&c48840%5BDATETIME_TZ_END_RANGE%5D={end_date.strftime(date_format)}&c48840%5BDATETIME_TZ_START_RANGE%5D={start_date.strftime(date_format)}T00%3A00%3A00%2B01%3A00"
+        with urllib.request.urlopen(url) as csv_file:
+            df = pd.read_csv(csv_file, sep=";")
             df["ISIN"] = isin
+            df["Date"] = pd.to_datetime(df["Datum"], format=date_format)
+            df["Close"] = df["Schlusspreis"].str.replace(",", ".").astype(float)
             dfs.append(df[columns])
     return pd.concat(dfs)
 

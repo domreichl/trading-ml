@@ -3,7 +3,7 @@ import pandas as pd
 import datetime as dt
 from dataclasses import dataclass
 
-from config.data_config import data_config
+from utils.config import Config
 
 
 @dataclass
@@ -33,9 +33,8 @@ class MultipleTimeSeries:
             for i, ISIN in enumerate(self.names)
         }
 
-    def get_forecast_dates(
-        self, date_format: str = data_config["date_format"]
-    ) -> list[str]:
+    def get_forecast_dates(self) -> list[str]:
+        date_format = Config().date_format
         day = dt.datetime.strptime(self.dates[-1], date_format)
         if day.weekday() == 4:  # Fri -> Mon
             start = day + dt.timedelta(days=3)

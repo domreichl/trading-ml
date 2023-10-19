@@ -1,4 +1,4 @@
-import os, json
+import os, yaml
 import numpy as np
 import pandas as pd
 from sqlalchemy import create_engine
@@ -19,8 +19,8 @@ def get_and_process_trades() -> None:
 
 
 def load_trades_from_database() -> pd.DataFrame:
-    db = json.load(
-        open(os.path.join(os.path.dirname(__file__), "..", "config", "db.json"))
+    db = yaml.safe_load(
+        open(os.path.join(os.path.dirname(__file__), "..", "..", "config", "db.yaml"))
     )
     conn_str = f"mysql+pymysql://{db['USER']}:{db['PW']}@{db['HOST']}:{db['PORT']}/{db['SCHEMA']}"
     with create_engine(conn_str).connect() as conn:
