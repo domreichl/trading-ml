@@ -1,6 +1,7 @@
-import os, pytest
+import pytest
 import numpy as np
 import pandas as pd
+from pathlib import Path
 
 from utils.data_preprocessing import preprocess_data
 from utils.data_processing import (
@@ -21,9 +22,7 @@ from utils.trades import load_trades_from_database, compute_trading_results
 
 def test_data_classes_mts_merge_features():
     mts = preprocess_data(
-        DataHandler().load_csv_data(
-            os.path.join(os.path.dirname(__file__), "test_data.csv")
-        )
+        DataHandler().load_csv_data(Path(__file__).parent.joinpath("test_data.csv"))
     )
     assert mts.x_train.shape == (4929, 260, 4)
     assert mts.y_train.shape == (4929, 10, 4)
@@ -36,9 +35,7 @@ def test_data_classes_mts_merge_features():
 
 def test_data_classes_mts_merge_features_dl():
     mts = preprocess_data(
-        DataHandler().load_csv_data(
-            os.path.join(os.path.dirname(__file__), "test_data.csv")
-        )
+        DataHandler().load_csv_data(Path(__file__).parent.joinpath("test_data.csv"))
     )
     mts.merge_features(for_deep_learning=True)
     assert mts.x_train.shape == (4930, 260, 4)
@@ -47,9 +44,7 @@ def test_data_classes_mts_merge_features_dl():
 
 def test_data_classes_mts_get_forecast_dates():
     mts = preprocess_data(
-        DataHandler().load_csv_data(
-            os.path.join(os.path.dirname(__file__), "test_data.csv")
-        )
+        DataHandler().load_csv_data(Path(__file__).parent.joinpath("test_data.csv"))
     )
     forecast_dates = mts.get_forecast_dates()
     assert mts.dates[-1] == "2023-09-15"
@@ -59,9 +54,7 @@ def test_data_classes_mts_get_forecast_dates():
 
 def test_data_preprocessing():
     mts = preprocess_data(
-        DataHandler().load_csv_data(
-            os.path.join(os.path.dirname(__file__), "test_data.csv")
-        )
+        DataHandler().load_csv_data(Path(__file__).parent.joinpath("test_data.csv"))
     )
     assert round(mts.x_train[-1][-1][-1], 4) == 0.4173
     assert round(mts.y_train[0][0][0], 4) == 0.8725
@@ -154,7 +147,7 @@ def test_trades_load_trades_from_database():
 
 def test_trades_compute_statistics():
     statistics, performance = compute_trading_results(
-        pd.read_csv(os.path.join(os.path.dirname(__file__), "test_trades.csv"))
+        pd.read_csv(Path(__file__).parent.joinpath("test_trades.csv"))
     )
     assert len(statistics) == 16
     assert len(performance.columns) == 7

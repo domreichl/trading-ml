@@ -1,6 +1,7 @@
-import os, yaml
+import yaml
 import numpy as np
 import pandas as pd
+from pathlib import Path
 from sqlalchemy import create_engine
 from sklearn.metrics import accuracy_score
 
@@ -21,7 +22,7 @@ def get_and_process_trades() -> None:
 
 def load_trades_from_database() -> pd.DataFrame:
     db = yaml.safe_load(
-        open(os.path.join(os.path.dirname(__file__), "..", "..", "config", "db.yaml"))
+        open(Path(__file__).parent.parent.parent.joinpath("config", "db.yaml"))
     )
     conn_str = f"mysql+pymysql://{db['USER']}:{db['PW']}@{db['HOST']}:{db['PORT']}/{db['SCHEMA']}"
     with create_engine(conn_str).connect() as conn:

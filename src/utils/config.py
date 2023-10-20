@@ -1,5 +1,6 @@
-import os, yaml
+import yaml
 from datetime import datetime as dt
+from pathlib import Path
 
 
 class Config:
@@ -7,9 +8,7 @@ class Config:
         self,
         cfg=yaml.safe_load(
             open(
-                os.path.join(
-                    os.path.dirname(__file__), "..", "..", "config", "config.yaml"
-                ),
+                Path(__file__).parent.parent.parent.joinpath("config", "config.yaml"),
                 "r",
             )
         ),

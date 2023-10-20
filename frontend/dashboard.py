@@ -1,8 +1,8 @@
-import os
 import pandas as pd
 import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
+from pathlib import Path
 
 
 # CONFIG
@@ -14,12 +14,12 @@ st.set_page_config(
 
 
 # DATA
-data_dir = os.path.join(os.path.dirname(__file__), "data")
-predictions = pd.read_csv(os.path.join(data_dir, "test_predictions.csv"))
-performance = pd.read_csv(os.path.join(data_dir, "test_performance.csv"))
-trades = pd.read_csv(os.path.join(data_dir, "trades.csv")).drop(columns=["ID"])
-trades_statistics = pd.read_csv(os.path.join(data_dir, "trades_statistics.csv"))
-backtest = pd.read_csv(os.path.join(data_dir, "backtest.csv"))
+data_dir = Path(__file__).parent / "data"
+predictions = pd.read_csv(data_dir / "test_predictions.csv")
+performance = pd.read_csv(data_dir / "test_performance.csv")
+trades = pd.read_csv(data_dir / "trades.csv").drop(columns=["ID"])
+trades_statistics = pd.read_csv(data_dir / "trades_statistics.csv")
+backtest = pd.read_csv(data_dir / "backtest.csv")
 
 
 # PREDICTIONS

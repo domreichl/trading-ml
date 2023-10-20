@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 
 from utils.data_classes import MultipleTimeSeries
 from utils.data_preprocessing import preprocess_data
@@ -37,13 +37,13 @@ class UnitTestDataTrimmer:
 
 
 mts = UnitTestDataTrimmer(
-    os.path.join(os.path.dirname(__file__), "test_data.csv"), days_to_keep=25
+    Path(__file__).parent.joinpath("test_data.csv"), days_to_keep=25
 ).get_mts()
 
 
 def test_base_fit_predict_arima():
     model_name = "test_arima"
-    if not os.path.isdir(CkptHandler().get_ckpt_dir(model_name)):
+    if not CkptHandler().get_ckpt_dir(model_name).is_dir():
         fit_arima(mts, model_name)
     y_preds = predict_arima(mts, model_name)
     assert stack_array_from_dict(y_preds, 1).shape == (10, 4)
@@ -91,7 +91,7 @@ def test_base_validate_moving_average():
 
 def test_base_fit_predict_prophet():
     model_name = "test_prophet"
-    if not os.path.isdir(CkptHandler().get_ckpt_dir(model_name)):
+    if not CkptHandler().get_ckpt_dir(model_name).is_dir():
         fit_prophet(mts, model_name)
     y_preds = predict_prophet(mts, model_name)
     assert stack_array_from_dict(y_preds, 1).shape == (10, 4)
