@@ -1,6 +1,2 @@
 /validation.csv
-/test_performance.csv
-/test_predictions.csv
-/selection.csv
-/forecast.csv
-/recommendation.json
+/validation_ranked.csv

@@ -1,9 +1,9 @@
 import json, pickle
 import pandas as pd
+from dvclive import Live
 from pathlib import Path
 from prophet.serialize import model_to_json, model_from_json
-
-from utils.config import Config
+from typing import Union, Optional
 
 
 def get_root_dir():
@@ -12,16 +12,16 @@ def get_root_dir():
 
 class DataHandler:
     def __init__(self):
-        self.csv_path = get_root_dir().joinpath("data", Config().data_source + ".csv")
+        self.data_dir = get_root_dir() / "data"
 
-    def load_csv_data(self, path: str = None) -> pd.DataFrame:
-        if path:
-            return pd.read_csv(path, sep=";")
+    def load_csv_data(self, csv_file: Union[str, Path]) -> pd.DataFrame:
+        if isinstance(csv_file, Path):
+            return pd.read_csv(csv_file, sep=";")
         else:
-            return pd.read_csv(self.csv_path, sep=";")
+            return pd.read_csv(self.data_dir.joinpath(csv_file), sep=";")
 
-    def write_csv_data(self, df: pd.DataFrame) -> None:
-        df.to_csv(self.csv_path, sep=";", index=False)
+    def write_csv_data(self, df: pd.DataFrame, csv_name: str) -> None:
+        df.to_csv(self.data_dir.joinpath(csv_name), sep=";", index=False)
 
 
 class ResultsHandler:
@@ -51,7 +51,7 @@ class ResultsHandler:
 class CkptHandler:
     def __init__(self):
         self.ckpts_dir = get_root_dir() / "ckpts"
-        self.ckpt_types = Config().ckpt_types
+        self.ckpt_types = ["cli_", "exp_", "val_", "main_", "prod_", "test_"]
 
     def get_ckpt_dir(self, name: str) -> Path:
         for prefix in self.ckpt_types:
@@ -66,7 +66,7 @@ class CkptHandler:
             path.rmdir()
         path.mkdir()
 
-    def save_model_to_pickle_ckpt(self, model: object, model_name: str) -> None:
+    def save_model_to_pickle_ckpt(self, model: object, model_name: str) -> Path:
         ckpt_dir = self.get_ckpt_dir(model_name)
         if not ckpt_dir.is_dir():
             ckpt_dir.mkdir()
@@ -74,8 +74,9 @@ class CkptHandler:
         with open(file_path, "wb") as ckpt:
             pickle.dump(model, ckpt)
         print(f"Saved model to '{file_path}'")
+        return file_path
 
-    def load_model_from_pickle_ckpt(self, model_name: str) -> object or None:
+    def load_model_from_pickle_ckpt(self, model_name: str) -> Optional[object]:
         file_path = self.get_ckpt_dir(model_name).joinpath(model_name + ".pickle")
         if file_path.is_file():
             with open(file_path, "rb") as ckpt:
@@ -86,7 +87,7 @@ class CkptHandler:
             print(f"No model checkpoint for '{file_path}' available")
             return None
 
-    def save_model_to_json_ckpt(self, model: object, model_name: str) -> None:
+    def save_model_to_json_ckpt(self, model: object, model_name: str) -> Path:
         ckpt_dir = self.get_ckpt_dir(model_name)
         if not ckpt_dir.is_dir():
             ckpt_dir.mkdir()
@@ -94,8 +95,9 @@ class CkptHandler:
         with open(file_path, "w") as ckpt:
             ckpt.write(model_to_json(model))
         print(f"Saved model to '{file_path}'")
+        return file_path
 
-    def load_model_from_json_ckpt(self, model_name: str) -> object or None:
+    def load_model_from_json_ckpt(self, model_name: str) -> Optional[object]:
         file_path = self.get_ckpt_dir(model_name).joinpath(model_name + ".json")
         if file_path.is_file():
             with open(file_path, "r") as ckpt:

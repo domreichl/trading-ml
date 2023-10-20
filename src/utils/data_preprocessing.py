@@ -1,7 +1,8 @@
-import yaml
 import numpy as np
 import pandas as pd
+from pathlib import Path
 from sklearn.preprocessing import MinMaxScaler
+from typing import Union
 
 from utils.config import Config
 from utils.data_classes import MultipleTimeSeries
@@ -102,8 +103,7 @@ class DataPreprocessor:
         return self.mts
 
 
-def preprocess_data(
-    df: pd.DataFrame = DataHandler().load_csv_data(),
-    cfg: Config = Config(),
-) -> MultipleTimeSeries:
+def preprocess_data(csv_file: Union[str, Path]) -> MultipleTimeSeries:
+    df = DataHandler().load_csv_data(csv_file)
+    cfg = Config()
     return DataPreprocessor(df, cfg).get_mts()

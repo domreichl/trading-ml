@@ -1,18 +1,13 @@
 ## TODO
 1. DVC tracking:
-
+    - add metrics to dvc.yaml
+    - reset model_config: n_epochs=10 & n_validations=50
     - simplify handling of model prefixes ("prod_" etc.)
         - in .gto file
         - dev/exp
         - val/eval
         - prod/stage/forecast
-    - 3 separate pipelines:
-        1. "validation" (need not run with prod pipeline, only 1x per quarter)
-        2. "produtction"
-            - renamed from 'pipeline' & without validation
-            - in config.yaml, specify: prod: True/False based on validation results
-        3. "experimentation"
-            - experimentation pipeline ('dvc exp [run, show, diff]' commands) with "dev_" or "exp_" models
+    - experimentation pipeline ('dvc exp [run, show, diff]' commands) with "dev_" or "exp_" models
     - think about how to best track & compare performances with DVC:
         - [!!] use 'dvclive' (see bookmarks folder "DVCLive")
         - use DVC 'params': "start_date" & "end_date"
@@ -24,8 +19,8 @@
     - for every week: simulate a trade & track trading performance -> update all relevant performance files
     - refactor trades.py
     - analyze the results with DVC VSCode extension
-    - update the frontend
-2. serious modeling:
+2. update cli, frontend, and readme
+3. serious modeling:
     - improve all model prototypes
     - models for leveraged positions:
         - 1-4 day forecast horizon (open on Mon/Tue, sell on Fri)

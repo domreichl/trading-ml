@@ -1,0 +1,28 @@
+stages:
+  prepare:
+    cmd: python prepare.py
+    deps:
+      - prepare.py
+      - params.yaml
+      - ../../config/data_config.yaml
+    params:
+      - start_date
+      - end_date
+    outs:
+      - ../../data/val.csv
+  train:
+    cmd: python train.py
+    deps:
+      - train.py
+      - ../../data/val.csv
+      - ../../config/model_config.yaml
+    outs:
+      - ../../ckpts/val
+  validate:
+    cmd: python validate.py
+    deps:
+      - validate.py
+      - ../../ckpts/val
+    outs:
+      - ../../results/validation.csv
+      - ../../results/validation_ranked.csv

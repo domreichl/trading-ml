@@ -1,35 +1,3 @@
-data:
-  source: wiener_boerse
-  start_date: "2000-01-03"
-  end_date: "2023-09-22"
-  date_format: "%Y-%m-%d"
-
-models:
-  arima:
-    store_ckpt: True
-  exponential_smoothing:
-    store_ckpt: False
-  LGBMRegressor:
-    store_ckpt: False
-  lstm:
-    store_ckpt: True
-  moving_average_recursive:
-    store_ckpt: False
-  prophet:
-    store_ckpt: True
-  XGBRegressor:
-    store_ckpt: False
-
-model_config:
-  look_back_window_size: 260
-  test_days: 10
-  n_validations: 50
-  ckpt_types:
-    - cli_
-    - eval_
-    - prod_
-    - test_
-
 securities:
   AT0000999982: ATX
   AT0000743059: omv-ag-AT0000743059
@@ -48,3 +16,4 @@ securities:
   AT0000A21KS2: immofinanz-ag-AT0000A21KS2
   AT0000641352: ca-immobilien-anlagen-ag-AT0000641352
   AT0000821103: uniqa-insurance-group-ag-AT0000821103
+date_format: "%Y-%m-%d"

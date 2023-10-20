@@ -1,0 +1,5 @@
+metrics:
+- src/validation/dvclive/metrics.json
+plots:
+- src/validation/dvclive/plots/metrics:
+    x: step

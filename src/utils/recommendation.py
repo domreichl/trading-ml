@@ -1,13 +1,11 @@
 import numpy as np
 import pandas as pd
 
-from pipeline.select import pick_top_models
 from utils.data_processing import compute_predicted_return, compute_predicted_returns
 from utils.file_handling import ResultsHandler
 
 
 def recommend_stock(
-    top_models: list[str],
     current_prices: dict,
     position_type: str = "long",
     optimize: str = "return",
@@ -15,7 +13,7 @@ def recommend_stock(
 ) -> str:
     candidates = {}
     forecast = ResultsHandler().load_csv_results("forecast")
-    for model_name in top_models:
+    for model_name in forecast["Model"].unique():
         predicted_returns = compute_predicted_returns(
             current_prices,
             forecast[forecast["Model"] == model_name],
@@ -84,15 +82,13 @@ def pick_top_stock(candidates: dict, position_type: str, optimize: str) -> tuple
 
 
 def recommend_close_position(
-    ISIN: str, current_price: float, position_type: str
+    forecast: pd.DataFrame, current_price: float, position_type: str
 ) -> bool:
-    forecast = ResultsHandler().load_csv_results("forecast")
-    forecast = forecast[forecast["ISIN"] == ISIN]
     predicted_returns = []
-    for model_name in pick_top_models(position_type, prod=True):
+    for model_name in forecast["Model"].unique():
         predicted_returns.append(
             compute_predicted_return(
-                current_price, forecast[forecast["Model"] == "prod_" + model_name]
+                current_price, forecast[forecast["Model"] == model_name]
             )
         )
     predicted_returns = np.array(predicted_returns)

@@ -3,45 +3,36 @@ stages:
     cmd: python prepare.py
     deps:
       - prepare.py
-      - ../../config/config.yaml
+      - params.yaml
+      - ../../config/data_config.yaml
+    params:
+      - start_date
+      - end_date
     outs:
-      - ../../data/wiener_boerse.csv
+      - ../../data/main.csv
   train:
     cmd: python train.py
     deps:
       - train.py
-      - ../../config/config.yaml
-      - ../../data/wiener_boerse.csv
+      - ../../data/main.csv
+      - ../../config/model_config.yaml
+      - ../../results/validation_ranked.csv
     outs:
-      - ../../ckpts/eval
-  validate:
-    cmd: python validate.py
-    deps:
-      - validate.py
-      - ../../ckpts/eval
-    outs:
-      - ../../results/validation.csv
+      - ../../ckpts/main
   test:
     cmd: python test.py
     deps:
       - test.py
-      - ../../ckpts/eval
+      - ../../ckpts/main
     outs:
       - ../../results/test_performance.csv
       - ../../results/test_predictions.csv
-  select:
-    cmd: python select.py
-    deps:
-      - select.py
-      - ../../results/validation.csv
-      - ../../results/test_performance.csv
-    outs:
-      - ../../results/selection.csv
+      - ../../results/test_ranked.csv
   forecast:
     cmd: python forecast.py
     deps:
       - forecast.py
-      - ../../results/selection.csv
+      - ../../results/test_ranked.csv
     outs:
       - ../../ckpts/prod
       - ../../results/forecast.csv

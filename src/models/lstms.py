@@ -29,7 +29,7 @@ class LSTMRegression:
             outputs.append(x_i)
         self.model = Model(inputs=inputs, outputs=tf.stack(outputs, 2))
 
-    def train(self, batch_size: int = 30, epochs: int = 10) -> Model:
+    def train(self, batch_size: int, epochs: int) -> Model:
         self.model.compile(loss="mean_squared_error", optimizer="adam")
         self.model.fit(
             self.mts.x_train,

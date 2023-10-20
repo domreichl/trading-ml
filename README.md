@@ -10,30 +10,31 @@
 4. Compile project: `python -m piptools compile pyproject.toml`
 5. Install project: `python -m pip install -e .`
 
-### Usage
-1. Update *config.yaml*
-2. Download & preprocess data: `trading-ml prepare`
-3. Train a model: `trading-ml train [model_name]`
-4. Validate a model on the train set: `trading-ml validate [model_name]`
-5. Evaluate a model on the test set: `trading-ml test [model_name]`
-6. Generate test set predictions: `trading-ml predict [model_name] [ISIN]`
-7. Generate an out-of-sample forecast: `trading-ml forecast [model_name] [ISIN]`
-8. Get a trading recommendation:
+### DVC Pipelines
+1. Main pipeline in src/main
+2. Validation pipeline in src/validation
+3. Experimentation pipeline src/experimentation
+
+### CLI Usage
+1. Download and preprocess cli_ data: `trading-ml prepare`
+2. Train a cli_ model: `trading-ml train [model_name]`
+3. Validate a cli_ model on the train set: `trading-ml validate [model_name]`
+4. Evaluate a cli_ model on the test set: `trading-ml test [model_name]`
+5. Generate cli_ test set predictions: `trading-ml predict [model_name] [ISIN]`
+6. Use prod_ models to generate an out-of-sample forecast: `trading-ml forecast [ISIN]`
+7. Get a trading recommendation from prod_ models:
     - `trading-ml recommend-open [position_type] [optimize]`
     - `trading-ml recommend-close [position_type] [ISIN]`
-9. Plot performance metrics:
-    - `trading-ml plot-metrics optimization`
-    - `trading-ml plot-metrics validation`
-    - `trading-ml plot-metrics evaluation`
-10. Explore trading strategies: `trading-ml backtest`
-11. Fetch trades to compute statistics: `trading-ml fetch-trades`
-12. Run production workflow: `dvc repro` in src/pipeline
+8. Plot performance metrics: `trading-ml plot-metrics [metrics_type]`
+9. Explore trading strategies: `trading-ml backtest`
+10. Fetch trades to compute statistics: `trading-ml fetch-trades`
 
-### Parameters
-- [model_name] ∈ config.yaml:models
-- [ISIN] ∈ config.yaml:securities
+### CLI Parameters
+- [model_name] ∈ model_config.yaml:models
+- [ISIN] ∈ data_config.yaml:securities
 - [position_type] ∈ {short, long}
 - [optimize] ∈ {risk, return}
+- [metrics_type] ∈ {validation, evaluation}
 
 ### Visualization
 - https://dominicreichl.com/ml/stock-price-prediction/

@@ -22,18 +22,16 @@ from models.lstms import LSTMRegression
 
 
 class UnitTestDataTrimmer:
-    def __init__(self, path: str, days_to_keep: int):
-        self.test_data = DataHandler().load_csv_data(path)
-        self.days_to_keep = days_to_keep
+    def __init__(self, path: Path, days_to_keep: int):
+        self.mts = preprocess_data(path)
+        self.mts.x_train = self.mts.x_train[-days_to_keep:]
+        self.mts.y_train = self.mts.y_train[-days_to_keep:]
+        self.mts.dates = self.mts.dates[
+            : days_to_keep + self.mts.x_train.shape[1] + len(self.mts.y_test)
+        ]
 
     def get_mts(self) -> MultipleTimeSeries:
-        mts = preprocess_data(self.test_data)
-        mts.x_train = mts.x_train[-self.days_to_keep :]
-        mts.y_train = mts.y_train[-self.days_to_keep :]
-        mts.dates = mts.dates[
-            : self.days_to_keep + mts.x_train.shape[1] + len(mts.y_test)
-        ]
-        return mts
+        return self.mts
 
 
 mts = UnitTestDataTrimmer(

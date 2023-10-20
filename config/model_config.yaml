@@ -1,0 +1,13 @@
+models:
+  - arima
+  - exponential_smoothing
+  - LGBMRegressor
+  #- lstm
+  - moving_average_recursive
+  - prophet
+  - XGBRegressor
+look_back_window_size: 260
+test_days: 10
+batch_size: 30
+n_epochs: 1
+n_validations: 1

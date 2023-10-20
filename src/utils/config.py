@@ -4,25 +4,21 @@ from pathlib import Path
 
 
 class Config:
-    def __init__(
-        self,
-        cfg=yaml.safe_load(
-            open(
-                Path(__file__).parent.parent.parent.joinpath("config", "config.yaml"),
-                "r",
-            )
-        ),
-    ):
-        self.data_source: str = cfg["data"]["source"]
-        self.date_format: str = cfg["data"]["date_format"]
-        self.start_date: dt = dt.strptime(cfg["data"]["start_date"], self.date_format)
-        self.end_date: dt = dt.strptime(cfg["data"]["end_date"], self.date_format)
-        self.securities: dict = cfg["securities"]
+    def __init__(self):
+        cfg_dir = Path(__file__).parent.parent.parent / "config"
 
-        self.models: dict = cfg["models"]
-        self.model_names: list = list(self.models.keys())
+        data_cfg = yaml.safe_load(open(cfg_dir.joinpath("data_config.yaml"), "r"))
+        self.securities: dict = data_cfg["securities"]
+        self.date_format: str = data_cfg["date_format"]
 
-        self.look_back_window_size: int = cfg["model_config"]["look_back_window_size"]
-        self.test_days: int = cfg["model_config"]["test_days"]
-        self.n_validations: int = cfg["model_config"]["n_validations"]
-        self.ckpt_types: list = cfg["model_config"]["ckpt_types"]
+        model_cfg = yaml.safe_load(open(cfg_dir.joinpath("model_config.yaml"), "r"))
+        self.models: list = model_cfg["models"]
+        self.look_back_window_size: int = model_cfg["look_back_window_size"]
+        self.test_days: int = model_cfg["test_days"]
+        self.batch_size: int = model_cfg["batch_size"]
+        self.n_epochs: int = model_cfg["n_epochs"]
+        self.n_validations: int = model_cfg["n_validations"]
+
+    def set_dates(self, start_date: str, end_date: str) -> None:
+        self.start_date = dt.strptime(start_date, self.date_format)
+        self.end_date = dt.strptime(end_date, self.date_format)

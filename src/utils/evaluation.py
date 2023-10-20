@@ -7,6 +7,49 @@ from utils.data_processing import (
     stack_array_from_dict,
     get_final_predictions_from_dict,
 )
+from utils.file_handling import ResultsHandler
+
+
+def rank_models(test_performance: pd.DataFrame = None, n: int = 3) -> pd.DataFrame:
+    if not test_performance:
+        performance = ResultsHandler().load_csv_results("test_performance")
+    performance = performance[performance["Metric"].isin(["Precision", "NPV", "SMAPE"])]
+    position_types, top_models, ranks = [], [], []
+    for position_type in ["long", "short"]:
+        sorted_ratings = rate_models(performance, position_type)
+        for i, model_name in enumerate(list(sorted_ratings.keys())[:n]):
+            position_types.append(position_type)
+            top_models.append(model_name)
+            ranks.append(i + 1)
+    return pd.DataFrame(
+        {"Position": position_types, "Rank": ranks, "Model": top_models}
+    )
+
+
+def rate_models(performance: pd.DataFrame, position_type: str) -> dict:
+    ratings = {}
+    for model_name in performance["Model"].unique():
+        metrics = performance[performance["Model"] == model_name]
+        if position_type == "long":
+            sign_prediction_score = metrics[metrics["Metric"] == "Precision"][
+                "Score"
+            ].iloc[0]
+        elif position_type == "short":
+            sign_prediction_score = metrics[metrics["Metric"] == "NPV"]["Score"].iloc[0]
+        ratings[model_name] = round(
+            sign_prediction_score
+            / metrics[metrics["Metric"] == "SMAPE"]["Score"].iloc[0]
+            * 100,
+            2,
+        )
+    sorted_ratings = dict(
+        sorted(ratings.items(), key=lambda item: item[1], reverse=True)
+    )
+    print(
+        f"\nRatings of top {performance['Model'].nunique()} validated models ({position_type} position):"
+    )
+    [print(f" [{i+1}] {k}: {v}") for i, (k, v) in enumerate(sorted_ratings.items())]
+    return sorted_ratings
 
 
 def compute_prediction_performances(

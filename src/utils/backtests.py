@@ -12,7 +12,7 @@ from utils.file_handling import ResultsHandler
 def run_backtests(
     buy_price: float = 1000, buy_fee: float = 0.99, start_year: int = 2000
 ) -> None:
-    mts = preprocess_data()
+    mts = preprocess_data("cli.csv")
     log_returns = stack_array_from_dict(mts.log_returns, 0)
     returns = np.exp(log_returns)
     visualize_averaged_yearly_log_returns(log_returns, start_year)

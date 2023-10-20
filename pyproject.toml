@@ -30,6 +30,7 @@ dependencies = [
     "dvc-gdrive==2.20.0",
     "plotly==5.17.0",
     "streamlit==1.27.2",
+    "dvclive==3.0.1",
     # "pandas-datareader==0.10.0",
     # "pandas-market-calendars==4.1.4",
     # "ta==0.10.2",

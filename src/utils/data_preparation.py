@@ -7,11 +7,10 @@ from utils.config import Config
 from utils.file_handling import DataHandler
 
 
-def prepare_data():
-    cfg = Config()
+def prepare_data(csv_name: str, cfg: Config):
     df = download_data(cfg.start_date, cfg.end_date, cfg.securities)
     df = impute_missing_data(df, get_weekdays(cfg.start_date, cfg.end_date))
-    DataHandler().write_csv_data(df)
+    DataHandler().write_csv_data(df, csv_name)
 
 
 def download_data(
@@ -91,7 +90,3 @@ def impute_missing_data(df: pd.DataFrame, weekdays: list) -> pd.DataFrame:
         dfs.append(df_isin)
 
     return pd.concat(dfs)
-
-
-if __name__ == "__main__":
-    prepare_data()
