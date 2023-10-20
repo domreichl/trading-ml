@@ -1,7 +1,6 @@
 ## TODO
 1. DVC tracking:
-    - add metrics to dvc.yaml
-    - reset model_config: n_epochs=10 & n_validations=50
+    - add metrics to dvc.yaml in main -> dvc repro in src/main
     - simplify handling of model prefixes ("prod_" etc.)
         - in .gto file
         - dev/exp
@@ -19,7 +18,7 @@
     - for every week: simulate a trade & track trading performance -> update all relevant performance files
     - refactor trades.py
     - analyze the results with DVC VSCode extension
-2. update cli, frontend, and readme
+2. update cli, visualization, frontend, and readme
 3. serious modeling:
     - improve all model prototypes
     - models for leveraged positions:

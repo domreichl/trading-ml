@@ -24,5 +24,6 @@ stages:
       - validate.py
       - ../../ckpts/val
     outs:
-      - ../../results/validation.csv
       - ../../results/validation_ranked.csv
+    metrics:
+      - ../../results/validation.json

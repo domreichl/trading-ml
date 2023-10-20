@@ -1,0 +1,68 @@
+schema: '2.0'
+stages:
+  prepare:
+    cmd: python prepare.py
+    deps:
+    - path: ../../config/data_config.yaml
+      hash: md5
+      md5: 0dc87b324c12218372ddf6a9e2daf984
+      size: 804
+    - path: params.yaml
+      hash: md5
+      md5: 0b6affdbe7e9203c0675c9abbbc872e8
+      size: 47
+    - path: prepare.py
+      hash: md5
+      md5: 9306145db18e04fda888905620accdf9
+      size: 295
+    params:
+      params.yaml:
+        end_date: '2023-09-22'
+        start_date: '2000-01-03'
+    outs:
+    - path: ../../data/val.csv
+      hash: md5
+      md5: 96b8711a53396327041c3b56e235ef90
+      size: 3209421
+  train:
+    cmd: python train.py
+    deps:
+    - path: ../../config/model_config.yaml
+      hash: md5
+      md5: 547b3b95f8095ddd3a3f973fee237714
+      size: 215
+    - path: ../../data/val.csv
+      hash: md5
+      md5: 96b8711a53396327041c3b56e235ef90
+      size: 3209421
+    - path: train.py
+      hash: md5
+      md5: fc990fc867c02fd9a4fd05f41dff8371
+      size: 312
+    outs:
+    - path: ../../ckpts/val
+      hash: md5
+      md5: ccff7186e0184d70f81e6ea34d6cd733.dir
+      size: 14870383
+      nfiles: 39
+  validate:
+    cmd: python validate.py
+    deps:
+    - path: ../../ckpts/val
+      hash: md5
+      md5: ccff7186e0184d70f81e6ea34d6cd733.dir
+      size: 14870383
+      nfiles: 39
+    - path: validate.py
+      hash: md5
+      md5: 7090f71c441fb39cd4399019cb07355a
+      size: 966
+    outs:
+    - path: ../../results/validation.json
+      hash: md5
+      md5: 421e614297631fea874dab1e3e061746
+      size: 747
+    - path: ../../results/validation_ranked.csv
+      hash: md5
+      md5: 74933be3313a1cc105d8f483c5dce3ca
+      size: 116

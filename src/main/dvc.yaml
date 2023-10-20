@@ -16,7 +16,6 @@ stages:
       - train.py
       - ../../data/main.csv
       - ../../config/model_config.yaml
-      - ../../results/validation_ranked.csv
     outs:
       - ../../ckpts/main
   test:
