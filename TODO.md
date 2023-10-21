@@ -2,11 +2,9 @@
 1. analyze trades:
     - 230922: Desktop/recommendation_230922.json -> add trade in DB
     - 230929: recommendation.json in latest git tag (current status) -> add trade in DB
+    - how to best manage metrics over time? -> git tags -> select in Iterative Studio -> Diffs, Trends, and CSV-Export possible!
     - analyze trades w.r.t. metrics in performance.ipynb
-    - think about how to best manage metrics over time
-        a. custom: results files in separate folders with date stamp (git tag)
-        b. DVC VSCode extension
-        c. Iterative Studio
+    - if analysis works well and doesn't need further metrics, continue with [2] below
 2. continue until 231019: update end date > dvc repro > dvc push > git add > git commit > git tag > git push > git push --tags > new trade
 3. serious modeling:
     - pipeline "experimentation" with "exp_" data and models
