@@ -1,12 +1,14 @@
 ## TODO
-0. current:
-    - analyze the results with DVC VSCode extension + Iterative Studio
-    - execute "main" for every week until End Date == 20.10.
-    - for every week: simulate a trade & track trading performance -> update all relevant performance files
-1. Simulate trades for:
-    - 230922 (see Desktop)
-    - 230929 (current git tag)
-2. serious modeling:
+1. analyze trades:
+    - 230922: Desktop/recommendation_230922.json -> add trade in DB
+    - 230929: recommendation.json in latest git tag (current status) -> add trade in DB
+    - analyze trades w.r.t. metrics in performance.ipynb
+    - think about how to best manage metrics over time
+        a. custom: results files in separate folders with date stamp (git tag)
+        b. DVC VSCode extension
+        c. Iterative Studio
+2. continue until 231019: update end date > dvc repro > dvc push > git add > git commit > git tag > git push > git push --tags > new trade
+3. serious modeling:
     - pipeline "experimentation" with "exp_" data and models
         - see bookmarks folder "DVCLive" & "ModelRegistry"
         - commands: 'dvc exp [run, show, diff]'
