@@ -17,7 +17,7 @@ from utils.evaluation import (
     process_metrics,
 )
 from utils.file_handling import DataHandler
-from utils.trades import load_trades_from_database, compute_trading_results
+from utils.trades import load_trades_from_database, compute_trading_statistics
 
 
 def test_data_classes_mts_merge_features():
@@ -131,15 +131,14 @@ def test_evaluation_process_metrics():
     assert int(performance["Score"].loc[performance["Metric"] == "MetricB"][1]) == 2
 
 
-#@pytest.mark.skip(reason="might fail when IP changes")
+# @pytest.mark.skip(reason="might fail when IP changes")
 def test_trades_load_trades_from_database():
     trades = load_trades_from_database()
     assert len(trades) > 1
 
 
 def test_trades_compute_statistics():
-    statistics, performance = compute_trading_results(
+    statistics = compute_trading_statistics(
         DataHandler().load_csv_data(Path(__file__).parent.joinpath("test_trades.csv"))
     )
     assert len(statistics) == 16
-    assert len(performance.columns) == 7

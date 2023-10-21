@@ -34,7 +34,7 @@ def compute_market_signals(prices: np.array) -> tuple[int, int]:
     bbb = bollinger_band_breakout(prices)
     state += bbb
 
-    return trend, state
+    return trend, state, macdc, fso, bbb
 
 
 def moving_average_convergence_divergence_crossover(

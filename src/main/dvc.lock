@@ -1,0 +1,22 @@
+schema: '2.0'
+stages:
+  prepare:
+    cmd: python prepare.py
+    deps:
+    - path: ../../config/data_config.yaml
+      hash: md5
+      md5: 0dc87b324c12218372ddf6a9e2daf984
+      size: 804
+    - path: prepare.py
+      hash: md5
+      md5: 890fc346dcb7dfb59c6c3cc1d47a1715
+      size: 231
+    params:
+      prepare_params.yaml:
+        end_date: '2023-09-22'
+        start_date: '2000-01-03'
+    outs:
+    - path: ../../data/main.csv
+      hash: md5
+      md5: 96b8711a53396327041c3b56e235ef90
+      size: 3209421

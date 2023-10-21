@@ -41,5 +41,6 @@ stages:
     deps:
       - recommend.py
       - ../../results/forecast.csv
-    outs:
-      - ../../results/recommendation.json
+    metrics:
+      - ../../results/recommendation.json:
+          cache: false

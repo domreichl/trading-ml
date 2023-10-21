@@ -22,14 +22,19 @@ for position_type in ["short", "long"]:
             optimize,
             results["buy_price"],
         )
-        trend, state = compute_market_signals(mts.close_prices[top_stock])
+        trend, state, macdc, fso, bbb = compute_market_signals(
+            mts.close_prices[top_stock]
+        )
         trend, state = interpret_market_signals(top_stock, trend, state)
         results[position_type][optimize] = {
             "Top Stock": top_stock,
             "Predicted Return": predicted_return,
             "Model Agreement": model_agreement,
-            "Market State": trend,
             "Market Trend": state,
+            "MACD Crossover": macdc,
+            "Market State": trend,
+            "Fast Stochastic Oscillator": fso,
+            "Bollinger Band Breakout": bbb,
         }
 
 ResultsHandler().write_json_results(results, "recommendation")

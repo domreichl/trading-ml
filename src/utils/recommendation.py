@@ -56,29 +56,36 @@ def pick_top_stock(candidates: dict, position_type: str, optimize: str) -> tuple
     stocks = {}
     candidates = pd.DataFrame(candidates).transpose()
     for col in candidates.columns:
-        stocks[col] = {}
-        stocks[col]["NaNs"] = candidates[col].isna().sum()
-        stocks[col]["MeanPredictedReturn"] = candidates[col].mean()
+        stocks[col] = {
+            "ModelsNotFavoringStock": candidates[col].isna().sum(),
+            "MeanPredictedReturn": candidates[col].mean(),
+        }
     stocks = pd.DataFrame(stocks).transpose()
     if optimize == "risk":
-        top_stocks = stocks[stocks["NaNs"] == stocks["NaNs"].min()]
+        stocks = stocks[
+            stocks["ModelsNotFavoringStock"] == stocks["ModelsNotFavoringStock"].min()
+        ].copy()
     elif optimize == "return":
-        top_stocks = stocks.copy()
-    if position_type == "long":
-        top_stock = top_stocks[
-            top_stocks["MeanPredictedReturn"] == top_stocks["MeanPredictedReturn"].max()
-        ].copy()
-    elif position_type == "short":
-        top_stock = top_stocks[
-            top_stocks["MeanPredictedReturn"] == top_stocks["MeanPredictedReturn"].min()
-        ].copy()
+        pass  # accept that model agreement may be low
+    top_stock = get_most_lucrative_stock(stocks, position_type)
     top_stock["ModelAgreement"] = (
-        (len(candidates) - top_stock["NaNs"]) / len(candidates) * 100
+        (len(candidates) - top_stock["ModelsNotFavoringStock"]) / len(candidates) * 100
     )
     ISIN = top_stock.index[0]
     predicted_return = round((top_stock["MeanPredictedReturn"].iloc[0]), 5)
     model_agreement = round((top_stock["ModelAgreement"].iloc[0]))
     return ISIN, predicted_return, model_agreement
+
+
+def get_most_lucrative_stock(stocks: pd.DataFrame, position_type: str) -> pd.DataFrame:
+    if position_type == "long":
+        return stocks[
+            stocks["MeanPredictedReturn"] == stocks["MeanPredictedReturn"].max()
+        ]
+    elif position_type == "short":
+        return stocks[
+            stocks["MeanPredictedReturn"] == stocks["MeanPredictedReturn"].min()
+        ]
 
 
 def recommend_close_position(

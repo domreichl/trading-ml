@@ -11,7 +11,7 @@ from utils.file_handling import ResultsHandler
 cfg = Config()
 rh = ResultsHandler()
 performance, predictions = [], []
-mts = preprocess_data("pred.csv")
+mts = preprocess_data("main.csv")
 returns_actual = mts.get_test_returns()
 prices_actual = mts.get_test_prices()
 dates = mts.get_test_dates()
