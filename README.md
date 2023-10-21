@@ -33,8 +33,8 @@
 - [model_name] ∈ model_config.yaml:models
 - [ISIN] ∈ data_config.yaml:securities
 - [position_type] ∈ {short, long}
-- [optimize] ∈ {risk, return}
-- [metrics_type] ∈ {validation, evaluation}
+- [optimize] ∈ {risk, reward}
+- [metrics_type] ∈ {validation, test}
 
 ### Visualization
 - https://dominicreichl.com/ml/stock-price-prediction/

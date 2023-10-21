@@ -1,17 +1,9 @@
 ## TODO
-0. finish current tasks:
+0. current:
     - analyze the results with DVC VSCode extension + Iterative Studio
-    - execute "main"
-    - analyze the results again
-    - dvc + git push
-1. weekly updates:
-    - refactor trades.py
-    - plan:
     - execute "main" for every week until End Date == 20.10.
     - for every week: simulate a trade & track trading performance -> update all relevant performance files
-    - analyze the results with DVC VSCode extension
-2. update cli, visualization, frontend, and readme
-3. serious modeling:
+1. serious modeling:
     - pipeline "experimentation" with "exp_" data and models
         - see bookmarks folder "DVCLive" & "ModelRegistry"
         - commands: 'dvc exp [run, show, diff]'

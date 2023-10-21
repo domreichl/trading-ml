@@ -1,4 +1,15 @@
 {
+    "main_exponential_smoothing": {
+        "Precision": 0.52,
+        "Recall": 0.642,
+        "F1": 0.5746,
+        "NPV": 0.5857,
+        "MAE": 0.0107,
+        "RMSE": 0.0168,
+        "MASE": 0.5977,
+        "RMSSE": 0.64,
+        "SMAPE": 1.9023
+    },
     "main_prophet": {
         "Precision": 0.5618,
         "Recall": 0.6173,
@@ -9,16 +20,5 @@
         "MASE": 0.6367,
         "RMSSE": 0.6622,
         "SMAPE": 2.523
-    },
-    "main_LGBMRegressor": {
-        "Precision": 0.4884,
-        "Recall": 0.7778,
-        "F1": 0.6,
-        "NPV": 0.561,
-        "MAE": 0.011,
-        "RMSE": 0.0172,
-        "MASE": 0.6125,
-        "RMSSE": 0.6565,
-        "SMAPE": 2.2538
     }
 }

@@ -38,16 +38,16 @@ stages:
     outs:
     - path: ../../ckpts/val
       hash: md5
-      md5: f85286b59d437113eea5783eaacfa095.dir
-      size: 14870384
+      md5: 742cc080897bbea94f735c92130464aa.dir
+      size: 14870383
       nfiles: 39
   validate:
     cmd: python validate.py
     deps:
     - path: ../../ckpts/val
       hash: md5
-      md5: f85286b59d437113eea5783eaacfa095.dir
-      size: 14870384
+      md5: 742cc080897bbea94f735c92130464aa.dir
+      size: 14870383
       nfiles: 39
     - path: validate.py
       hash: md5
@@ -59,9 +59,9 @@ stages:
     outs:
     - path: ../../results/validation_metrics.json
       hash: md5
-      md5: 5739632f8c7798a62601e76aeea86d59
-      size: 989
+      md5: f78d9d27c6a66d27d2cd3662ac8fa1ab
+      size: 993
     - path: ../../results/validation_ranked.csv
       hash: md5
-      md5: 4ab5139e4e623c89f58e95e43f55162b
-      size: 45
+      md5: 622d9303466640f031ba27a003ae726e
+      size: 53

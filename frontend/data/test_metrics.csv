@@ -1,4 +1,13 @@
 Model,Target,Metric,Score
+main_exponential_smoothing,Sign,Precision,0.52
+main_exponential_smoothing,Sign,Recall,0.642
+main_exponential_smoothing,Sign,F1,0.5746
+main_exponential_smoothing,Sign,NPV,0.5857
+main_exponential_smoothing,Return,MAE,0.0107
+main_exponential_smoothing,Return,RMSE,0.0168
+main_exponential_smoothing,Return,MASE,0.5977
+main_exponential_smoothing,Return,RMSSE,0.64
+main_exponential_smoothing,Price,SMAPE,1.9023
 main_prophet,Sign,Precision,0.5618
 main_prophet,Sign,Recall,0.6173
 main_prophet,Sign,F1,0.5882
@@ -8,12 +17,3 @@ main_prophet,Return,RMSE,0.0174
 main_prophet,Return,MASE,0.6367
 main_prophet,Return,RMSSE,0.6622
 main_prophet,Price,SMAPE,2.523
-main_LGBMRegressor,Sign,Precision,0.4884
-main_LGBMRegressor,Sign,Recall,0.7778
-main_LGBMRegressor,Sign,F1,0.6
-main_LGBMRegressor,Sign,NPV,0.561
-main_LGBMRegressor,Return,MAE,0.011
-main_LGBMRegressor,Return,RMSE,0.0172
-main_LGBMRegressor,Return,MASE,0.6125
-main_LGBMRegressor,Return,RMSSE,0.6565
-main_LGBMRegressor,Price,SMAPE,2.2538

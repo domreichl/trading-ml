@@ -30,7 +30,7 @@ def load_trades_from_database() -> pd.DataFrame:
 
 def compute_trading_statistics(df: pd.DataFrame) -> dict:
     df["NET_PROFIT"] = df["GROSS_PROFIT"] - df["FEES"]
-    df["REWARD"] = (df["SELL_PRICE"] - df["BUY_PRICE"]) / df["BUY_PRICE"]
+    df["REWARD"] = (df["CLOSE_PRICE"] - df["OPEN_PRICE"]) / df["OPEN_PRICE"]
     trades_win = df[df["NET_PROFIT"] > 0]
     trades_loss = df[df["NET_PROFIT"] <= 0]
     statistics_dict = {
@@ -38,11 +38,11 @@ def compute_trading_statistics(df: pd.DataFrame) -> dict:
         "N_TRADES_WIN": len(trades_win),
         "N_TRADES_LOSS": len(trades_loss),
         "WIN_RATE": round(len(trades_win) / len(df) * 100),
-        "TOTAL_VOLUME": (df["BUY_PRICE"] * df["SHARES"]).sum(),
+        "TOTAL_VOLUME": (df["OPEN_PRICE"] * df["SHARES"]).sum(),
         "TOTAL_GROSS_PROFIT": df["GROSS_PROFIT"].sum(),
         "TOTAL_NET_PROFIT": df["NET_PROFIT"].sum(),
         "TOTAL_FEES": df["FEES"].sum(),
-        "AVG_VOLUME": round((df["BUY_PRICE"] * df["SHARES"]).mean(), 2),
+        "AVG_VOLUME": round((df["OPEN_PRICE"] * df["SHARES"]).mean(), 2),
         "AVG_PROFIT": round(df["NET_PROFIT"].mean(), 2),
         "STD_PROFIT": round(df["NET_PROFIT"].std(), 2),
         "MAX_WIN": df["NET_PROFIT"].max(),
