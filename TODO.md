@@ -1,25 +1,20 @@
 ## TODO
-1. DVC tracking:
-    - add metrics to dvc.yaml in main -> dvc repro in src/main
-    - simplify handling of model prefixes ("prod_" etc.)
-        - in .gto file
-        - dev/exp
-        - val/eval
-        - prod/stage/forecast
-    - experimentation pipeline ('dvc exp [run, show, diff]' commands) with "dev_" or "exp_" models
-    - think about how to best track & compare performances with DVC:
-        - [!!] use 'dvclive' (see bookmarks folder "DVCLive")
-        - use DVC 'params': "start_date" & "end_date"
-        - track metrics in .json-format with DVCLive (keeping the CSVs for now)
-        - use DVC 'plots'
-        - use DVC 'artifacts' for model metadata
-    - execute the "production" for every week until End Date == 13.10.
-    - new folder "src/optimization" or "src/experimentation" with dvc.yaml
-    - for every week: simulate a trade & track trading performance -> update all relevant performance files
+0. finish current tasks:
+    - analyze the results with DVC VSCode extension + Iterative Studio
+    - execute "main"
+    - analyze the results again
+    - dvc + git push
+1. weekly updates:
     - refactor trades.py
+    - plan:
+    - execute "main" for every week until End Date == 20.10.
+    - for every week: simulate a trade & track trading performance -> update all relevant performance files
     - analyze the results with DVC VSCode extension
 2. update cli, visualization, frontend, and readme
 3. serious modeling:
+    - pipeline "experimentation" with "exp_" data and models
+        - see bookmarks folder "DVCLive" & "ModelRegistry"
+        - commands: 'dvc exp [run, show, diff]'
     - improve all model prototypes
     - models for leveraged positions:
         - 1-4 day forecast horizon (open on Mon/Tue, sell on Fri)

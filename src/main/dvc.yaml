@@ -3,11 +3,9 @@ stages:
     cmd: python prepare.py
     deps:
       - prepare.py
-      - params.yaml
       - ../../config/data_config.yaml
     params:
-      - start_date
-      - end_date
+      - prepare_params.yaml:
     outs:
       - ../../data/main.csv
   train:
@@ -24,9 +22,12 @@ stages:
       - test.py
       - ../../ckpts/main
     outs:
-      - ../../results/test_performance.csv
+      - ../../results/test_metrics.csv
       - ../../results/test_predictions.csv
       - ../../results/test_ranked.csv
+    metrics:
+      - ../../results/test_metrics.json:
+          cache: false
   forecast:
     cmd: python forecast.py
     deps:

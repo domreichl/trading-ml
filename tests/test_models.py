@@ -49,9 +49,10 @@ def test_base_fit_predict_arima():
 
 
 def test_base_validate_arima():
-    mse, rmse = validate_arima(mts, n_validations=2)
+    mse, rmse, f1 = validate_arima(mts, n_validations=2)
     assert mse > 0
     assert rmse > 0
+    assert f1 > 0
 
 
 def test_base_fit_predict_exponential_smoothing():
@@ -61,9 +62,10 @@ def test_base_fit_predict_exponential_smoothing():
 
 
 def test_base_validate_exponential_smoothing():
-    mse, rmse = validate_exponential_smoothing(mts, n_validations=2)
+    mse, rmse, f1 = validate_exponential_smoothing(mts, n_validations=2)
     assert mse > 0
     assert rmse > 0
+    assert f1 > 0
 
 
 def test_base_predict_moving_average():
@@ -79,12 +81,16 @@ def test_base_predict_moving_average_recursive():
 
 
 def test_base_validate_moving_average():
-    mse, rmse = validate_moving_average(mts, recursive=False, n_validations=2)
-    mse_rec, rmse_rec = validate_moving_average(mts, recursive=True, n_validations=2)
+    mse, rmse, f1 = validate_moving_average(mts, recursive=False, n_validations=2)
+    mse_rec, rmse_rec, f1_rec = validate_moving_average(
+        mts, recursive=True, n_validations=2
+    )
     assert mse > 0
     assert rmse > 0
+    assert f1 > 0
     assert mse_rec > 0
     assert rmse_rec > 0
+    assert f1_rec > 0
 
 
 def test_base_fit_predict_prophet():
@@ -97,9 +103,10 @@ def test_base_fit_predict_prophet():
 
 
 def test_base_validate_prophet():
-    mse, rmse = validate_prophet(mts, n_validations=2)
+    mse, rmse, f1 = validate_prophet(mts, n_validations=2)
     assert mse > 0
     assert rmse > 0
+    assert f1 > 0
 
 
 def test_boosting_fit_predict_boosting_model():
@@ -111,9 +118,10 @@ def test_boosting_fit_predict_boosting_model():
 
 def test_boosting_validate_boosting_model():
     for model_name in ["LGBMRegressor", "XGBRegressor"]:
-        mse, rmse = validate_boosting_model(model_name, mts, n_validations=2)
+        mse, rmse, f1 = validate_boosting_model(model_name, mts, n_validations=2)
         assert mse > 0
         assert rmse > 0
+        assert f1 > 0
 
 
 def test_lstms_lstmregression_predict():
@@ -124,6 +132,7 @@ def test_lstms_lstmregression_predict():
 
 def test_lstms_lstmregression_validate():
     model = LSTMRegression(mts)
-    mse, rmse = model.validate(n_validations=2)
+    mse, rmse, f1 = model.validate(n_validations=2)
     assert mse > 0
     assert rmse > 0
+    assert f1 == 0

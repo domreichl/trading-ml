@@ -3,11 +3,9 @@ stages:
     cmd: python prepare.py
     deps:
       - prepare.py
-      - params.yaml
       - ../../config/data_config.yaml
     params:
-      - start_date
-      - end_date
+      - prepare_params.yaml:
     outs:
       - ../../data/val.csv
   train:
@@ -23,8 +21,10 @@ stages:
     deps:
       - validate.py
       - ../../ckpts/val
+    params:
+      - validate_params.yaml:
     outs:
       - ../../results/validation_ranked.csv
     metrics:
-      - ../../results/validation.json:
+      - ../../results/validation_metrics.json:
           cache: false

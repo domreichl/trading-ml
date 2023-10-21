@@ -51,9 +51,7 @@ def fit_predict_boosting_model(model_name: str, mts: MultipleTimeSeries) -> dict
 
 
 def validate_boosting_model(
-    model_name: str,
-    mts: MultipleTimeSeries,
-    n_validations: int = Config().n_validations,
+    model_name: str, mts: MultipleTimeSeries, n_validations: int
 ) -> tuple[float, float]:
     if "LGBMRegressor" in model_name:
         model = load_lightgbm()
@@ -62,7 +60,7 @@ def validate_boosting_model(
     else:
         raise Exception(f"Name '{model_name}' is not a valid booster model name.")
     test_days = len(mts.y_test)
-    mae_lst, rmse_lst = [], []
+    mae_lst, rmse_lst, f1_lst = [], [], []
     for _ in range(n_validations):
         trial_i = random.randint(0, len(mts.x_train) - 1 - test_days)
         y_true = mts.x_train[trial_i + 1 : trial_i + 1 + test_days, -1, :]
@@ -77,7 +75,8 @@ def validate_boosting_model(
         )
         mae_lst.append(metrics["MAE"])
         rmse_lst.append(metrics["RMSE"])
-    return float(np.mean(mae_lst)), float(np.mean(rmse_lst))
+        f1_lst.append(metrics["F1"])
+    return float(np.mean(mae_lst)), float(np.mean(rmse_lst)), float(np.mean(f1_lst))
 
 
 def get_y_preds_from_boosting_results(

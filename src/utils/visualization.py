@@ -8,38 +8,31 @@ rcParams["figure.figsize"] = 20, 10
 from utils.file_handling import ResultsHandler
 
 
-def plot_optimization_metrics() -> None:
-    df = ResultsHandler().load_csv_results("optimization")
-    barplot = sns.barplot(
-        x="look_back_window_size", y="RMSE", hue="Model", data=df, palette="Oranges"
-    )
-    barplot.set(ylabel="RMSE (log scale)", yscale="log")
-    plt.title(
-        f"Validation Error for Hyperparameter Optimization with {df['Model'].nunique()} Prediction Models"
-    )
-    plt.show()
-
-
 def plot_validation_metrics() -> None:
-    df = ResultsHandler().load_csv_results("validation")
-    mae = df[["Model", "MAE"]].rename(columns={"MAE": "Score"})
-    mae["Metric"] = "MAE"
-    rmse = df[["Model", "RMSE"]].rename(columns={"RMSE": "Score"})
-    rmse["Metric"] = "RMSE"
-    df = pd.concat([mae, rmse])
-    df["Score"] = df["Score"]
-    barplot = sns.barplot(
-        x="Model", y="Score", hue="Metric", data=df, palette="Oranges"
-    )
-    barplot.set(ylabel="Score (log scale)", yscale="log")
-    plt.title(
-        f"Train Set Validation Error for {df['Model'].nunique()} Optimized Prediction Models"
-    )
+    validation = ResultsHandler().load_json_results("validation_metrics")
+    models, metrics, scores = [], [], []
+    for model, subdict in validation.items():
+        for metric, score in subdict.items():
+            models.append(model)
+            metrics.append(metric)
+            scores.append(score)
+    df = pd.DataFrame({"Model": models, "Metric": metrics, "Score": scores})
+    fig, axs = plt.subplots(df["Metric"].nunique(), 1)
+    for i, metric in enumerate(df["Metric"].unique()):
+        sns.barplot(
+            ax=axs[i],
+            x="Model",
+            y="Score",
+            hue="Metric",
+            data=df[df["Metric"] == metric],
+            palette="Blues" if metric == "F1" else "Oranges",
+        )
+    plt.suptitle(f"Train Set Validation Error for {df['Model'].nunique()} Models")
     plt.show()
 
 
-def plot_test_performance() -> None:
-    df = ResultsHandler().load_csv_results("test_performance")
+def plot_test_metrics() -> None:
+    df = ResultsHandler().load_csv_results("test_metrics")
     fig, axs = plt.subplots(4, 1)
     barplot_cfg = {"x": "Model", "y": "Score", "hue": "Metric"}
     sns.barplot(

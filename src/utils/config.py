@@ -17,8 +17,10 @@ class Config:
         self.test_days: int = model_cfg["test_days"]
         self.batch_size: int = model_cfg["batch_size"]
         self.n_epochs: int = model_cfg["n_epochs"]
-        self.n_validations: int = model_cfg["n_validations"]
 
     def set_dates(self, start_date: str, end_date: str) -> None:
         self.start_date = dt.strptime(start_date, self.date_format)
         self.end_date = dt.strptime(end_date, self.date_format)
+
+    def get_params(self, file_name: str = "params.yaml") -> dict:
+        return yaml.safe_load(open(Path.cwd() / file_name, "r"))

@@ -131,7 +131,7 @@ def test_evaluation_process_metrics():
     assert int(performance["Score"].loc[performance["Metric"] == "MetricB"][1]) == 2
 
 
-@pytest.mark.skip(reason="might fail when IP changes")
+#@pytest.mark.skip(reason="might fail when IP changes")
 def test_trades_load_trades_from_database():
     trades = load_trades_from_database()
     assert len(trades) > 1

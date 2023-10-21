@@ -46,11 +46,9 @@ class LSTMRegression:
         predictions = np.squeeze(self.model.predict(np.expand_dims(self.mts.x_test, 0)))
         return {ts_name: predictions[:, i] for i, ts_name in enumerate(self.names)}
 
-    def validate(
-        self, n_validations: int = Config().n_validations
-    ) -> tuple[float, float]:
+    def validate(self, n_validations: int) -> tuple[float, float]:
         test_days = len(self.mts.y_test)
-        mae_lst, rmse_lst = [], []
+        mae_lst, rmse_lst, f1_lst = [], [], []
         for _ in range(n_validations):
             trial_idx = random.randint(0, len(self.mts.x_train) - test_days)
             x = np.expand_dims(self.mts.x_train[trial_idx], 0)
@@ -63,7 +61,8 @@ class LSTMRegression:
             )
             mae_lst.append(metrics["MAE"])
             rmse_lst.append(metrics["RMSE"])
-        return float(np.mean(mae_lst)), float(np.mean(rmse_lst))
+            f1_lst.append(metrics["F1"])
+        return float(np.mean(mae_lst)), float(np.mean(rmse_lst)), float(np.mean(f1_lst))
 
 
 def load_lstm_model(model_name: str, mts: MultipleTimeSeries) -> Model:

@@ -3,19 +3,16 @@ import numpy as np
 import pandas as pd
 from pathlib import Path
 from sqlalchemy import create_engine
-from sklearn.metrics import accuracy_score
 
-from utils.evaluation import compute_SMAPE, evaluate_sign_predictions
 from utils.file_handling import ResultsHandler
 
 
 def get_and_process_trades() -> None:
     rh = ResultsHandler()
     trades = load_trades_from_database()
-    statistics, performance = compute_trading_results(trades)
+    statistics = compute_trading_statistics(trades)
     rh.write_csv_results(trades, "trades")
-    rh.write_csv_results(statistics, "trades_statistics")
-    rh.write_csv_results(performance, "trades_performance")
+    rh.write_json_results(statistics, "trades_statistics")
     rh.write_frontend_data(trades, "trades")
     rh.write_frontend_data(statistics, "trades_statistics")
 
@@ -31,74 +28,27 @@ def load_trades_from_database() -> pd.DataFrame:
     return trades
 
 
-def compute_trading_results(df: pd.DataFrame) -> tuple:
-    df["NET_PROFIT"] = df["GROSS_PROFIT"] - df["FEES"]
-    df["REWARD"] = (df["SELL_PRICE"] - df["BUY_PRICE"]) / df[
-        "BUY_PRICE"
-    ]  # = ACTUAL_RETURN
-    df["ACTUAL_RETURN"] = (df["SELL_PRICE"] * df["SHARES"]) / (
-        df["BUY_PRICE"] * df["SHARES"]
-    ) - 1
-    assert np.array_equal(
-        np.round(df["REWARD"].values, 10), np.round(df["ACTUAL_RETURN"].values, 10)
-    )
-    df["PREDICTED_RETURN"] = (df["PREDICTED_PRICE"] * df["SHARES"]) / (
-        df["BUY_PRICE"] * df["SHARES"]
-    ) - 1
-    df["RETURN_AE"] = np.abs(df["ACTUAL_RETURN"] - df["PREDICTED_RETURN"])
-    trading_statistics = compute_trading_statistics(df)
-    trading_performance = compute_trading_performance(df)
-    return trading_statistics, trading_performance
-
-
 def compute_trading_statistics(df: pd.DataFrame) -> dict:
+    df["NET_PROFIT"] = df["GROSS_PROFIT"] - df["FEES"]
+    df["REWARD"] = (df["SELL_PRICE"] - df["BUY_PRICE"]) / df["BUY_PRICE"]
     trades_win = df[df["NET_PROFIT"] > 0]
     trades_loss = df[df["NET_PROFIT"] <= 0]
     statistics_dict = {
         "N_TRADES": len(df),
         "N_TRADES_WIN": len(trades_win),
         "N_TRADES_LOSS": len(trades_loss),
-        "WIN_RATE": len(trades_win) / len(df) * 100,
+        "WIN_RATE": round(len(trades_win) / len(df) * 100),
         "TOTAL_VOLUME": (df["BUY_PRICE"] * df["SHARES"]).sum(),
         "TOTAL_GROSS_PROFIT": df["GROSS_PROFIT"].sum(),
         "TOTAL_NET_PROFIT": df["NET_PROFIT"].sum(),
         "TOTAL_FEES": df["FEES"].sum(),
-        "AVG_VOLUME": (df["BUY_PRICE"] * df["SHARES"]).mean(),
-        "AVG_PROFIT": df["NET_PROFIT"].mean(),
-        "STD_PROFIT": df["NET_PROFIT"].std(),
+        "AVG_VOLUME": round((df["BUY_PRICE"] * df["SHARES"]).mean(), 2),
+        "AVG_PROFIT": round(df["NET_PROFIT"].mean(), 2),
+        "STD_PROFIT": round(df["NET_PROFIT"].std(), 2),
         "MAX_WIN": df["NET_PROFIT"].max(),
         "MAX_LOSS": df["NET_PROFIT"].min(),
-        "AVG_WIN": trades_win["NET_PROFIT"].mean(),
-        "AVG_LOSS": trades_loss["NET_PROFIT"].mean(),
+        "AVG_WIN": round(trades_win["NET_PROFIT"].mean(), 2),
+        "AVG_LOSS": round(trades_loss["NET_PROFIT"].mean(), 2),
         "SQN": df["REWARD"].mean() / df["REWARD"].std() * np.sqrt(len(df)),
     }
-    statistics = pd.DataFrame(columns=statistics_dict.keys())
-    statistics.loc[len(statistics)] = statistics_dict
-    statistics = statistics.transpose()
-    statistics[0] = round(statistics[0], 2)
-    statistics = statistics.reset_index()
-    statistics.columns = ["Statistic", "Value"]
-    return statistics
-
-
-def compute_trading_performance(df: pd.DataFrame) -> pd.DataFrame:
-    performance = {}
-    for model in df["MODEL"].unique():
-        df_model = df[df["MODEL"] == model]
-        buy_price = df_model["BUY_PRICE"].values
-        sell_price_gt = df_model["SELL_PRICE"].values
-        sell_price_pr = df_model["PREDICTED_PRICE"].values
-        win_gt = sell_price_gt > buy_price
-        win_pr = sell_price_pr > buy_price
-        metrics = evaluate_sign_predictions(win_gt, win_pr)
-        performance[model] = {
-            "RETURN_MAE": round(np.mean(df_model["RETURN_AE"]), 4),
-            "PRICE_SMAPE": round(compute_SMAPE(sell_price_gt, sell_price_pr), 2),
-            "ACCURACY": accuracy_score(win_gt, win_pr),
-            "PRECISION": metrics["Precision"],
-            "RECALL": metrics["Recall"],
-            "F1": metrics["F1"],
-        }
-    performance = pd.DataFrame(performance).transpose()
-    performance = performance.reset_index(names="Model")
-    return performance
+    return statistics_dict

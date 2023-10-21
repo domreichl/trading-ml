@@ -4,7 +4,7 @@ from utils.backtests import run_backtests
 from utils.config import Config
 from utils.data_preparation import prepare_data
 from utils.data_preprocessing import preprocess_data
-from utils.data_processing import get_df_from_predictions, get_forecast_df
+from utils.data_processing import get_df_from_predictions
 from utils.evaluation import compute_prediction_performances
 from utils.file_handling import ResultsHandler
 from utils.indicators import compute_market_signals, interpret_market_signals
@@ -15,7 +15,7 @@ from utils.training import train_model
 from utils.validation import validate_model
 from utils.visualization import (
     plot_price_predictions,
-    plot_test_performance,
+    plot_test_metrics,
     plot_validation_metrics,
     plot_price_forecast,
 )
@@ -44,10 +44,11 @@ def train(model_name: str):
 def validate(model_name: str):
     model_name = "cli_" + model_name
     mts = preprocess_data("cli.csv")
-    mae, rmse = validate_model(model_name, mts)
+    mae, rmse, f1 = validate_model(model_name, mts)
     print(f"Validation results for {model_name}:")
     print("MAE: ", mae)
     print("RMSE: ", rmse)
+    print("F1: ", f1)
 
 
 @cli.command()
@@ -129,8 +130,8 @@ def recommend_close(position_type: str, ts_name: str):
 def plot_metrics(metrics_type: str):
     if metrics_type == "validation":
         plot_validation_metrics()
-    elif metrics_type == "evaluation":
-        plot_test_performance()
+    elif metrics_type == "test":
+        plot_test_metrics()
 
 
 @cli.command()

@@ -5,8 +5,8 @@ from utils.config import Config
 from utils.data_preparation import prepare_data
 
 
-params = yaml.safe_load(open(Path(__file__).parent / "params.yaml", "r"))
 cfg = Config()
+params = cfg.get_params("prepare_params.yaml")
 cfg.set_dates(params["start_date"], params["end_date"])
 
 prepare_data("val.csv", cfg)

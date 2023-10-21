@@ -92,11 +92,11 @@ def recommend_close_position(
             )
         )
     predicted_returns = np.array(predicted_returns)
-    negative_return = len(predicted_returns[predicted_returns < 1.0])
+    n_negative_return = len(predicted_returns[predicted_returns < 1.0])
     print(
-        f"\n{negative_return}/{len(predicted_returns)} top models predict a negative return."
+        f"\n{n_negative_return}/{len(predicted_returns)} top models predict a negative return."
     )
-    if negative_return / len(predicted_returns) > 0.5:
+    if n_negative_return / len(predicted_returns) > 0.5:
         if position_type == "long":
             recommendation = close()
         elif position_type == "short":

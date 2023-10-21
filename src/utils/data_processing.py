@@ -13,8 +13,23 @@ def get_signs_from_prices(prices: dict) -> np.array:
     )
 
 
+def get_signs_from_returns(array: np.array) -> np.array:
+    return np.array(array > 1, int).reshape(-1)
+
+
 def get_final_predictions_from_dict(dictionary: dict) -> np.array:
     return np.squeeze(np.stack(list(dictionary.values()), 1)[-1, :])
+
+
+def convert_metrics_df_to_dict(df: pd.DataFrame) -> dict:
+    metrics = {}
+    for model_name in df["Model"].unique():
+        df_m = df[df["Model"] == model_name]
+        metrics[model_name] = {
+            df_m["Metric"].iloc[0],
+            float(df_m["Score"].iloc[0]),
+        }
+    return metrics
 
 
 def get_df_from_predictions(

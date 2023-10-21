@@ -5,7 +5,7 @@ from utils.indicators import compute_market_signals, interpret_market_signals
 from utils.recommendation import recommend_stock
 
 
-mts = preprocess_data("pred.csv")
+mts = preprocess_data("main.csv")
 results = {"buy_price": 1000}
 ranked_models = rank_models()
 current_prices = {ISIN: cp[-1] for ISIN, cp in mts.close_prices.items()}

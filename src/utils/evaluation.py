@@ -1,22 +1,25 @@
 import numpy as np
 import pandas as pd
-from sklearn.metrics import precision_recall_fscore_support
+from sklearn.metrics import precision_recall_fscore_support, f1_score
 
 from utils.data_processing import (
     get_signs_from_prices,
+    get_signs_from_returns,
     stack_array_from_dict,
     get_final_predictions_from_dict,
 )
 from utils.file_handling import ResultsHandler
 
 
-def rank_models(test_performance: pd.DataFrame = None, n: int = 3) -> pd.DataFrame:
-    if not test_performance:
-        performance = ResultsHandler().load_csv_results("test_performance")
-    performance = performance[performance["Metric"].isin(["Precision", "NPV", "SMAPE"])]
+def rank_models(test_metrics: pd.DataFrame = None, n: int = 3) -> pd.DataFrame:
+    if not test_metrics:
+        test_metrics = ResultsHandler().load_csv_results("test_metrics")
+    test_metrics = test_metrics[
+        test_metrics["Metric"].isin(["Precision", "NPV", "SMAPE"])
+    ]
     position_types, top_models, ranks = [], [], []
     for position_type in ["long", "short"]:
-        sorted_ratings = rate_models(performance, position_type)
+        sorted_ratings = rate_models(test_metrics, position_type)
         for i, model_name in enumerate(list(sorted_ratings.keys())[:n]):
             position_types.append(position_type)
             top_models.append(model_name)
@@ -26,10 +29,10 @@ def rank_models(test_performance: pd.DataFrame = None, n: int = 3) -> pd.DataFra
     )
 
 
-def rate_models(performance: pd.DataFrame, position_type: str) -> dict:
+def rate_models(test_metrics: pd.DataFrame, position_type: str) -> dict:
     ratings = {}
-    for model_name in performance["Model"].unique():
-        metrics = performance[performance["Model"] == model_name]
+    for model_name in test_metrics["Model"].unique():
+        metrics = test_metrics[test_metrics["Model"] == model_name]
         if position_type == "long":
             sign_prediction_score = metrics[metrics["Metric"] == "Precision"][
                 "Score"
@@ -46,7 +49,7 @@ def rate_models(performance: pd.DataFrame, position_type: str) -> dict:
         sorted(ratings.items(), key=lambda item: item[1], reverse=True)
     )
     print(
-        f"\nRatings of top {performance['Model'].nunique()} validated models ({position_type} position):"
+        f"\nRatings of top {test_metrics['Model'].nunique()} validated models ({position_type} position):"
     )
     [print(f" [{i+1}] {k}: {v}") for i, (k, v) in enumerate(sorted_ratings.items())]
     return sorted_ratings
@@ -123,10 +126,10 @@ def compute_price_prediction_performance(
 
 def evaluate_sign_predictions(gt: np.array, pr: np.array) -> dict:
     precision, recall, f1_score, _ = precision_recall_fscore_support(
-        gt, pr, average="binary"
+        gt, pr, average="binary", zero_division=1.0
     )
     negative_predictive_value, _, _, _ = precision_recall_fscore_support(
-        1 - gt, 1 - pr, average="binary"
+        1 - gt, 1 - pr, average="binary", zero_division=1.0
     )
     metrics = dict(
         zip(
@@ -154,7 +157,13 @@ def evaluate_return_predictions(
 ) -> dict:
     mae = np.mean(np.abs(pr - gt))  # for homogenous returns scales
     rmse = np.sqrt(np.mean(np.square(pr - gt)))  # to penalize large errors
-    metrics = {"MAE": mae, "RMSE": rmse}
+    f1 = f1_score(
+        get_signs_from_returns(gt),
+        get_signs_from_returns(pr),
+        average="binary",
+        zero_division=1.0,
+    )
+    metrics = {"MAE": mae, "RMSE": rmse, "F1": f1}
     if naive_errors:
         metrics["MASE"] = mae / naive_errors[0]
         metrics["RMSSE"] = rmse / naive_errors[1]

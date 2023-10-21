@@ -31,21 +31,33 @@ class ResultsHandler:
         self.frontend_data_dir = root_dir.joinpath("frontend", "data")
 
     def load_csv_results(self, filename: str) -> pd.DataFrame:
-        return pd.read_csv(self.results_dir.joinpath(filename + ".csv"))
+        return pd.read_csv(self.results_dir.joinpath(filename + ".csv"), sep=";")
 
-    def write_csv_results(self, df: pd.DataFrame, filename: str) -> None:
-        file_path = self.results_dir.joinpath(filename + ".csv")
-        df.to_csv(file_path, index=False)
-        print(f"\nSaved results to '{file_path}'")
+    def load_json_results(self, file_name: str) -> dict:
+        return json.load(open(self.results_dir.joinpath(file_name + ".json"), "r"))
 
-    def write_frontend_data(self, df: pd.DataFrame, filename: str) -> None:
-        file_path = self.frontend_data_dir.joinpath(filename + ".csv")
-        df.to_csv(file_path, index=False)
+    def write_csv_results(self, df: pd.DataFrame, file_name: str) -> None:
+        file_path = self.results_dir.joinpath(file_name + ".csv")
+        df.to_csv(file_path, sep=";", index=False)
 
-    def write_json_results(self, content: dict, file_name: str) -> None:
+    def write_json_results(self, data: dict, file_name: str) -> None:
         with open(self.results_dir.joinpath(file_name + ".json"), "w") as file:
-            for line in json.dumps(content, indent=4):
+            for line in json.dumps(data, indent=4):
                 file.write(line)
+
+    def write_frontend_data(
+        self, data: Union[dict, pd.DataFrame], file_name: str
+    ) -> None:
+        if isinstance(data, dict):
+            with open(
+                self.frontend_data_dir.joinpath(file_name + ".json"), "w"
+            ) as file:
+                for line in json.dumps(data, indent=4):
+                    file.write(line)
+        elif isinstance(data, pd.DataFrame):
+            data.to_csv(
+                self.frontend_data_dir.joinpath(file_name + ".csv"), index=False
+            )
 
 
 class CkptHandler:

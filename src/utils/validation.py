@@ -13,20 +13,20 @@ def validate_model(
     model_name: str, mts: MultipleTimeSeries, n_validations: int
 ) -> tuple[float, float]:
     if "arima" in model_name:
-        mae, rmse = validate_arima(mts, n_validations)
+        mae, rmse, f1 = validate_arima(mts, n_validations)
     elif "exponential_smoothing" in model_name:
-        mae, rmse = validate_exponential_smoothing(mts, n_validations)
+        mae, rmse, f1 = validate_exponential_smoothing(mts, n_validations)
     elif "LGBMRegressor" in model_name:
-        mae, rmse = validate_boosting_model(model_name, mts, n_validations)
+        mae, rmse, f1 = validate_boosting_model(model_name, mts, n_validations)
     elif "lstm" in model_name:
         model = load_lstm_model(model_name, mts)
-        mae, rmse = model.validate(n_validations)
+        mae, rmse, f1 = model.validate(n_validations)
     elif "moving_average_recursive" in model_name:
-        mae, rmse = validate_moving_average(mts, n_validations, recursive=True)
+        mae, rmse, f1 = validate_moving_average(mts, n_validations, recursive=True)
     elif "prophet" in model_name:
-        mae, rmse = validate_prophet(mts, n_validations)
+        mae, rmse, f1 = validate_prophet(mts, n_validations)
     elif "XGBRegressor" in model_name:
-        mae, rmse = validate_boosting_model(model_name, mts, n_validations)
+        mae, rmse, f1 = validate_boosting_model(model_name, mts, n_validations)
     else:
         raise Exception(f"Name '{model_name}' is not a valid model name.")
-    return mae, rmse
+    return mae, rmse, f1

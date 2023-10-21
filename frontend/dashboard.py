@@ -1,3 +1,4 @@
+import json
 import pandas as pd
 import streamlit as st
 import plotly.express as px
@@ -15,11 +16,11 @@ st.set_page_config(
 
 # DATA
 data_dir = Path(__file__).parent / "data"
-predictions = pd.read_csv(data_dir / "test_predictions.csv")
-performance = pd.read_csv(data_dir / "test_performance.csv")
-trades = pd.read_csv(data_dir / "trades.csv").drop(columns=["ID"])
-trades_statistics = pd.read_csv(data_dir / "trades_statistics.csv")
-backtest = pd.read_csv(data_dir / "backtest.csv")
+predictions = pd.read_csv(data_dir / "test_predictions.csv", sep=";")
+performance = pd.read_csv(data_dir / "test_metrics.csv", sep=";")
+trades = pd.read_csv(data_dir / "trades.csv", sep=";").drop(columns=["ID"])
+ts = json.load(open(data_dir / "trades_statistics.json", "r"))
+backtest = pd.read_csv(data_dir / "backtest.csv", sep=";")
 
 
 # PREDICTIONS
@@ -84,7 +85,6 @@ st.plotly_chart(
 
 # TRADES
 st.title("Trading Statistics")
-ts = dict(zip(trades_statistics["Statistic"], trades_statistics["Value"]))
 counts = pd.DataFrame(
     {
         "trades": [f"{int(ts['N_TRADES'])} Trades"] * 2,
