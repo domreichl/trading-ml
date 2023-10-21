@@ -3,7 +3,10 @@
     - analyze the results with DVC VSCode extension + Iterative Studio
     - execute "main" for every week until End Date == 20.10.
     - for every week: simulate a trade & track trading performance -> update all relevant performance files
-1. serious modeling:
+1. Simulate trades for:
+    - 230922 (see Desktop)
+    - 230929 (current git tag)
+2. serious modeling:
     - pipeline "experimentation" with "exp_" data and models
         - see bookmarks folder "DVCLive" & "ModelRegistry"
         - commands: 'dvc exp [run, show, diff]'

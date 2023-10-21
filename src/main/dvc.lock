@@ -13,13 +13,13 @@ stages:
       size: 231
     params:
       prepare_params.yaml:
-        end_date: '2023-09-22'
+        end_date: '2023-09-29'
         start_date: '2000-01-03'
     outs:
     - path: ../../data/main.csv
       hash: md5
-      md5: 96b8711a53396327041c3b56e235ef90
-      size: 3209421
+      md5: 92d87ea7d9e541220605d13921b71ab9
+      size: 3211949
   train:
     cmd: python train.py
     deps:
@@ -29,8 +29,8 @@ stages:
       size: 197
     - path: ../../data/main.csv
       hash: md5
-      md5: 96b8711a53396327041c3b56e235ef90
-      size: 3209421
+      md5: 92d87ea7d9e541220605d13921b71ab9
+      size: 3211949
     - path: train.py
       hash: md5
       md5: 11d850958009333d7ade5e66b4df39d9
@@ -38,16 +38,16 @@ stages:
     outs:
     - path: ../../ckpts/main
       hash: md5
-      md5: bd4bbf651d09f5517f6fc500b15b31fb.dir
-      size: 884086
+      md5: 890a97ad292c1ed2bcfb7ec3c4a5776b.dir
+      size: 884077
       nfiles: 17
   test:
     cmd: python test.py
     deps:
     - path: ../../ckpts/main
       hash: md5
-      md5: bd4bbf651d09f5517f6fc500b15b31fb.dir
-      size: 884086
+      md5: 890a97ad292c1ed2bcfb7ec3c4a5776b.dir
+      size: 884077
       nfiles: 17
     - path: test.py
       hash: md5
@@ -56,16 +56,16 @@ stages:
     outs:
     - path: ../../results/test_metrics.csv
       hash: md5
-      md5: fb4817e9d071d472441cfb4f70d71a6f
-      size: 714
+      md5: a5923e64e04f3bed3e50aadbae5ab41e
+      size: 719
     - path: ../../results/test_metrics.json
       hash: md5
-      md5: 800ffd173b54db1e461c3461c71db5b4
-      size: 508
+      md5: 78dd716234956f81950013d3421c326d
+      size: 513
     - path: ../../results/test_predictions.csv
       hash: md5
-      md5: 48b4e532c0a2d2f56fb2dc117f63582b
-      size: 31460
+      md5: dfef104e2168e105e254b2099446367a
+      size: 31344
     - path: ../../results/test_ranked.csv
       hash: md5
       md5: b8727d8e498af90083fc68e5499d059a
