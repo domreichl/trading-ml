@@ -1,6 +1,5 @@
 import json, pickle
 import pandas as pd
-from dvclive import Live
 from pathlib import Path
 from prophet.serialize import model_to_json, model_from_json
 from typing import Union, Optional
