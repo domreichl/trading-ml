@@ -26,4 +26,5 @@ stages:
     outs:
       - ../../results/validation_ranked.csv
     metrics:
-      - ../../results/validation.json
+      - ../../results/validation.json:
+          cache: false
