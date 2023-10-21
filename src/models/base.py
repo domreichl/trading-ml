@@ -7,7 +7,7 @@ from sktime.forecasting.compose import EnsembleForecaster
 
 from utils.data_classes import MultipleTimeSeries
 from utils.data_processing import get_signs_from_returns
-from utils.evaluation import evaluate_return_predictions
+from utils.evaluation import evaluate_return_predictions, evaluate_sign_predictions
 from utils.file_handling import CkptHandler
 
 
@@ -36,13 +36,15 @@ def validate_arima(mts: MultipleTimeSeries, n_validations: int) -> tuple[float, 
             y_true = mts.x_train[trial_i + 1 : trial_i + 1 + test_days, -1, i]
             y_pred = model.predict(test_days)
             assert y_true.shape == y_pred.shape == (test_days,)
-            metrics = evaluate_return_predictions(
-                mts.get_returns_from_features(y_true),
-                mts.get_returns_from_features(y_pred),
+            gt = mts.get_returns_from_features(y_true)
+            pr = mts.get_returns_from_features(y_pred)
+            metrics = evaluate_return_predictions(gt, pr)
+            metrics_sign = evaluate_sign_predictions(
+                get_signs_from_returns(gt), get_signs_from_returns(pr)
             )
             mae_lst.append(metrics["MAE"])
             rmse_lst.append(metrics["RMSE"])
-            f1_lst.append(metrics["F1"])
+            f1_lst.append(metrics_sign["F1"])
     return float(np.mean(mae_lst)), float(np.mean(rmse_lst)), float(np.mean(f1_lst))
 
 
@@ -66,13 +68,15 @@ def validate_exponential_smoothing(
             mts.x_train[trial_i, :, :], fh=range(1, test_days + 1)
         )
         assert y_true.shape == y_pred.shape == (test_days, len(mts.names))
-        metrics = evaluate_return_predictions(
-            mts.get_returns_from_features(y_true),
-            mts.get_returns_from_features(y_pred),
+        gt = mts.get_returns_from_features(y_true)
+        pr = mts.get_returns_from_features(y_pred)
+        metrics = evaluate_return_predictions(gt, pr)
+        metrics_sign = evaluate_sign_predictions(
+            get_signs_from_returns(gt), get_signs_from_returns(pr)
         )
         mae_lst.append(metrics["MAE"])
         rmse_lst.append(metrics["RMSE"])
-        f1_lst.append(metrics["F1"])
+        f1_lst.append(metrics_sign["F1"])
     return float(np.mean(mae_lst)), float(np.mean(rmse_lst)), float(np.mean(f1_lst))
 
 
@@ -145,13 +149,15 @@ def validate_moving_average(
         y_pred = np.stack(list(y_preds.values()), 1)
         y_true = mts.x_train[trial_i + 1 : trial_i + 1 + test_days, -1, :]
         assert y_true.shape == y_pred.shape == (test_days, len(mts.names))
-        metrics = evaluate_return_predictions(
-            mts.get_returns_from_features(y_true),
-            mts.get_returns_from_features(y_pred),
+        gt = mts.get_returns_from_features(y_true)
+        pr = mts.get_returns_from_features(y_pred)
+        metrics = evaluate_return_predictions(gt, pr)
+        metrics_sign = evaluate_sign_predictions(
+            get_signs_from_returns(gt), get_signs_from_returns(pr)
         )
         mae_lst.append(metrics["MAE"])
         rmse_lst.append(metrics["RMSE"])
-        f1_lst.append(metrics["F1"])
+        f1_lst.append(metrics_sign["F1"])
     return float(np.mean(mae_lst)), float(np.mean(rmse_lst)), float(np.mean(f1_lst))
 
 
@@ -191,11 +197,13 @@ def validate_prophet(mts: MultipleTimeSeries, n_validations: int) -> dict:
                 )["yhat"]
             )
             assert y_true.shape == y_pred.shape == (test_days,)
-            metrics = evaluate_return_predictions(
-                mts.get_returns_from_features(y_true),
-                mts.get_returns_from_features(y_pred),
+            gt = mts.get_returns_from_features(y_true)
+            pr = mts.get_returns_from_features(y_pred)
+            metrics = evaluate_return_predictions(gt, pr)
+            metrics_sign = evaluate_sign_predictions(
+                get_signs_from_returns(gt), get_signs_from_returns(pr)
             )
             mae_lst.append(metrics["MAE"])
             rmse_lst.append(metrics["RMSE"])
-        f1_lst.append(metrics["F1"])
+            f1_lst.append(metrics_sign["F1"])
     return float(np.mean(mae_lst)), float(np.mean(rmse_lst)), float(np.mean(f1_lst))

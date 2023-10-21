@@ -1,29 +1,32 @@
 import numpy as np
 import pandas as pd
-from sklearn.metrics import precision_recall_fscore_support, f1_score
+from sklearn.metrics import precision_recall_fscore_support
+from typing import Optional
 
 from utils.data_processing import (
-    get_signs_from_prices,
+    get_final_predictions_from_dict,
     get_signs_from_returns,
     stack_array_from_dict,
-    get_final_predictions_from_dict,
 )
 from utils.file_handling import ResultsHandler
 
 
-def rank_models(test_metrics: pd.DataFrame = None, n: int = 3) -> pd.DataFrame:
-    if not test_metrics:
-        test_metrics = ResultsHandler().load_csv_results("test_metrics")
+def rank_models(top_n: int = 3) -> pd.DataFrame:
+    test_metrics = ResultsHandler().load_csv_results("test_metrics")
     test_metrics = test_metrics[
         test_metrics["Metric"].isin(["Precision", "NPV", "SMAPE"])
     ]
     position_types, top_models, ranks = [], [], []
     for position_type in ["long", "short"]:
         sorted_ratings = rate_models(test_metrics, position_type)
-        for i, model_name in enumerate(list(sorted_ratings.keys())[:n]):
+        for i, model_name in enumerate(list(sorted_ratings.keys())):
+            if i == top_n:
+                break
             position_types.append(position_type)
             top_models.append(model_name)
             ranks.append(i + 1)
+    if max(ranks) < top_n:
+        (f"Warning: Only {len(top_models)} top models were ranked.")
     return pd.DataFrame(
         {"Position": position_types, "Rank": ranks, "Model": top_models}
     )
@@ -65,9 +68,6 @@ def compute_prediction_performances(
 ):
     return pd.concat(
         [
-            compute_sign_prediction_performance(
-                prices_actual, prices_predicted, model_name
-            ),
             compute_return_prediction_performance(
                 returns_actual, returns_predicted, naive_errors, model_name
             ),
@@ -78,36 +78,27 @@ def compute_prediction_performances(
     )
 
 
-def compute_sign_prediction_performance(
-    prices_actual: dict, prices_predicted: dict, model_name: str
-) -> pd.DataFrame:
-    performance = process_metrics(
-        evaluate_sign_predictions(
-            get_signs_from_prices(prices_actual),
-            get_signs_from_prices(prices_predicted),
-        ),
-        "Sign",
-        model_name,
-    )
-    return performance
-
-
 def compute_return_prediction_performance(
     returns_actual: dict,
     returns_predicted: dict,
     naive_errors: tuple[float, float],
     model_name: str,
 ) -> pd.DataFrame:
-    performance = process_metrics(
-        evaluate_return_predictions(
-            stack_array_from_dict(returns_actual, 1),
-            stack_array_from_dict(returns_predicted, 1),
-            naive_errors,
+    gt = stack_array_from_dict(returns_actual, 1)
+    pr = stack_array_from_dict(returns_predicted, 1)
+    sign_performance = process_metrics(
+        evaluate_sign_predictions(
+            get_signs_from_returns(gt), get_signs_from_returns(pr)
         ),
+        "Sign",
+        model_name,
+    )
+    performance = process_metrics(
+        evaluate_return_predictions(gt, pr, naive_errors),
         "Return",
         model_name,
     )
-    return performance
+    return pd.concat([sign_performance, performance])
 
 
 def compute_price_prediction_performance(
@@ -122,6 +113,19 @@ def compute_price_prediction_performance(
         model_name,
     )
     return performance
+
+
+def evaluate_return_predictions(
+    gt: np.array, pr: np.array, naive_errors: Optional[tuple[float, float]] = None
+) -> dict:
+    metrics = {
+        "MAE": np.mean(np.abs(pr - gt)),  # for homogenous returns scales
+        "RMSE": np.sqrt(np.mean(np.square(pr - gt))),  # to penalize large errors
+    }
+    if naive_errors:
+        metrics["MASE"] = metrics["MAE"] / naive_errors[0]
+        metrics["RMSSE"] = metrics["RMSE"] / naive_errors[1]
+    return metrics
 
 
 def evaluate_sign_predictions(gt: np.array, pr: np.array) -> dict:
@@ -150,24 +154,6 @@ def compute_SMAPE(gt: np.array, pr: np.array) -> float:
     return float(
         100 / len(gt) * np.sum(np.abs(pr - gt) / np.add(np.abs(gt), np.abs(pr)))
     )
-
-
-def evaluate_return_predictions(
-    gt: np.array, pr: np.array, naive_errors: tuple[float, float] = None
-) -> dict:
-    mae = np.mean(np.abs(pr - gt))  # for homogenous returns scales
-    rmse = np.sqrt(np.mean(np.square(pr - gt)))  # to penalize large errors
-    f1 = f1_score(
-        get_signs_from_returns(gt),
-        get_signs_from_returns(pr),
-        average="binary",
-        zero_division=1.0,
-    )
-    metrics = {"MAE": mae, "RMSE": rmse, "F1": f1}
-    if naive_errors:
-        metrics["MASE"] = mae / naive_errors[0]
-        metrics["RMSSE"] = rmse / naive_errors[1]
-    return metrics
 
 
 def process_metrics(

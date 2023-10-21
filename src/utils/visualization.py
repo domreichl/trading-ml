@@ -33,8 +33,8 @@ def plot_validation_metrics() -> None:
 
 def plot_test_metrics() -> None:
     df = ResultsHandler().load_csv_results("test_metrics")
-    fig, axs = plt.subplots(4, 1)
-    barplot_cfg = {"x": "Model", "y": "Score", "hue": "Metric"}
+    fig, axs = plt.subplots(2, 1)
+    barplot_cfg = {"x": "Metric", "y": "Score", "hue": "Model"}
     sns.barplot(
         ax=axs[0],
         data=df[df["Target"] == "Sign"],
@@ -43,22 +43,10 @@ def plot_test_metrics() -> None:
     ).set(xlabel=None)
     sns.barplot(
         ax=axs[1],
-        data=df[(df["Target"] == "Return") & (~df["Metric"].isin(["MASE", "RMSSE"]))],
+        data=df[(df["Target"] != "Sign") & (~df["Metric"].isin(["MAE", "RMSE"]))],
         palette="Oranges",
         **barplot_cfg,
-    ).set(xlabel=None)
-    sns.barplot(
-        ax=axs[2],
-        data=df[(df["Target"] == "Return") & (df["Metric"].isin(["MASE", "RMSSE"]))],
-        palette="Oranges",
-        **barplot_cfg,
-    ).set(xlabel=None)
-    sns.barplot(
-        ax=axs[3],
-        data=df[df["Target"] == "Price"],
-        palette="Oranges",
-        **barplot_cfg,
-    ).set(ylabel="Score [%]")
+    )
     plt.suptitle(
         f"Test Set Performance of {df['Model'].nunique()} Prediction Models on Various Metrics",
         y=0.9,

@@ -6,9 +6,9 @@ from mlforecast import MLForecast
 from window_ops.rolling import rolling_mean, rolling_max, rolling_min
 from xgboost import XGBRegressor
 
-from utils.config import Config
 from utils.data_classes import MultipleTimeSeries
-from utils.evaluation import evaluate_return_predictions
+from utils.data_processing import get_signs_from_returns
+from utils.evaluation import evaluate_return_predictions, evaluate_sign_predictions
 
 
 def load_lightgbm() -> MLForecast:
@@ -69,13 +69,15 @@ def validate_boosting_model(
         y_preds = get_y_preds_from_boosting_results(results, mts.names, model_name)
         y_pred = np.stack(list(y_preds.values()), 1)
         assert y_true.shape == y_pred.shape == (test_days, len(mts.names))
-        metrics = evaluate_return_predictions(
-            mts.get_returns_from_features(y_true),
-            mts.get_returns_from_features(y_pred),
+        gt = mts.get_returns_from_features(y_true)
+        pr = mts.get_returns_from_features(y_pred)
+        metrics = evaluate_return_predictions(gt, pr)
+        metrics_sign = evaluate_sign_predictions(
+            get_signs_from_returns(gt), get_signs_from_returns(pr)
         )
         mae_lst.append(metrics["MAE"])
         rmse_lst.append(metrics["RMSE"])
-        f1_lst.append(metrics["F1"])
+        f1_lst.append(metrics_sign["F1"])
     return float(np.mean(mae_lst)), float(np.mean(rmse_lst)), float(np.mean(f1_lst))
 
 

@@ -6,13 +6,6 @@ def stack_array_from_dict(dictionary: dict, axis: int) -> np.array:
     return np.stack(list(dictionary.values()), axis)
 
 
-def get_signs_from_prices(prices: dict) -> np.array:
-    return np.concatenate(
-        [np.array(np.array(v)[1:] > np.array(v)[:-1], int) for v in prices.values()],
-        0,
-    )
-
-
 def get_signs_from_returns(array: np.array) -> np.array:
     return np.array(array > 1, int).reshape(-1)
 
@@ -26,8 +19,7 @@ def convert_metrics_df_to_dict(df: pd.DataFrame) -> dict:
     for model_name in df["Model"].unique():
         df_m = df[df["Model"] == model_name]
         metrics[model_name] = {
-            df_m["Metric"].iloc[0],
-            float(df_m["Score"].iloc[0]),
+            m: float(s) for m, s in zip(df_m["Metric"], df_m["Score"])
         }
     return metrics
 

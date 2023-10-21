@@ -4,9 +4,9 @@ import tensorflow as tf
 from tensorflow.keras.models import Model, load_model
 from tensorflow.keras.layers import Input, Dense, Dropout, LSTM
 
-from utils.config import Config
 from utils.data_classes import MultipleTimeSeries
-from utils.evaluation import evaluate_return_predictions
+from utils.data_processing import get_signs_from_returns
+from utils.evaluation import evaluate_return_predictions, evaluate_sign_predictions
 from utils.file_handling import CkptHandler
 
 
@@ -55,13 +55,15 @@ class LSTMRegression:
             y_true = self.mts.y_train[trial_idx]
             y_pred = np.squeeze(self.model.predict(x))
             assert y_true.shape == y_pred.shape == (test_days, len(self.names))
-            metrics = evaluate_return_predictions(
-                self.mts.get_returns_from_features(y_true),
-                self.mts.get_returns_from_features(y_pred),
+            gt = self.mts.get_returns_from_features(y_true)
+            pr = self.mts.get_returns_from_features(y_pred)
+            metrics = evaluate_return_predictions(gt, pr)
+            metrics_sign = evaluate_sign_predictions(
+                get_signs_from_returns(gt), get_signs_from_returns(pr)
             )
             mae_lst.append(metrics["MAE"])
             rmse_lst.append(metrics["RMSE"])
-            f1_lst.append(metrics["F1"])
+            f1_lst.append(metrics_sign["F1"])
         return float(np.mean(mae_lst)), float(np.mean(rmse_lst)), float(np.mean(f1_lst))
 
 

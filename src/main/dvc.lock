@@ -20,3 +20,90 @@ stages:
       hash: md5
       md5: 96b8711a53396327041c3b56e235ef90
       size: 3209421
+  train:
+    cmd: python train.py
+    deps:
+    - path: ../../config/model_config.yaml
+      hash: md5
+      md5: ac21e0e9eb595c6a472ec09c8b5b84b3
+      size: 197
+    - path: ../../data/main.csv
+      hash: md5
+      md5: 96b8711a53396327041c3b56e235ef90
+      size: 3209421
+    - path: train.py
+      hash: md5
+      md5: 11d850958009333d7ade5e66b4df39d9
+      size: 401
+    outs:
+    - path: ../../ckpts/main
+      hash: md5
+      md5: bd4bbf651d09f5517f6fc500b15b31fb.dir
+      size: 884086
+      nfiles: 17
+  test:
+    cmd: python test.py
+    deps:
+    - path: ../../ckpts/main
+      hash: md5
+      md5: bd4bbf651d09f5517f6fc500b15b31fb.dir
+      size: 884086
+      nfiles: 17
+    - path: test.py
+      hash: md5
+      md5: 9e4360421e428e648b9b28d7c78aebdd
+      size: 1850
+    outs:
+    - path: ../../results/test_metrics.csv
+      hash: md5
+      md5: 0d31c8b3d38219e84fc8e834d38a1e74
+      size: 642
+    - path: ../../results/test_metrics.json
+      hash: md5
+      md5: f61e90db3489c8311bd62bd3c9f4dad5
+      size: 500
+    - path: ../../results/test_predictions.csv
+      hash: md5
+      md5: 5af33318d73fc7e1716fa1ae5d214963
+      size: 30091
+    - path: ../../results/test_ranked.csv
+      hash: md5
+      md5: a83c106b17a7dcfb35fb1dd2dfa20bb8
+      size: 114
+  forecast:
+    cmd: python forecast.py
+    deps:
+    - path: ../../results/test_ranked.csv
+      hash: md5
+      md5: a83c106b17a7dcfb35fb1dd2dfa20bb8
+      size: 114
+    - path: forecast.py
+      hash: md5
+      md5: 2c0ce07af51de408a5ebf1647b28dd39
+      size: 1128
+    outs:
+    - path: ../../ckpts/prod
+      hash: md5
+      md5: 9f9a07a83e9b811c0d7888ac73b27e63.dir
+      size: 884097
+      nfiles: 17
+    - path: ../../results/forecast.csv
+      hash: md5
+      md5: a827b63c79a7cbaa9b56e41bd5a1e59d
+      size: 22074
+  recommend:
+    cmd: python recommend.py
+    deps:
+    - path: ../../results/forecast.csv
+      hash: md5
+      md5: a827b63c79a7cbaa9b56e41bd5a1e59d
+      size: 22074
+    - path: recommend.py
+      hash: md5
+      md5: 2106aa14570725536b2b1c594eafa4ef
+      size: 1442
+    outs:
+    - path: ../../results/recommendation.json
+      hash: md5
+      md5: 3d2c8614583476b922a7dcab2b1745b1
+      size: 1711

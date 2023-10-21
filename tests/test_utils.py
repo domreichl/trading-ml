@@ -4,11 +4,7 @@ import pandas as pd
 from pathlib import Path
 
 from utils.data_preprocessing import preprocess_data
-from utils.data_processing import (
-    stack_array_from_dict,
-    get_signs_from_prices,
-    get_final_predictions_from_dict,
-)
+from utils.data_processing import stack_array_from_dict, get_final_predictions_from_dict
 from utils.evaluation import (
     evaluate_sign_predictions,
     evaluate_price_predictions,
@@ -66,12 +62,6 @@ def test_data_processing_stack_array_from_dict():
     assert array.shape == (2, 3)
     array = stack_array_from_dict(dictionary, 1)
     assert array.shape == (3, 2)
-
-
-def test_data_processing_get_signs_from_prices():
-    prices = {"A": [10, 11, 12], "B": [12, 11, 10]}
-    array = get_signs_from_prices(prices)
-    assert np.array_equal(array, [1, 1, 0, 0]) == True
 
 
 def test_data_processing_get_final_predictions_from_dict():

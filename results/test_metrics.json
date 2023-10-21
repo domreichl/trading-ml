@@ -1,0 +1,24 @@
+{
+    "main_prophet": {
+        "Precision": 0.5618,
+        "Recall": 0.6173,
+        "F1": 0.5882,
+        "NPV": 0.6173,
+        "MAE": 0.0114,
+        "RMSE": 0.0174,
+        "MASE": 0.6367,
+        "RMSSE": 0.6622,
+        "SMAPE": 2.523
+    },
+    "main_LGBMRegressor": {
+        "Precision": 0.4884,
+        "Recall": 0.7778,
+        "F1": 0.6,
+        "NPV": 0.561,
+        "MAE": 0.011,
+        "RMSE": 0.0172,
+        "MASE": 0.6125,
+        "RMSSE": 0.6565,
+        "SMAPE": 2.2538
+    }
+}

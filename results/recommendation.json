@@ -1,0 +1,54 @@
+{
+    "short": {
+        "top models": [
+            "main_LGBMRegressor",
+            "main_prophet"
+        ],
+        "risk": {
+            "Top Stock": "AT0000743059",
+            "Predicted Return": 0.83938,
+            "Model Agreement": 50,
+            "Market Trend": "neutral",
+            "MACD Crossover": 0,
+            "Market State": "neither overbought nor oversold",
+            "Fast Stochastic Oscillator": 42,
+            "Bollinger Band Breakout": 0
+        },
+        "reward": {
+            "Top Stock": "AT0000743059",
+            "Predicted Return": 0.83938,
+            "Model Agreement": 50,
+            "Market Trend": "neutral",
+            "MACD Crossover": 0,
+            "Market State": "neither overbought nor oversold",
+            "Fast Stochastic Oscillator": 42,
+            "Bollinger Band Breakout": 0
+        }
+    },
+    "long": {
+        "top models": [
+            "main_prophet",
+            "main_LGBMRegressor"
+        ],
+        "risk": {
+            "Top Stock": "AT0000746409",
+            "Predicted Return": 1.00751,
+            "Model Agreement": 100,
+            "Market Trend": "bullish",
+            "MACD Crossover": 1,
+            "Market State": "neither overbought nor oversold",
+            "Fast Stochastic Oscillator": 57,
+            "Bollinger Band Breakout": 0
+        },
+        "reward": {
+            "Top Stock": "AT0000821103",
+            "Predicted Return": 1.0251,
+            "Model Agreement": 50,
+            "Market Trend": "neutral",
+            "MACD Crossover": 0,
+            "Market State": "neither overbought nor oversold",
+            "Fast Stochastic Oscillator": 80,
+            "Bollinger Band Breakout": 0
+        }
+    }
+}

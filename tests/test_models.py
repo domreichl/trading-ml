@@ -3,7 +3,7 @@ from pathlib import Path
 from utils.data_classes import MultipleTimeSeries
 from utils.data_preprocessing import preprocess_data
 from utils.data_processing import stack_array_from_dict
-from utils.file_handling import DataHandler, CkptHandler
+from utils.file_handling import CkptHandler
 from models.base import (
     fit_arima,
     predict_arima,

@@ -8,7 +8,6 @@ from utils.prediction import generate_predictions
 from utils.file_handling import ResultsHandler
 
 
-cfg = Config()
 rh = ResultsHandler()
 performance, predictions = [], []
 mts = preprocess_data("main.csv")
@@ -16,9 +15,10 @@ returns_actual = mts.get_test_returns()
 prices_actual = mts.get_test_prices()
 dates = mts.get_test_dates()
 naive_errors = mts.get_naive_errors()
+ranked_models = rh.load_csv_results("validation_ranked")["Model"].unique()
 
-for model_name in cfg.models:
-    model_name = "main_" + model_name
+for model_name in ranked_models:
+    model_name = model_name.replace("val_", "main_")
     print(f"Computing predictions with model '{model_name}'")
     returns_predicted, prices_predicted = generate_predictions(model_name, mts)
     performance.append(
@@ -47,8 +47,8 @@ predictions = pd.concat(predictions)
 rh.write_csv_results(performance, "test_metrics")
 rh.write_csv_results(predictions, "test_predictions")
 rh.write_json_results(convert_metrics_df_to_dict(performance), "test_metrics")
+rh.write_csv_results(rank_models(), "test_ranked")
 rh.write_frontend_data(performance, "test_metrics")
 rh.write_frontend_data(
     predictions.drop(columns=["Return", "ReturnPredicted"]), "test_predictions"
 )
-rh.write_csv_results(rank_models(performance), "test_ranked")

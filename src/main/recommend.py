@@ -5,8 +5,8 @@ from utils.indicators import compute_market_signals, interpret_market_signals
 from utils.recommendation import recommend_stock
 
 
+results = {}
 mts = preprocess_data("main.csv")
-results = {"buy_price": 1000}
 ranked_models = rank_models()
 current_prices = {ISIN: cp[-1] for ISIN, cp in mts.close_prices.items()}
 
@@ -14,13 +14,10 @@ for position_type in ["short", "long"]:
     top_models = list(
         ranked_models[ranked_models["Position"] == position_type]["Model"].unique()
     )
-    results[position_type] = {"Top Models": top_models}
-    for optimize in ["risk", "return"]:
+    results[position_type] = {"top models": top_models}
+    for optimize in ["risk", "reward"]:
         top_stock, predicted_return, model_agreement = recommend_stock(
-            current_prices,
-            position_type,
-            optimize,
-            results["buy_price"],
+            current_prices, position_type, optimize
         )
         trend, state, macdc, fso, bbb = compute_market_signals(
             mts.close_prices[top_stock]
@@ -30,9 +27,9 @@ for position_type in ["short", "long"]:
             "Top Stock": top_stock,
             "Predicted Return": predicted_return,
             "Model Agreement": model_agreement,
-            "Market Trend": state,
+            "Market Trend": trend,
             "MACD Crossover": macdc,
-            "Market State": trend,
+            "Market State": state,
             "Fast Stochastic Oscillator": fso,
             "Bollinger Band Breakout": bbb,
         }

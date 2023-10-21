@@ -7,8 +7,8 @@ from utils.file_handling import ResultsHandler
 
 def recommend_stock(
     current_prices: dict,
-    position_type: str = "long",
-    optimize: str = "return",
+    position_type: str,
+    optimize: str,
     buy_price: float = 1000,
 ) -> str:
     candidates = {}
@@ -65,15 +65,16 @@ def pick_top_stock(candidates: dict, position_type: str, optimize: str) -> tuple
         stocks = stocks[
             stocks["ModelsNotFavoringStock"] == stocks["ModelsNotFavoringStock"].min()
         ].copy()
-    elif optimize == "return":
+    elif optimize == "reward":
         pass  # accept that model agreement may be low
     top_stock = get_most_lucrative_stock(stocks, position_type)
-    top_stock["ModelAgreement"] = (
-        (len(candidates) - top_stock["ModelsNotFavoringStock"]) / len(candidates) * 100
-    )
     ISIN = top_stock.index[0]
     predicted_return = round((top_stock["MeanPredictedReturn"].iloc[0]), 5)
-    model_agreement = round((top_stock["ModelAgreement"].iloc[0]))
+    model_agreement = round(
+        (len(candidates) - top_stock["ModelsNotFavoringStock"].iloc[0])
+        / len(candidates)
+        * 100
+    )
     return ISIN, predicted_return, model_agreement
 
 
