@@ -62,7 +62,7 @@ st.plotly_chart(fig_prices)
 
 # MODELS
 st.title("Model Performance")
-st.subheader("Testing")
+st.subheader("Test Set")
 metric_selected = st.radio(
     "Select metric",
     options=list(performance["Metric"].unique()),
@@ -74,12 +74,6 @@ st.bar_chart(
     x="Model",
     y="Score",
     color="#b35300",
-)
-st.subheader("Trading")
-st.plotly_chart(
-    px.box(x=trades["MODEL"], y=trades["GROSS_PROFIT"]).update_layout(
-        xaxis_title="Model", yaxis_title="Gross Profit [€]"
-    )
 )
 
 
