@@ -16,12 +16,11 @@ st.set_page_config(
 
 # DATA
 data_dir = Path(__file__).parent / "data"
-predictions = pd.read_csv(data_dir / "test_predictions.csv", sep=";")
-performance = pd.read_csv(data_dir / "test_metrics.csv", sep=";")
-trades = pd.read_csv(data_dir / "trades.csv", sep=";")
-trades.drop(columns=["ID"], inplace=True)
+predictions = pd.read_csv(data_dir / "test_predictions.csv")
+performance = pd.read_csv(data_dir / "test_metrics.csv")
+trades = pd.read_csv(data_dir / "trades.csv").drop(columns=["ID"])
 ts = json.load(open(data_dir / "trades_statistics.json", "r"))
-backtest = pd.read_csv(data_dir / "backtest.csv", sep=";")
+backtest = pd.read_csv(data_dir / "backtest.csv")
 
 
 # PREDICTIONS
