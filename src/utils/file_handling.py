@@ -62,7 +62,7 @@ class ResultsHandler:
 class CkptHandler:
     def __init__(self):
         self.ckpts_dir = get_root_dir() / "ckpts"
-        self.ckpt_types = ["cli_", "exp_", "val_", "main_", "prod_", "test_"]
+        self.ckpt_types = ["exp_", "val_", "main_", "prod_", "test_"]
 
     def get_ckpt_dir(self, name: str) -> Path:
         for prefix in self.ckpt_types:

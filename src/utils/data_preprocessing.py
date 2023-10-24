@@ -4,21 +4,20 @@ from pathlib import Path
 from sklearn.preprocessing import MinMaxScaler
 from typing import Union
 
-from utils.config import Config
 from utils.data_classes import MultipleTimeSeries
 from utils.file_handling import DataHandler
 
 
 class DataPreprocessor:
-    def __init__(self, df: pd.DataFrame, cfg: Config):
+    def __init__(self, df: pd.DataFrame, look_back_window_size: int, test_days: int):
         self.df = df
         self.dates = list(self.df["Date"].unique())
         self.securities = list(self.df["ISIN"].unique())
         self.ts_count = len(self.securities)
         self.total_days = len(self.df) // self.ts_count
-        self.look_back_window_size = cfg.look_back_window_size
+        self.look_back_window_size = look_back_window_size
         self.time_steps = self.total_days - self.look_back_window_size
-        self.test_days = cfg.test_days
+        self.test_days = test_days
         self.train_days = self.time_steps - self.test_days
         self.scaler = None
         self.compute_log_returns()
@@ -103,7 +102,8 @@ class DataPreprocessor:
         return self.mts
 
 
-def preprocess_data(csv_file: Union[str, Path]) -> MultipleTimeSeries:
+def preprocess_data(
+    csv_file: Union[str, Path], look_back_window_size: int = 260, test_days: int = 10
+) -> MultipleTimeSeries:
     df = DataHandler().load_csv_data(csv_file)
-    cfg = Config()
-    return DataPreprocessor(df, cfg).get_mts()
+    return DataPreprocessor(df, look_back_window_size, test_days).get_mts()

@@ -3,7 +3,7 @@ stages:
     cmd: python prepare.py
     deps:
       - prepare.py
-      - ../../config/data_config.yaml
+      - ../../config/data.yaml
     params:
       - prepare_params.yaml:
     outs:
@@ -13,7 +13,7 @@ stages:
     deps:
       - train.py
       - ../../data/val.csv
-      - ../../config/model_config.yaml
+      - ../../config/models.yaml
     outs:
       - ../../ckpts/val
   validate:

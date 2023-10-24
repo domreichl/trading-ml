@@ -7,16 +7,12 @@ class Config:
     def __init__(self):
         cfg_dir = Path(__file__).parent.parent.parent / "config"
 
-        data_cfg = yaml.safe_load(open(cfg_dir.joinpath("data_config.yaml"), "r"))
+        data_cfg = yaml.safe_load(open(cfg_dir.joinpath("data.yaml"), "r"))
         self.securities: dict = data_cfg["securities"]
         self.date_format: str = data_cfg["date_format"]
 
-        model_cfg = yaml.safe_load(open(cfg_dir.joinpath("model_config.yaml"), "r"))
+        model_cfg = yaml.safe_load(open(cfg_dir.joinpath("models.yaml"), "r"))
         self.models: list = model_cfg["models"]
-        self.look_back_window_size: int = model_cfg["look_back_window_size"]
-        self.test_days: int = model_cfg["test_days"]
-        self.batch_size: int = model_cfg["batch_size"]
-        self.n_epochs: int = model_cfg["n_epochs"]
 
     def set_dates(self, start_date: str, end_date: str) -> None:
         self.start_date = dt.strptime(start_date, self.date_format)

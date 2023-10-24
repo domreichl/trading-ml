@@ -16,11 +16,11 @@
 3. Experimentation pipeline src/experimentation
 
 ### CLI Usage
-1. Download and preprocess cli_ data: `trading-ml prepare`
-2. Train a cli_ model: `trading-ml train [model_name]`
-3. Validate a cli_ model on the train set: `trading-ml validate [model_name]`
-4. Evaluate a cli_ model on the test set: `trading-ml test [model_name]`
-5. Generate cli_ test set predictions: `trading-ml predict [model_name] [ISIN]`
+1. Download and preprocess exp_ data: `trading-ml prepare`
+2. Train an exp_ model: `trading-ml train [model_name]`
+3. Validate an exp_ model on the train set: `trading-ml validate [model_name]`
+4. Evaluate an exp_ model on the test set: `trading-ml test [model_name]`
+5. Generate exp_ test set predictions: `trading-ml predict [model_name] [ISIN]`
 6. Use prod_ models to generate an out-of-sample forecast: `trading-ml forecast [ISIN]`
 7. Get a trading recommendation from prod_ models:
     - `trading-ml recommend-open [position_type] [optimize]`
@@ -30,8 +30,8 @@
 10. Fetch trades to compute statistics: `trading-ml fetch-trades`
 
 ### CLI Parameters
-- [model_name] ∈ model_config.yaml:models
-- [ISIN] ∈ data_config.yaml:securities
+- [model_name] ∈ models.yaml:models
+- [ISIN] ∈ data.yaml:securities
 - [position_type] ∈ {short, long}
 - [optimize] ∈ {risk, reward}
 - [metrics_type] ∈ {validation, test}

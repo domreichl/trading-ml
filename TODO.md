@@ -1,8 +1,7 @@
 ## TODO
-1. pipeline "experimentation" with "exp_" data and models
-    - see bookmarks folder "DVCLive""
-    - commands: 'dvc exp [run, show, diff]'
-2. models below
+1. "experimentation" with "exp_" data and models
+    - use optuna together with dvclive
+2. integrate 'Models' as described below
 3. rerun validation with full date range
 4. rerun main pipeline with extended date range
 
@@ -16,10 +15,8 @@
 - TCN: temporal convolutional network -> keras.layers.Conv1d(padding='causal', 'dilation_rate'>1)
 - FFNN: N-BEATS
 - RNNs: DeepAR, adRNNCell, DA-RNN, MQRNN
-- 1 Transformer (just for completeness sake): LogTrans, Fedformer, Autoformer, Pyraformer, Informer
 - DecisionTree, RandomForest, LightGBX & XGBoost as MultiClassClassifiers for SignPrediction (multi-class for full ForecastWindow)
-- sktime docs
-- huggingface.co
+- sktime docs: https://www.sktime.net/en/stable/api_reference/forecasting.html
 - models specifically for leveraged products:
     - knock-outs:
         - 1-4 day forecast horizon
@@ -35,6 +32,7 @@
 - tuning of all models (except transformer)
     - especially ETS, LightGBM, and XGBoost
     - RNN (Zellen unwesentlich: einfach 128)
+- Pinball loss
 - COCOB instead of Adam optimizer
 - stacking (of RNNs)
 

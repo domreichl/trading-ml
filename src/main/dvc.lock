@@ -3,7 +3,7 @@ stages:
   prepare:
     cmd: python prepare.py
     deps:
-    - path: ../../config/data_config.yaml
+    - path: ../../config/data.yaml
       hash: md5
       md5: 0dc87b324c12218372ddf6a9e2daf984
       size: 804
@@ -23,10 +23,10 @@ stages:
   train:
     cmd: python train.py
     deps:
-    - path: ../../config/model_config.yaml
+    - path: ../../config/models.yaml
       hash: md5
-      md5: ac21e0e9eb595c6a472ec09c8b5b84b3
-      size: 197
+      md5: 7b34ca3161d02fbd2d3e85554857b227
+      size: 128
     - path: ../../data/main.csv
       hash: md5
       md5: 92d87ea7d9e541220605d13921b71ab9

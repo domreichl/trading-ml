@@ -30,20 +30,20 @@ def cli():
 def prepare():
     cfg = Config()
     cfg.set_dates("2000-01-03", "2023-09-22")
-    prepare_data("cli.csv", cfg)
+    prepare_data("exp.csv", cfg)
 
 
 @cli.command()
 @click.argument("model_name")
 def train(model_name: str):
-    train_model("cli_" + model_name, mts=preprocess_data("cli.csv"))
+    train_model("exp_" + model_name, mts=preprocess_data("exp.csv"))
 
 
 @cli.command()
 @click.argument("model_name")
 def validate(model_name: str):
-    model_name = "cli_" + model_name
-    mts = preprocess_data("cli.csv")
+    model_name = "exp_" + model_name
+    mts = preprocess_data("exp.csv")
     mae, rmse, f1 = validate_model(model_name, mts, n_validations=10)
     print(f"Validation results for {model_name}:")
     print("MAE: ", mae)
@@ -54,8 +54,8 @@ def validate(model_name: str):
 @cli.command()
 @click.argument("model_name")
 def test(model_name: str):
-    model_name = "cli_" + model_name
-    mts = preprocess_data("cli.csv")
+    model_name = "exp_" + model_name
+    mts = preprocess_data("exp.csv")
     returns_predicted, prices_predicted = generate_predictions(model_name, mts)
     df = compute_prediction_performances(
         mts.get_test_returns(),
@@ -72,8 +72,8 @@ def test(model_name: str):
 @click.argument("model_name")
 @click.argument("ts_name", required=False)
 def predict(model_name: str, ts_name: str = ""):
-    model_name = "cli_" + model_name
-    mts = preprocess_data("cli.csv")
+    model_name = "exp_" + model_name
+    mts = preprocess_data("exp.csv")
     returns_predicted, prices_predicted = generate_predictions(model_name, mts)
     df = get_df_from_predictions(
         mts.get_test_returns(),
