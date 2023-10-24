@@ -1,7 +1,8 @@
 import random
 import numpy as np
-from pmdarima import auto_arima
 from prophet import Prophet
+
+from sktime.forecasting.arima import AutoARIMA
 from sktime.forecasting.exp_smoothing import ExponentialSmoothing
 from sktime.forecasting.compose import EnsembleForecaster
 
@@ -13,7 +14,8 @@ from utils.file_handling import CkptHandler
 
 def fit_arima(mts: MultipleTimeSeries, model_name: str) -> None:
     for i, ts_name in enumerate(mts.names):
-        model = auto_arima(mts.x_train[-1, :, i])
+        model = AutoARIMA(suppress_warnings=True)
+        model.fit(mts.x_train[-1, :, i])
         CkptHandler().save_model_to_pickle_ckpt(model, f"{model_name}_{ts_name}")
 
 
@@ -21,7 +23,7 @@ def predict_arima(mts: MultipleTimeSeries, model_name: str) -> dict:
     y_preds = {}
     for ts_name in mts.names:
         model = CkptHandler().load_model_from_pickle_ckpt(f"{model_name}_{ts_name}")
-        y_preds[ts_name] = model.predict(len(mts.y_test))
+        y_preds[ts_name] = np.squeeze(model.predict(fh=range(1, len(mts.y_test) + 1)))
     return y_preds
 
 
@@ -32,9 +34,13 @@ def validate_arima(mts: MultipleTimeSeries, n_validations: int) -> tuple[float, 
         print(f"Validating arima_{ts_name}")
         for _ in range(n_validations):
             trial_i = random.randint(0, len(mts.x_train) - 1 - test_days)
-            model = auto_arima(mts.x_train[trial_i, :, i])
+            model = AutoARIMA(suppress_warnings=True)
             y_true = mts.x_train[trial_i + 1 : trial_i + 1 + test_days, -1, i]
-            y_pred = model.predict(test_days)
+            y_pred = np.squeeze(
+                model.fit_predict(
+                    mts.x_train[trial_i, :, i], fh=range(1, test_days + 1)
+                )
+            )
             assert y_true.shape == y_pred.shape == (test_days,)
             gt = mts.get_returns_from_features(y_true)
             pr = mts.get_returns_from_features(y_pred)

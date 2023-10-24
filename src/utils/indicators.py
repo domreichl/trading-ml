@@ -1,4 +1,6 @@
 import numpy as np
+import pandas as pd
+from ta.trend import ema_indicator
 
 
 def interpret_market_signals(top_stock: str, trend: int, state: int) -> tuple[str]:
@@ -22,7 +24,7 @@ def compute_market_signals(prices: np.array) -> tuple[int, int]:
     trend = 0
     state = 0
 
-    macdc = moving_average_convergence_divergence_crossover(prices)
+    macdc, _, _, _ = moving_average_convergence_divergence(prices)
     trend += macdc
 
     fso = fast_stochastic_oscillator(prices)
@@ -31,21 +33,20 @@ def compute_market_signals(prices: np.array) -> tuple[int, int]:
     elif fso < 20:
         state -= 1
 
-    bbb = bollinger_band_breakout(prices)
+    bbb, _, _ = bollinger_band_breakout(prices)
     state += bbb
 
     return trend, state, macdc, fso, bbb
 
 
-def moving_average_convergence_divergence_crossover(
+def moving_average_convergence_divergence(
     prices: np.array, threshold: float = 0.5
-) -> int:
-    p1, p2, p3 = 26, 12, 9
-    ema26 = exponential_moving_average(prices, period=p1)
-    ema12 = exponential_moving_average(prices, period=p2)
-    signal = exponential_moving_average(ema12[-p3:] - ema26[-p3:], period=p3)
-    signal = signal[-1]
-    macd = ema12[-1] - ema26[-1]
+) -> tuple[int, float, float]:
+    ema26 = ema_indicator(pd.Series(prices), window=26)
+    ema12 = ema_indicator(pd.Series(prices), window=12)
+    signal = ema_indicator(ema12 - ema26, window=9)
+    signal = signal.iloc[-1]
+    macd = ema12.iloc[-1] - ema26.iloc[-1]
     relative_change = (macd - signal) / signal
     crossover = 0
     if abs(relative_change) > threshold:
@@ -53,16 +54,7 @@ def moving_average_convergence_divergence_crossover(
             crossover = 1
         else:
             crossover = -1
-    return crossover
-
-
-def exponential_moving_average(prices: np.array, period: int) -> np.array:
-    recent_period = prices[-period:]
-    alpha = 2 / (len(recent_period) + 1)
-    ema = [recent_period[0]]
-    for i in range(1, len(recent_period)):
-        ema.append(alpha * recent_period[i] + (1 - alpha) * ema[-1])
-    return np.array(ema)
+    return crossover, macd, signal, relative_change
 
 
 def fast_stochastic_oscillator(prices: np.array, period: int = 14) -> int:
@@ -74,7 +66,9 @@ def fast_stochastic_oscillator(prices: np.array, period: int = 14) -> int:
     return round(k * 100)
 
 
-def bollinger_band_breakout(prices: np.array, period: int = 20) -> int:
+def bollinger_band_breakout(
+    prices: np.array, period: int = 20
+) -> tuple[int, float, float]:
     recent_period = prices[-period:]
     avg = np.mean(recent_period)
     std = np.std(recent_period)
@@ -86,4 +80,4 @@ def bollinger_band_breakout(prices: np.array, period: int = 20) -> int:
         breakout = 1
     elif current < lower:
         breakout = -1
-    return breakout
+    return breakout, upper, lower

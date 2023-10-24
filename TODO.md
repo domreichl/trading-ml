@@ -1,33 +1,55 @@
 ## TODO
-1. analyze trades:
-    - 230922: Desktop/recommendation_230922.json -> add trade in DB
-    - 230929: recommendation.json in latest git tag (current status) -> add trade in DB
-    - how to best manage metrics over time? -> git tags -> select in Iterative Studio -> Diffs, Trends, and CSV-Export possible!
-    - analyze trades w.r.t. metrics in performance.ipynb
-    - if analysis works well and doesn't need further metrics, continue with [2] below
-2. continue until 231019: update end date > dvc repro > dvc push > git add > git commit > git tag > git push > git push --tags > new trade
-3. serious modeling:
-    - pipeline "experimentation" with "exp_" data and models
-        - see bookmarks folder "DVCLive" & "ModelRegistry"
-        - commands: 'dvc exp [run, show, diff]'
-    - improve all model prototypes
-    - models for leveraged positions:
-        - 1-4 day forecast horizon (open on Mon/Tue, sell on Fri)
-        - Faktorzertifikat:
-            - prediction of %return for each day --> optimize path, e.g., every day positive
-            - could also be multi-day sign prediction
-            - warning: make sure model are capable of predicting non-linear paths! (just just all up/down)
-        - Knock-out-Zertifikat:
-            - prediction of both price & voliatility
-            - during validation, minimize error w.r.t. price declines (or increases for short positions)
-            - during price+volatility forecast analysis, include a high penalty for potential knock-out
-    - revisit my deep forecasting presentation to implement additional models
-    - potential libraries: statsforecast, sktime
-    - additional data sources
-        - https://www.wienerborse.at/aktien-prime-market/
-            - 43 prime, 22 standard, 7 direct+, 21 direct, 780 global
-            - use all time series with T > LBWS
-        - stick to eurozone ISINs to minimize currency risk (ATX < ATX+DAX < MSCI EMU < EMU part of Stoxx Europe 600)
-    - alternative preprocessing
-        - train with or without market index?
-    - statistical testing for model comparision: test significance of differences in performance (e.g., RMSE) between models for n validations
+1. pipeline "experimentation" with "exp_" data and models
+    - see bookmarks folder "DVCLive""
+    - commands: 'dvc exp [run, show, diff]'
+2. models below
+3. rerun validation with full date range
+4. rerun main pipeline with extended date range
+
+### Models
+- LinearNN:
+    - as simple baseline (like DLinear, but without decomposition not needed for LogReturns)
+    - input: LookBackWindow
+    - hidden: DenseLayer with linear activation
+    - output: ForecastWindow
+- globals models to utilize cross-series information
+- TCN: temporal convolutional network -> keras.layers.Conv1d(padding='causal', 'dilation_rate'>1)
+- FFNN: N-BEATS
+- RNNs: DeepAR, adRNNCell, DA-RNN, MQRNN
+- 1 Transformer (just for completeness sake): LogTrans, Fedformer, Autoformer, Pyraformer, Informer
+- DecisionTree, RandomForest, LightGBX & XGBoost as MultiClassClassifiers for SignPrediction (multi-class for full ForecastWindow)
+- sktime docs
+- huggingface.co
+- models specifically for leveraged products:
+    - knock-outs:
+        - 1-4 day forecast horizon
+        - analysis/prediction of volatility/likelihood of knock-out
+        - high penalty for potential knock-out
+    - factors:
+        - evaluation with entire forecast window (because the full path is relevant)
+        - probably focus on multi-class sign prediction
+        - optimize model for non-linear paths (the model shouldn't systematically just all up/down!)
+        - recommendation: invest when every prediction in path has the same sign with high confidence
+
+### Model Tuning
+- tuning of all models (except transformer)
+    - especially ETS, LightGBM, and XGBoost
+    - RNN (Zellen unwesentlich: einfach 128)
+- COCOB instead of Adam optimizer
+- stacking (of RNNs)
+
+### Data Sources
+- https://www.wienerborse.at/aktien-prime-market/
+    - 43 prime, 22 standard, 7 direct+, 21 direct, 780 global
+    - use all time series with T > LBWS
+- stick to eurozone ISINs to minimize currency risk (ATX < ATX+DAX < MSCI EMU < EMU part of Stoxx Europe 600)
+
+### Data Preprocessing
+- optimal number of test days
+- optimal look back window size
+- normalization methods
+- with/without market index
+
+### Recommendation
+- improve ensembling algorithm
+- add technical indicators

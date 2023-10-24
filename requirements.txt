@@ -113,6 +113,7 @@ dulwich==0.21.6
 dvc==3.26.2
     # via
     #   dvc-gdrive
+    #   dvclive
     #   trading-ml (pyproject.toml)
 dvc-data==2.18.1
     # via dvc
@@ -123,11 +124,17 @@ dvc-http==2.30.2
 dvc-objects==1.0.1
     # via dvc-data
 dvc-render==0.6.0
-    # via dvc
+    # via
+    #   dvc
+    #   dvclive
 dvc-studio-client==0.15.0
-    # via dvc
+    # via
+    #   dvc
+    #   dvclive
 dvc-task==0.3.0
     # via dvc
+dvclive==3.0.1
+    # via trading-ml (pyproject.toml)
 entrypoints==0.4
     # via gto
 ephem==4.1.5
@@ -158,6 +165,7 @@ funcy==2.0
     #   dvc-data
     #   dvc-objects
     #   dvc-task
+    #   dvclive
     #   gto
     #   pydrive2
     #   scmrepo
@@ -197,7 +205,9 @@ grpcio==1.59.0
     #   tensorboard
     #   tensorflow-cpu
 gto==1.4.0
-    # via dvc
+    # via
+    #   dvc
+    #   dvclive
 h5py==3.10.0
     # via tensorflow-cpu
 holidays==0.35
@@ -299,6 +309,7 @@ numpy==1.23.5
     #   stanio
     #   statsmodels
     #   streamlit
+    #   ta
     #   tensorboard
     #   tensorflow-cpu
     #   trading-ml (pyproject.toml)
@@ -322,12 +333,13 @@ packaging==23.2
     #   hydra-core
     #   matplotlib
     #   plotly
+    #   pmdarima
     #   pytest
     #   sktime
     #   statsmodels
     #   streamlit
     #   tensorflow-cpu
-pandas==2.0.2
+pandas==2.1.1
     # via
     #   altair
     #   cmdstanpy
@@ -338,6 +350,7 @@ pandas==2.0.2
     #   sktime
     #   statsmodels
     #   streamlit
+    #   ta
     #   trading-ml (pyproject.toml)
 pathspec==0.11.2
     # via
@@ -355,7 +368,7 @@ plotly==5.17.0
     # via trading-ml (pyproject.toml)
 pluggy==1.3.0
     # via pytest
-pmdarima==2.0.3
+pmdarima==2.0.4
     # via trading-ml (pyproject.toml)
 prompt-toolkit==3.0.39
     # via click-repl
@@ -467,6 +480,7 @@ rsa==4.9
 ruamel-yaml==0.17.38
     # via
     #   dvc
+    #   dvclive
     #   gto
 ruamel-yaml-clib==0.2.8
     # via ruamel-yaml
@@ -489,6 +503,7 @@ scipy==1.11.3
 scmrepo==1.4.0
     # via
     #   dvc
+    #   dvclive
     #   gto
 seaborn==0.12.2
     # via trading-ml (pyproject.toml)
@@ -513,7 +528,7 @@ six==1.16.0
     #   patsy
     #   python-dateutil
     #   tensorflow-cpu
-sktime==0.23.0
+sktime==0.24.0
     # via trading-ml (pyproject.toml)
 smmap==5.0.1
     # via gitdb
@@ -526,6 +541,8 @@ stanio==0.3.0
 statsmodels==0.14.0
     # via pmdarima
 streamlit==1.27.2
+    # via trading-ml (pyproject.toml)
+ta==0.10.2
     # via trading-ml (pyproject.toml)
 tabulate==0.9.0
     # via
