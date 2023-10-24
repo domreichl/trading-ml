@@ -8,9 +8,10 @@
     - goals:
         1. build a solid, reusable experimentation protocol
         2. once I've found the best parameters for AutoArima --> run get precise AutoArima outputs (over all securities & n validations) --> fixate parameters to not use AutoArima, but ARIMA for val_ & prod_
-2. integrate 'Models' as described below
-3. rerun validation with full date range
-4. rerun main pipeline with extended date range
+2. optimize the other 5 tunable models as well (moving_averge_recursive is done)
+3. integrate 'Models' as described below
+4. rerun validation with full date range
+5. rerun main pipeline with extended date range
 
 ### Models
 - LinearNN:
