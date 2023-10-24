@@ -16,6 +16,8 @@ aiohttp-retry==2.8.3
     # via dvc-http
 aiosignal==1.3.1
     # via aiohttp
+alembic==1.12.0
+    # via optuna
 altair==5.1.2
     # via streamlit
 amqp==5.1.1
@@ -82,6 +84,8 @@ cmdstanpy==1.2.0
     # via prophet
 colorama==0.4.6
     # via dvc
+colorlog==6.7.0
+    # via optuna
 configobj==5.0.8
     # via dvc
 contourpy==1.1.1
@@ -259,6 +263,8 @@ llvmlite==0.41.1
     # via numba
 lunarcalendar==0.0.9
     # via prophet
+mako==1.2.4
+    # via alembic
 markdown==3.5
     # via tensorboard
 markdown-it-py==3.0.0
@@ -266,6 +272,7 @@ markdown-it-py==3.0.0
 markupsafe==2.1.3
     # via
     #   jinja2
+    #   mako
     #   werkzeug
 matplotlib==3.7.2
     # via
@@ -296,6 +303,7 @@ numpy==1.23.5
     #   matplotlib
     #   numba
     #   opt-einsum
+    #   optuna
     #   pandas
     #   patsy
     #   pmdarima
@@ -323,6 +331,8 @@ omegaconf==2.3.0
     # via hydra-core
 opt-einsum==3.3.0
     # via tensorflow-cpu
+optuna==3.4.0
+    # via trading-ml (pyproject.toml)
 orjson==3.9.9
     # via sqltrie
 packaging==23.2
@@ -332,6 +342,7 @@ packaging==23.2
     #   dvc-objects
     #   hydra-core
     #   matplotlib
+    #   optuna
     #   plotly
     #   pmdarima
     #   pytest
@@ -447,6 +458,7 @@ pytz==2023.3.post1
 pyyaml==6.0.1
     # via
     #   omegaconf
+    #   optuna
     #   pydrive2
 referencing==0.30.2
     # via
@@ -533,7 +545,10 @@ sktime==0.24.0
 smmap==5.0.1
     # via gitdb
 sqlalchemy==2.0.21
-    # via trading-ml (pyproject.toml)
+    # via
+    #   alembic
+    #   optuna
+    #   trading-ml (pyproject.toml)
 sqltrie==0.8.0
     # via dvc-data
 stanio==0.3.0
@@ -579,12 +594,14 @@ tqdm==4.66.1
     #   cmdstanpy
     #   dvc
     #   dvc-objects
+    #   optuna
     #   prophet
     #   pydrive2
 typer==0.9.0
     # via gto
 typing-extensions==4.5.0
     # via
+    #   alembic
     #   asyncssh
     #   dvc-objects
     #   pydantic

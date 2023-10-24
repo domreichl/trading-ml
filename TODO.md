@@ -1,6 +1,13 @@
 ## TODO
-1. "experimentation" with "exp_" data and models
+1. tune_models.py
+    - "experimentation" with "exp_arima"
     - use optuna together with dvclive
+    - parameters:
+        - look_back_window_size
+        - seasonal_period (sp)
+    - goals:
+        1. build a solid, reusable experimentation protocol
+        2. once I've found the best parameters for AutoArima --> run get precise AutoArima outputs (over all securities & n validations) --> fixate parameters to not use AutoArima, but ARIMA for val_ & prod_
 2. integrate 'Models' as described below
 3. rerun validation with full date range
 4. rerun main pipeline with extended date range

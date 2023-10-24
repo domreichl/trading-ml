@@ -1,11 +1,15 @@
-import random
+import optuna, random
 import numpy as np
+import pandas as pd
 from dvclive import Live
+from dvclive.optuna import DVCLiveCallback
 from sktime.forecasting.arima import AutoARIMA
 
 from utils.data_preprocessing import preprocess_data
 from utils.data_processing import get_signs_from_returns
 from utils.evaluation import evaluate_return_predictions, evaluate_sign_predictions
+from utils.file_handling import ResultsHandler
+from utils.validation import validate_model
 
 
 def validate_arima(mts, n_validations, sp) -> tuple[float, float]:
@@ -45,3 +49,45 @@ with Live() as live:
         live.log_metric("RMSE", rmse)
         live.log_metric("F1", f1)
         live.next_step()
+
+
+def get_grid_sampler(hparam: str):
+    week = 5
+    year = week * 52
+    search_space = {
+        hparam: [
+            week * 4,
+            year // 4,
+            year,
+            year * 2,
+        ]
+    }
+    grid_sampler = optuna.samplers.GridSampler(search_space)
+    return grid_sampler
+
+
+hparam = "look_back_window_size"
+results = []
+
+
+def objective(trial):
+    lbws = trial.suggest_int(hparam, 5, 2600, step=5)
+    mts = preprocess_data(look_back_window_size=lbws)
+    _, rmse = validate_model(model_name, mts)
+    return rmse
+
+
+study = optuna.create_study(
+    direction="minimize",
+    sampler=get_grid_sampler(hparam),
+    study_name=f"{model_name}_{hparam}",
+)
+study.optimize(objective)
+study_df = study.trials_dataframe()
+study_df["Model"] = model_name
+study_df = study_df[["Model", f"params_{hparam}", "value"]]
+study_df.columns = ["Model", hparam, "RMSE"]
+study_df.sort_values("RMSE", inplace=True)
+study_df = study_df.reset_index(drop=True)
+results.append(study_df)
+ResultsHandler().write_csv_results(pd.concat(results), "optimization_lstm")
