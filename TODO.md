@@ -1,13 +1,6 @@
 ## TODO
-1. tune_models.py
-    - "experimentation" with "exp_arima"
-    - use optuna together with dvclive
-    - parameters:
-        - look_back_window_size
-        - seasonal_period (sp)
-    - goals:
-        1. build a solid, reusable experimentation protocol
-        2. once I've found the best parameters for AutoArima --> run get precise AutoArima outputs (over all securities & n validations) --> fixate parameters to not use AutoArima, but ARIMA for val_ & prod_
+0. try ARIMA with close prices instead of log returns
+1. fixate ARIMA parameters for val_ & prod_ --> max lbws & (0,0,0)x(0,0,0)
 2. optimize the other 5 tunable models as well (moving_averge_recursive is done)
 3. integrate 'Models' as described below
 4. rerun validation with full date range
@@ -23,6 +16,7 @@
 - TCN: temporal convolutional network -> keras.layers.Conv1d(padding='causal', 'dilation_rate'>1)
 - FFNN: N-BEATS
 - RNNs: DeepAR, adRNNCell, DA-RNN, MQRNN
+- one model in PyTorch
 - DecisionTree, RandomForest, LightGBX & XGBoost as MultiClassClassifiers for SignPrediction (multi-class for full ForecastWindow)
 - sktime docs: https://www.sktime.net/en/stable/api_reference/forecasting.html
 - models specifically for leveraged products:

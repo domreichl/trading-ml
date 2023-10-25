@@ -22,8 +22,7 @@ dependencies = [
     "pytest==7.4.0",
     "mlforecast==0.9.3",
     "lightgbm==4.1.0",
-    "pmdarima==2.0.4",
-    #"statsforecast==1.6.0", # conflict with pandas 2
+    "pmdarima==2.0.4",        # because statsforecast==1.6.0 conflicts with pandas 2
     "sktime==0.24.0",
     "xgboost==2.0.0",
     "prophet==1.1.4",
@@ -31,9 +30,9 @@ dependencies = [
     "dvc-gdrive==2.20.0",
     "plotly==5.17.0",
     "streamlit==1.27.2",
-    "dvclive==3.0.1",
     "optuna==3.4.0",
     "ta==0.10.2",
+    "statsmodels==0.14.0",
 ]
 
 [project.scripts]

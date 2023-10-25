@@ -13,7 +13,6 @@
 ### DVC Pipelines
 1. Main pipeline in src/main
 2. Validation pipeline in src/validation
-3. Experimentation pipeline src/experimentation
 
 ### CLI Usage
 1. Download and preprocess exp_ data: `trading-ml prepare`
