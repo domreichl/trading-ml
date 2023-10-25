@@ -1,6 +1,5 @@
 ## TODO
-0. try ARIMA with close prices instead of log returns
-1. fixate ARIMA parameters for val_ & prod_ --> max lbws & (0,0,0)x(0,0,0)
+1. fixate ARIMA parameters for val_ & prod_ --> not AutoARIMA, but ARIMA with max lbws(!) & order=(0,0,0)x(0,0,0)
 2. optimize the other 5 tunable models as well (moving_averge_recursive is done)
 3. integrate 'Models' as described below
 4. rerun validation with full date range
