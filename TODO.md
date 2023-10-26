@@ -1,7 +1,11 @@
 ## TODO
-1. fixate ARIMA parameters for val_ & prod_ --> not AutoARIMA, but ARIMA with max lbws(!) & order=(0,0,0)x(0,0,0)
-2. optimize the other 5 tunable models as well (moving_averge_recursive is done)
-3. integrate 'Models' as described below
+1. optimize the other 6 tunable models as well with the following search space:
+    - LBWS {5, 10, 20, 65, 260, 520, 780, 1300}
+    - Normalization {True, False}
+    - Model-Specific Hyperparameters
+2. integrate 'Models' as described below
+3. fixate optimale parameters for val_ & prod_ models:
+    - AutoARIMA -> ARIMA(order=(0,0,0) with LookBackWindowSize of 1300 or 2600)
 4. rerun validation with full date range
 5. rerun main pipeline with extended date range
 
@@ -30,9 +34,6 @@
         - recommendation: invest when every prediction in path has the same sign with high confidence
 
 ### Model Tuning
-- tuning of all models (except transformer)
-    - especially ETS, LightGBM, and XGBoost
-    - RNN (Zellen unwesentlich: einfach 128)
 - Pinball loss
 - COCOB instead of Adam optimizer
 - stacking (of RNNs)
@@ -47,7 +48,7 @@
 - optimal number of test days
 - optimal look back window size
 - normalization methods
-- with/without market index
+- with/without market index (global models)
 
 ### Recommendation
 - improve ensembling algorithm

@@ -9,7 +9,13 @@ from utils.file_handling import DataHandler
 
 
 class DataPreprocessor:
-    def __init__(self, df: pd.DataFrame, look_back_window_size: int, test_days: int):
+    def __init__(
+        self,
+        df: pd.DataFrame,
+        look_back_window_size: int,
+        test_days: int,
+        normalize: bool,
+    ):
         self.df = df
         self.dates = list(self.df["Date"].unique())
         self.securities = list(self.df["ISIN"].unique())
@@ -19,11 +25,13 @@ class DataPreprocessor:
         self.time_steps = self.total_days - self.look_back_window_size
         self.test_days = test_days
         self.train_days = self.time_steps - self.test_days
-        self.scaler = None
         self.compute_log_returns()
         self.prepare_features()
         self.split_train_test()
-        self.normalize()
+        if normalize:
+            self.scaler = self.normalize()
+        else:
+            self.scaler = None
         self.mts = self.create_mts()
 
     def compute_log_returns(self) -> None:
@@ -70,20 +78,21 @@ class DataPreprocessor:
             self.y[-1, :, :],
         )
 
-    def normalize(self) -> None:
-        self.scaler = MinMaxScaler()
-        self.x_train = self.scaler.fit_transform(self.x_train.reshape(-1, 1)).reshape(
+    def normalize(self) -> MinMaxScaler:
+        scaler = MinMaxScaler()
+        self.x_train = scaler.fit_transform(self.x_train.reshape(-1, 1)).reshape(
             self.train_days - 1, self.look_back_window_size, len(self.securities)
         )
-        self.x_test = self.scaler.transform(self.x_test.reshape(-1, 1)).reshape(
+        self.x_test = scaler.transform(self.x_test.reshape(-1, 1)).reshape(
             self.look_back_window_size, len(self.securities)
         )
-        self.y_train = self.scaler.transform(self.y_train.reshape(-1, 1)).reshape(
+        self.y_train = scaler.transform(self.y_train.reshape(-1, 1)).reshape(
             self.train_days - 1, self.test_days, len(self.securities)
         )
-        self.y_test = self.scaler.transform(self.y_test.reshape(-1, 1)).reshape(
+        self.y_test = scaler.transform(self.y_test.reshape(-1, 1)).reshape(
             self.test_days, len(self.securities)
         )
+        return scaler
 
     def create_mts(self) -> MultipleTimeSeries:
         return MultipleTimeSeries(
@@ -103,7 +112,10 @@ class DataPreprocessor:
 
 
 def preprocess_data(
-    csv_file: Union[str, Path], look_back_window_size: int = 260, test_days: int = 10
+    csv_file: Union[str, Path],
+    look_back_window_size: int = 260,
+    test_days: int = 10,
+    normalize: bool = True,
 ) -> MultipleTimeSeries:
     df = DataHandler().load_csv_data(csv_file)
-    return DataPreprocessor(df, look_back_window_size, test_days).get_mts()
+    return DataPreprocessor(df, look_back_window_size, test_days, normalize).get_mts()

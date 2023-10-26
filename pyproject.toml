@@ -33,6 +33,7 @@ dependencies = [
     "optuna==3.4.0",
     "ta==0.10.2",
     "statsmodels==0.14.0",
+    "scipy==1.11.3",
 ]
 
 [project.scripts]
