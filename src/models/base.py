@@ -2,7 +2,7 @@ import random
 import numpy as np
 from prophet import Prophet
 
-from sktime.forecasting.arima import AutoARIMA
+from sktime.forecasting.arima import ARIMA
 from sktime.forecasting.exp_smoothing import ExponentialSmoothing
 from sktime.forecasting.compose import EnsembleForecaster
 
@@ -14,7 +14,9 @@ from utils.file_handling import CkptHandler
 
 def fit_arima(mts: MultipleTimeSeries, model_name: str) -> None:
     for i, ts_name in enumerate(mts.names):
-        model = AutoARIMA(suppress_warnings=True)
+        model = ARIMA(
+            order=(0, 0, 0), seasonal_order=(0, 0, 0, 0), suppress_warnings=True
+        )
         model.fit(mts.x_train[-1, :, i])
         CkptHandler().save_model_to_pickle_ckpt(model, f"{model_name}_{ts_name}")
 
@@ -34,7 +36,9 @@ def validate_arima(mts: MultipleTimeSeries, n_validations: int) -> tuple[float, 
         print(f"Validating arima_{ts_name}")
         for _ in range(n_validations):
             trial_i = random.randint(0, len(mts.x_train) - 1 - test_days)
-            model = AutoARIMA(suppress_warnings=True)
+            model = ARIMA(
+                order=(0, 0, 0), seasonal_order=(0, 0, 0, 0), suppress_warnings=True
+            )
             y_true = mts.x_train[trial_i + 1 : trial_i + 1 + test_days, -1, i]
             y_pred = np.squeeze(
                 model.fit_predict(
@@ -171,7 +175,12 @@ def fit_prophet(mts: MultipleTimeSeries, model_name: str) -> None:
     df = mts.get_train_df()
     for ts_name in mts.names:
         x = df[df["unique_id"] == ts_name].copy()
-        model = Prophet().fit(x)
+        model = Prophet(
+            growth="flat",
+            daily_seasonality=True,
+            weekly_seasonality=True,
+            yearly_seasonality=False,
+        ).fit(x)
         CkptHandler().save_model_to_json_ckpt(model, f"{model_name}_{ts_name}")
 
 
@@ -193,7 +202,12 @@ def validate_prophet(mts: MultipleTimeSeries, n_validations: int) -> dict:
         print(f"Validating prophet_{ts_name}")
         for _ in range(n_validations):
             trial_i = random.randint(0, len(mts.x_train) - 1 - test_days)
-            model = Prophet().fit(mts.get_train_df(trial_i, ts_name))
+            model = Prophet(
+                growth="flat",
+                daily_seasonality=True,
+                weekly_seasonality=True,
+                yearly_seasonality=False,
+            ).fit(mts.get_train_df(trial_i, ts_name))
             y_true = mts.x_train[trial_i + 1 : trial_i + 1 + test_days, -1, i]
             y_pred = np.array(
                 model.predict(

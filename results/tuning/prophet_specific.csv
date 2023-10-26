@@ -1,0 +1,5 @@
+Model;LookBackWindowSize;MAE;F1-Score;DailySeasonality;WeeklySeasonality;YearlySeasonality
+prophet;260;0.012594331213758627;0.5544583304046972;true;true;false
+prophet;520;0.01286700319818383;0.5751861025617172;true;true;false
+prophet;520;0.012795202784548494;0.5577556596866377;false;true;false
+prophet;260;0.012718940489304423;0.5608952114782564;false;true;false

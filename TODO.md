@@ -1,12 +1,18 @@
 ## TODO
-1. optimize 5 more models with the following search space:
-    - LBWS {5, 10, 20, 65, 260, 520, 780, 1300}
-    - Normalization {True, False}
-    - Model-Specific Hyperparameters
+1. optimize 4 more models:
+  - exponential_smoothing
+  - LGBMRegressor
+    - https://github.com/optuna/optuna-examples/blob/main/lightgbm/lightgbm_integration.py
+  - XGBRegressor
+    - https://www.kaggle.com/code/mtszkw/xgboost-for-stock-trend-prices-prediction
+    - https://github.com/optuna/optuna-examples/blob/main/xgboost/xgboost_integration.py
+  - lstm
+    - https://github.com/optuna/optuna-examples/blob/main/tfkeras/tfkeras_integration.py
 2. integrate 'Models' as described below
 3. fixate optimale parameters for val_ & prod_ models:
-    - AutoARIMA -> ARIMA(order=(0,0,0)) with LookBackWindowSize of 1300
-    - moving_average_recursive: large LookBackWindowSize of 1300
+    - arima: LookBackWindowSize=max, i.e., 1300
+    - moving_average_recursive: LookBackWindowSizee=max, i.e., 1300
+    - prophet:LookBackWindowSize=520 (exactly!)
 4. rerun validation with full date range
 5. rerun main pipeline with extended date range
 
