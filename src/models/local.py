@@ -59,7 +59,7 @@ def validate_arima(mts: MultipleTimeSeries, n_validations: int) -> tuple[float, 
 
 
 def fit_predict_exponential_smoothing(mts: MultipleTimeSeries) -> dict:
-    model = load_exponential_smoothing()
+    model = ExponentialSmoothing(method="Powell")
     results = model.fit_predict(mts.x_train[-1, :, :], fh=range(1, len(mts.y_test) + 1))
     y_preds = {name: results[:, i] for i, name in enumerate(mts.names)}
     return y_preds
@@ -69,7 +69,7 @@ def validate_exponential_smoothing(
     mts: MultipleTimeSeries, n_validations: int
 ) -> tuple[float, float]:
     test_days = len(mts.y_test)
-    model = load_exponential_smoothing()
+    model = ExponentialSmoothing(method="Powell")
     mae_lst, rmse_lst, f1_lst = [], [], []
     for _ in range(n_validations):
         trial_i = random.randint(0, len(mts.x_train) - 1 - test_days)
@@ -88,31 +88,6 @@ def validate_exponential_smoothing(
         rmse_lst.append(metrics["RMSE"])
         f1_lst.append(metrics_sign["F1"])
     return float(np.mean(mae_lst)), float(np.mean(rmse_lst)), float(np.mean(f1_lst))
-
-
-def load_exponential_smoothing(seasonal_periods: int = 20) -> EnsembleForecaster:
-    model = EnsembleForecaster(
-        [
-            ("ses", ExponentialSmoothing(sp=seasonal_periods)),
-            (
-                "holt",
-                ExponentialSmoothing(
-                    trend="add",
-                    damped_trend=False,
-                    sp=seasonal_periods,
-                ),
-            ),
-            (
-                "damped",
-                ExponentialSmoothing(
-                    trend="add",
-                    damped_trend=True,
-                    sp=seasonal_periods,
-                ),
-            ),
-        ]
-    )
-    return model
 
 
 def predict_moving_average(mts: MultipleTimeSeries, idx: int = -1) -> dict:

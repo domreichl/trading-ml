@@ -1,6 +1,5 @@
 ## TODO
-1. optimize 4 more models:
-  - exponential_smoothing
+1. optimize 3 more models:
   - LGBMRegressor
     - https://github.com/optuna/optuna-examples/blob/main/lightgbm/lightgbm_integration.py
   - XGBRegressor
@@ -10,9 +9,13 @@
     - https://github.com/optuna/optuna-examples/blob/main/tfkeras/tfkeras_integration.py
 2. integrate 'Models' as described below
 3. fixate optimale parameters for val_ & prod_ models:
-    - arima: LookBackWindowSize=max, i.e., 1300
-    - moving_average_recursive: LookBackWindowSizee=max, i.e., 1300
-    - prophet:LookBackWindowSize=520 (exactly!)
+    - LookBackWindowSize:
+      - 520 (2 years):
+        - arima (1300 would be just as good, but less efficient)
+        - prophet (exactly the best)
+      - 780 (3 years):
+        - moving_average_recursive
+        - exponential_smoothing
 4. rerun validation with full date range
 5. rerun main pipeline with extended date range
 
@@ -23,6 +26,7 @@
     - hidden: DenseLayer with linear activation
     - output: ForecastWindow
 - globals models to utilize cross-series information
+- sklearn's EnsembleForecaster
 - TCN: temporal convolutional network -> keras.layers.Conv1d(padding='causal', 'dilation_rate'>1)
 - FFNN: N-BEATS
 - RNNs: DeepAR, adRNNCell, DA-RNN, MQRNN
