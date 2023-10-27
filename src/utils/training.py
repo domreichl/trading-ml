@@ -1,5 +1,5 @@
 from models.local import fit_arima, fit_prophet
-from models.neural_networks import LSTMRegression
+from models.neural_networks import RegressionNet
 from utils.data_classes import MultipleTimeSeries
 
 from utils.file_handling import CkptHandler
@@ -10,9 +10,9 @@ def train_model(
 ) -> None:
     if "arima" in model_name:
         fit_arima(mts, model_name)
-    elif "lstm" in model_name:
-        model = LSTMRegression(mts)
-        model.train(batch_size, n_epochs).save(CkptHandler().get_ckpt_dir(model_name))
+    elif "_net" in model_name:
+        model = RegressionNet(model_name, mts)
+        model.train(batch_size, n_epochs)
     elif "prophet" in model_name:
         fit_prophet(mts, model_name)
     else:

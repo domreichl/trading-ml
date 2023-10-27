@@ -1,8 +1,9 @@
 models:
   - arima
   - exponential_smoothing
-  - LGBMRegressor
-  - lstm
   - moving_average_recursive
   - prophet
+  - simple_regression_net
+  - recurrent_regression_net
+  - LGBMRegressor
   - XGBRegressor

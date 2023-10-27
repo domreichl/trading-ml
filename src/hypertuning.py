@@ -16,7 +16,7 @@ from utils.validation import validate_model
 # predictions = model.predict()
 # print(predictions)
 
-MODEL_NAME = "LGBMRegressor"  # XGBRegressor, lstm
+MODEL_NAME = "LGBMRegressor"  # XGBRegressor
 N_VALIDATIONS = 50
 
 

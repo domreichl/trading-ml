@@ -16,7 +16,7 @@ for model_name in ranked_models:
     model_name = model_name.replace("main_", "prod_")
     print(f"Computing forecast with model '{model_name}'")
     deep_learning = False
-    if "lstm" in model_name:
+    if "_net" in model_name:
         deep_learning = True
     mts = preprocess_data("main.csv")
     mts.merge_features(for_deep_learning=deep_learning)

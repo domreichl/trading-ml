@@ -18,10 +18,11 @@ def generate_predictions(
         from models.boosting import fit_predict_boosting_model
 
         y_preds = fit_predict_boosting_model(model_name, mts)
-    elif "lstm" in model_name:
-        from models.neural_networks import load_nn_model
+    elif "_net" in model_name:
+        from models.neural_networks import RegressionNet
 
-        model = load_nn_model(model_name, mts)
+        model = RegressionNet(model_name, mts)
+        model.load()
         y_preds = model.predict()
     elif "moving_average_recursive" in model_name:
         from models.local import predict_moving_average_recursive

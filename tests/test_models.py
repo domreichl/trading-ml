@@ -18,7 +18,7 @@ from models.local import (
     validate_prophet,
 )
 from models.boosting import fit_predict_boosting_model, validate_boosting_model
-from models.neural_networks import LSTMRegression
+from models.neural_networks import RegressionNet
 
 
 class UnitTestDataTrimmer:
@@ -124,14 +124,20 @@ def test_boosting_validate_boosting_model():
         assert f1 > 0
 
 
-def test_lstms_lstmregression_predict():
-    model = LSTMRegression(mts)
+def test_neural_networks_simple_regression_net():
+    model = RegressionNet("test_simple_regression_net", mts)
     y_preds = model.predict()
     assert stack_array_from_dict(y_preds, 1).shape == (10, 4)
 
 
-def test_lstms_lstmregression_validate():
-    model = LSTMRegression(mts)
+def test_neural_networks_recurrent_regression_net():
+    model = RegressionNet("test_recurrent_regression_net", mts)
+    y_preds = model.predict()
+    assert stack_array_from_dict(y_preds, 1).shape == (10, 4)
+
+
+def test_neural_networks_simple_regression_net_validate():
+    model = RegressionNet("test_simple_regression_net", mts)
     mse, rmse, f1 = model.validate(n_validations=2)
     assert mse > 0
     assert rmse > 0

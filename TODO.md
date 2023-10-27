@@ -1,21 +1,20 @@
 ## TODO
-0. finish GlobalLinearNet
-1. fully integrate LocalLinearNet & GlobalLinearNet:
-      - training.py (LocalLinearNet: one for each TS)
-      - test_models.py
-      - config/models.yaml
-      - forecast.py
-      - prediction.py
-      - validation.py
-2. refactor validation loops
-3. hypertuning.py:
-  - 3 keras models: LocalLinearNet, GlobalLinearNet, and lstm
-    - https://github.com/optuna/optuna-examples/blob/main/tfkeras/tfkeras_integration.py
+0. finish & tune:
+  - simple_regression_net
+  - recurrent_regression_net
+  - hparams:
+    - LBWS
+    - Linear vs. Relu
+    - N_Layers
+    - COCOB vs Adam
+    - Pinball vs. MAE
+  - https://github.com/optuna/optuna-examples/blob/main/tfkeras/tfkeras_integration.py
+1. hypertuning.py:
   - LGBMRegressor: https://github.com/optuna/optuna-examples/blob/main/lightgbm/lightgbm_integration.py
   - XGBRegressor:
     - https://www.kaggle.com/code/mtszkw/xgboost-for-stock-trend-prices-prediction
     - https://github.com/optuna/optuna-examples/blob/main/xgboost/xgboost_integration.py
-4. fixate optimale parameters for val_ & prod_ models:
+2. fixate optimale parameters for val_ & prod_ models:
     - LookBackWindowSize:
       - 520 (2 years):
         - arima (1300 would be just as good, but less efficient)
@@ -23,8 +22,9 @@
       - 780 (3 years):
         - moving_average_recursive
         - exponential_smoothing
-5. rerun validation with full date range
-6. rerun main pipeline with extended date range
+3. refactor validation loops
+4. rerun validation with full date range
+5. rerun main pipeline with extended date range
 
 
 ### Data
@@ -45,9 +45,6 @@
     - TCN: temporal convolutional network -> keras.layers.Conv1d(padding='causal', 'dilation_rate'>1)
     - FFNN: N-BEATS
     - RNNs: DeepAR, adRNNCell, DA-RNN, MQRNN
-    - optimization:
-      - Pinball loss
-      - COCOB instead of Adam optimizer
 3. sktime: EnsembleForecaster & StackingForecaster
 4. models specifically for leveraged products:
     - knock-outs:

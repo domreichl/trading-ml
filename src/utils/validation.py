@@ -5,7 +5,7 @@ from models.local import (
     validate_moving_average,
     validate_prophet,
 )
-from models.neural_networks import load_nn_model
+from models.neural_networks import RegressionNet
 from utils.data_classes import MultipleTimeSeries
 
 
@@ -18,8 +18,9 @@ def validate_model(
         mae, rmse, f1 = validate_exponential_smoothing(mts, n_validations)
     elif "LGBMRegressor" in model_name:
         mae, rmse, f1 = validate_boosting_model(model_name, mts, n_validations)
-    elif "lstm" in model_name:
-        model = load_nn_model(model_name, mts)
+    elif "_net" in model_name:
+        model = RegressionNet(model_name, mts)
+        model.load()
         mae, rmse, f1 = model.validate(n_validations)
     elif "moving_average_recursive" in model_name:
         mae, rmse, f1 = validate_moving_average(mts, n_validations, recursive=True)
