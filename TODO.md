@@ -1,15 +1,7 @@
 ## TODO
-0. finish & tune:
+1. hypertuning:
   - simple_regression_net
   - recurrent_regression_net
-  - hparams:
-    - LBWS
-    - Linear vs. Relu
-    - N_Layers
-    - COCOB vs Adam
-    - Pinball vs. MAE
-  - https://github.com/optuna/optuna-examples/blob/main/tfkeras/tfkeras_integration.py
-1. hypertuning.py:
   - LGBMRegressor: https://github.com/optuna/optuna-examples/blob/main/lightgbm/lightgbm_integration.py
   - XGBRegressor:
     - https://www.kaggle.com/code/mtszkw/xgboost-for-stock-trend-prices-prediction

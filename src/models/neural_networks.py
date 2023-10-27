@@ -18,6 +18,7 @@ class RegressionNet:
         self.test_days = len(mts.y_test)
         self.look_back_window_size = mts.x_train.shape[1]
         self.model_name = model_name
+        self.training = False
         if "simple" in model_name:
             self.model = self.set_feed_forward_net(
                 self.look_back_window_size, self.test_days, len(self.names)
@@ -35,10 +36,10 @@ class RegressionNet:
         dropout_rate: float = 0.3,
     ) -> Model:
         inputs = Input(shape=(look_back_window_size, n_heads))
-        x = Dense(260, activation="linear")(inputs)
-        x = Dropout(dropout_rate)(x)
-        x = Dense(65, activation="linear")(x)
-        x = Dropout(dropout_rate)(x)
+        x = Dense(260, activation="relu")(inputs)
+        x = Dropout(dropout_rate)(x, training=self.training)
+        x = Dense(65, activation="relu")(x)
+        x = Dropout(dropout_rate)(x, training=self.training)
         x = GlobalAveragePooling1D()(x)
         outputs = self.compute_heads(x, test_days, n_heads)
         return Model(inputs=inputs, outputs=outputs)
@@ -51,22 +52,23 @@ class RegressionNet:
         dropout_rate: float = 0.3,
     ) -> Model:
         inputs = Input(shape=(look_back_window_size, n_heads))
-        x = LSTM(260, activation="linear", return_sequences=True)(inputs)
-        x = Dropout(dropout_rate)(x)
-        x = LSTM(65, activation="linear")(x)
-        x = Dropout(dropout_rate)(x)
+        x = LSTM(260, return_sequences=True)(inputs)
+        x = Dropout(dropout_rate)(x, training=self.training)
+        x = LSTM(65)(x)
+        x = Dropout(dropout_rate)(x, training=self.training)
         outputs = self.compute_heads(x, test_days, n_heads)
         return Model(inputs=inputs, outputs=outputs)
 
     def compute_heads(self, x: tf.Tensor, test_days: int, n_heads: int) -> list:
         outputs = []
         for _ in range(n_heads):
-            head = Dense(20, activation="linear")(x)
+            head = Dense(22, activation="relu")(x)
             head = Dense(test_days)(head)
             outputs.append(head)
         return tf.stack(outputs, 2)
 
     def train(self, batch_size: int, epochs: int) -> None:
+        self.training = True
         self.model.compile(loss="mean_squared_error", optimizer="adam")
         self.model.fit(
             self.mts.x_train,
