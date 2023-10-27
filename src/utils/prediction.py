@@ -7,11 +7,11 @@ def generate_predictions(
     model_name: str, mts: MultipleTimeSeries, forecast: bool = False
 ) -> tuple[dict, dict]:
     if "arima" in model_name:
-        from models.base import predict_arima
+        from models.local import predict_arima
 
         y_preds = predict_arima(mts, model_name)
     elif "exponential_smoothing" in model_name:
-        from models.base import fit_predict_exponential_smoothing
+        from models.local import fit_predict_exponential_smoothing
 
         y_preds = fit_predict_exponential_smoothing(mts)
     elif "LGBMRegressor" in model_name:
@@ -24,11 +24,11 @@ def generate_predictions(
         model = load_lstm_model(model_name, mts)
         y_preds = model.predict()
     elif "moving_average_recursive" in model_name:
-        from models.base import predict_moving_average_recursive
+        from models.local import predict_moving_average_recursive
 
         y_preds = predict_moving_average_recursive(mts)
     elif "prophet" in model_name:
-        from models.base import predict_prophet
+        from models.local import predict_prophet
 
         y_preds = predict_prophet(mts, model_name)
     elif "XGBRegressor" in model_name:

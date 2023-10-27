@@ -1,4 +1,4 @@
-from models.base import fit_arima, fit_prophet
+from models.local import fit_arima, fit_prophet
 from models.lstms import LSTMRegression
 from utils.data_classes import MultipleTimeSeries
 

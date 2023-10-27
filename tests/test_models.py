@@ -4,7 +4,7 @@ from utils.data_classes import MultipleTimeSeries
 from utils.data_preprocessing import preprocess_data
 from utils.data_processing import stack_array_from_dict
 from utils.file_handling import CkptHandler
-from models.base import (
+from models.local import (
     fit_arima,
     predict_arima,
     fit_predict_exponential_smoothing,
@@ -39,7 +39,7 @@ mts = UnitTestDataTrimmer(
 ).get_mts()
 
 
-def test_base_fit_predict_arima():
+def test_local_fit_predict_arima():
     model_name = "test_arima"
     if not CkptHandler().get_ckpt_dir(model_name).is_dir():
         fit_arima(mts, model_name)
@@ -48,39 +48,39 @@ def test_base_fit_predict_arima():
     assert y_preds["AT0000937503"][6] > 0
 
 
-def test_base_validate_arima():
+def test_local_validate_arima():
     mse, rmse, f1 = validate_arima(mts, n_validations=2)
     assert mse > 0
     assert rmse > 0
     assert f1 > 0
 
 
-def test_base_fit_predict_exponential_smoothing():
+def test_local_fit_predict_exponential_smoothing():
     y_preds = fit_predict_exponential_smoothing(mts)
     assert y_preds["ExponentialTrend"][8] > 0
     assert stack_array_from_dict(y_preds, 1).shape == (10, 4)
 
 
-def test_base_validate_exponential_smoothing():
+def test_local_validate_exponential_smoothing():
     mse, rmse, f1 = validate_exponential_smoothing(mts, n_validations=2)
     assert mse > 0
     assert rmse > 0
     assert f1 > 0
 
 
-def test_base_predict_moving_average():
+def test_local_predict_moving_average():
     y_preds = predict_moving_average(mts)
     assert y_preds["ExponentialTrend"][8] > 0
     assert stack_array_from_dict(y_preds, 1).shape == (10, 4)
 
 
-def test_base_predict_moving_average_recursive():
+def test_local_predict_moving_average_recursive():
     y_preds = predict_moving_average_recursive(mts)
     assert y_preds["ExponentialTrend"][8] > 0
     assert stack_array_from_dict(y_preds, 1).shape == (10, 4)
 
 
-def test_base_validate_moving_average():
+def test_local_validate_moving_average():
     mse, rmse, f1 = validate_moving_average(mts, recursive=False, n_validations=2)
     mse_rec, rmse_rec, f1_rec = validate_moving_average(
         mts, recursive=True, n_validations=2
@@ -93,7 +93,7 @@ def test_base_validate_moving_average():
     assert f1_rec > 0
 
 
-def test_base_fit_predict_prophet():
+def test_local_fit_predict_prophet():
     model_name = "test_prophet"
     if not CkptHandler().get_ckpt_dir(model_name).is_dir():
         fit_prophet(mts, model_name)
@@ -102,7 +102,7 @@ def test_base_fit_predict_prophet():
     assert y_preds["AT0000937503"][6] > 0
 
 
-def test_base_validate_prophet():
+def test_local_validate_prophet():
     mse, rmse, f1 = validate_prophet(mts, n_validations=2)
     assert mse > 0
     assert rmse > 0

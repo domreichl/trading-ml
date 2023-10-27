@@ -1,10 +1,10 @@
-from models.base import (
+from models.boosting import validate_boosting_model
+from models.local import (
     validate_arima,
     validate_exponential_smoothing,
     validate_moving_average,
     validate_prophet,
 )
-from models.boosting import validate_boosting_model
 from models.lstms import load_lstm_model
 from utils.data_classes import MultipleTimeSeries
 
