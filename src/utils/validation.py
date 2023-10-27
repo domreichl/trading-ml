@@ -5,7 +5,7 @@ from models.local import (
     validate_moving_average,
     validate_prophet,
 )
-from models.lstms import load_lstm_model
+from models.neural_networks import load_nn_model
 from utils.data_classes import MultipleTimeSeries
 
 
@@ -19,7 +19,7 @@ def validate_model(
     elif "LGBMRegressor" in model_name:
         mae, rmse, f1 = validate_boosting_model(model_name, mts, n_validations)
     elif "lstm" in model_name:
-        model = load_lstm_model(model_name, mts)
+        model = load_nn_model(model_name, mts)
         mae, rmse, f1 = model.validate(n_validations)
     elif "moving_average_recursive" in model_name:
         mae, rmse, f1 = validate_moving_average(mts, n_validations, recursive=True)

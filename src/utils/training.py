@@ -1,5 +1,5 @@
 from models.local import fit_arima, fit_prophet
-from models.lstms import LSTMRegression
+from models.neural_networks import LSTMRegression
 from utils.data_classes import MultipleTimeSeries
 
 from utils.file_handling import CkptHandler

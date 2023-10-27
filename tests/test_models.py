@@ -18,7 +18,7 @@ from models.local import (
     validate_prophet,
 )
 from models.boosting import fit_predict_boosting_model, validate_boosting_model
-from models.lstms import LSTMRegression
+from models.neural_networks import LSTMRegression
 
 
 class UnitTestDataTrimmer:

@@ -5,6 +5,17 @@ from utils.file_handling import ResultsHandler
 from utils.validation import validate_model
 
 
+# from models.neural_networks import LocalLinearNet, GlobalLinearNet, load_linearnn_model
+# from utils.file_handling import CkptHandler
+
+# ts_idx = 2
+# mts = preprocess_data("exp.csv", look_back_window_size=520)
+# model = LocalLinearNet(mts, ts_idx)
+# model.train(30, 10).save(CkptHandler().get_ckpt_dir("exp_local_linear_net"))
+# model = load_linearnn_model("exp_local_linear_net", mts, ts_idx)
+# predictions = model.predict()
+# print(predictions)
+
 MODEL_NAME = "LGBMRegressor"  # XGBRegressor, lstm
 N_VALIDATIONS = 50
 
