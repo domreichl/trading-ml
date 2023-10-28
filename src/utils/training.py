@@ -1,8 +1,6 @@
 from models.local import fit_arima, fit_prophet
-from models.neural_networks import RegressionNet
+from models.neural_nets import RegressionNet
 from utils.data_classes import MultipleTimeSeries
-
-from utils.file_handling import CkptHandler
 
 
 def train_model(

@@ -1,23 +1,29 @@
 ## TODO
 1. hypertuning:
-  - simple_regression_net
-  - recurrent_regression_net
-  - LGBMRegressor: https://github.com/optuna/optuna-examples/blob/main/lightgbm/lightgbm_integration.py
+  - LGBMRegressor
+    - Base: LBWS only
+    - MLForecast:
+      - lags
+      - lag_transforms
+    - LGBMRegressor:
+      - boosting_type
+      - num_leaves
+      - learning_rate
+      - n_estimators
   - XGBRegressor:
-    - https://www.kaggle.com/code/mtszkw/xgboost-for-stock-trend-prices-prediction
-    - https://github.com/optuna/optuna-examples/blob/main/xgboost/xgboost_integration.py
-2. fixate optimale parameters for val_ & prod_ models:
-    - LookBackWindowSize:
-      - 520 (2 years):
-        - arima (1300 would be just as good, but less efficient)
-        - prophet (exactly the best)
-      - 780 (3 years):
-        - moving_average_recursive
-        - exponential_smoothing
-3. refactor validation loops
-4. rerun validation with full date range
-5. rerun main pipeline with extended date range
-
+    - Base: LBWS only
+    - MLForecast:
+      - lags
+      - lag_transforms
+    - XGBRegressor:
+      - booster
+      - "n_estimators": [100, 200, 300, 400],
+      - "learning_rate": [0.001, 0.005, 0.01, 0.05],
+      - "max_depth": [8, 10, 12, 15],
+      - "gamma": [0.001, 0.005, 0.01, 0.02],
+  - update 'look_back_window_size' in models.yaml
+2. rerun validation with full date range
+3. rerun main pipeline with extended date range
 
 ### Data
 - https://www.wienerborse.at/aktien-prime-market/
@@ -31,8 +37,8 @@
     - sklearn.ensemble.RandomForestClassifier
     - LGBMClassifier
     - XGBClassifier
-    - neural_networks.py: LocalLinearClassifier, GlobalLinearClassifier
-2. deep neural networks:
+    - neural_nets.py: LocalLinearClassifier, GlobalLinearClassifier
+2. deep neural nets:
     - one model in PyTorch
     - TCN: temporal convolutional network -> keras.layers.Conv1d(padding='causal', 'dilation_rate'>1)
     - FFNN: N-BEATS

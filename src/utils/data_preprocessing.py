@@ -4,6 +4,7 @@ from pathlib import Path
 from sklearn.preprocessing import MinMaxScaler
 from typing import Union
 
+from utils.config import Config
 from utils.data_classes import MultipleTimeSeries
 from utils.file_handling import DataHandler
 
@@ -113,9 +114,14 @@ class DataPreprocessor:
 
 def preprocess_data(
     csv_file: Union[str, Path],
+    model_name: str = "",
     look_back_window_size: int = 260,
     test_days: int = 10,
     normalize: bool = True,
 ) -> MultipleTimeSeries:
     df = DataHandler().load_csv_data(csv_file)
-    return DataPreprocessor(df, look_back_window_size, test_days, normalize).get_mts()
+    if model_name:
+        lbws = Config().models[model_name]["look_back_window_size"]
+    else:
+        lbws = look_back_window_size
+    return DataPreprocessor(df, lbws, test_days, normalize).get_mts()

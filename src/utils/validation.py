@@ -5,7 +5,7 @@ from models.local import (
     validate_moving_average,
     validate_prophet,
 )
-from models.neural_networks import RegressionNet
+from models.neural_nets import RegressionNet
 from utils.data_classes import MultipleTimeSeries
 
 

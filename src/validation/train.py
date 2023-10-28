@@ -4,8 +4,8 @@ from utils.file_handling import CkptHandler
 from utils.training import train_model
 
 
-mts = preprocess_data("val.csv")
 CkptHandler().reset_dir("val")
 
-for model_name in Config().models:
+for model_name in Config().models.keys():
+    mts = preprocess_data("val.csv", model_name=model_name)
     train_model("val_" + model_name, mts)

@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from sklearn.metrics import precision_recall_fscore_support
+from sklearn.metrics import f1_score, precision_recall_fscore_support
 from typing import Optional
 
 from utils.data_processing import (
@@ -56,6 +56,20 @@ def rate_models(test_metrics: pd.DataFrame, position_type: str) -> dict:
     )
     [print(f" [{i+1}] {k}: {v}") for i, (k, v) in enumerate(sorted_ratings.items())]
     return sorted_ratings
+
+
+def get_validation_metrics(
+    returns_true: np.array, returns_pred: np.array
+) -> tuple[float]:
+    assert returns_true.shape == returns_pred.shape
+    metrics = evaluate_return_predictions(returns_true, returns_pred)
+    f1 = f1_score(
+        get_signs_from_returns(returns_true),
+        get_signs_from_returns(returns_pred),
+        average="binary",
+        zero_division=1.0,
+    )
+    return metrics["MAE"], metrics["RMSE"], f1
 
 
 def compute_prediction_performances(

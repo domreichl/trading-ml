@@ -10,9 +10,9 @@ results = {}
 cfg = Config()
 params = cfg.get_params("validate_params.yaml")
 rh = ResultsHandler()
-mts = preprocess_data("val.csv")
 
-for model_name in cfg.models:
+for model_name in cfg.models.keys():
+    mts = preprocess_data("val.csv", model_name=model_name)
     model_name = "val_" + model_name
     print(
         f"Validating {model_name} with {params['n_validations']} iterations on train set"

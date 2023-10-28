@@ -42,8 +42,8 @@ def train(model_name: str):
 @cli.command()
 @click.argument("model_name")
 def validate(model_name: str):
+    mts = preprocess_data("exp.csv", model_name=model_name)
     model_name = "exp_" + model_name
-    mts = preprocess_data("exp.csv")
     mae, rmse, f1 = validate_model(model_name, mts, n_validations=10)
     print(f"Validation results for {model_name}:")
     print("MAE: ", mae)
@@ -54,8 +54,8 @@ def validate(model_name: str):
 @cli.command()
 @click.argument("model_name")
 def test(model_name: str):
+    mts = preprocess_data("exp.csv", model_name=model_name)
     model_name = "exp_" + model_name
-    mts = preprocess_data("exp.csv")
     returns_predicted, prices_predicted = generate_predictions(model_name, mts)
     df = compute_prediction_performances(
         mts.get_test_returns(),
@@ -72,8 +72,8 @@ def test(model_name: str):
 @click.argument("model_name")
 @click.argument("ts_name", required=False)
 def predict(model_name: str, ts_name: str = ""):
+    mts = preprocess_data("exp.csv", model_name=model_name)
     model_name = "exp_" + model_name
-    mts = preprocess_data("exp.csv")
     returns_predicted, prices_predicted = generate_predictions(model_name, mts)
     df = get_df_from_predictions(
         mts.get_test_returns(),
@@ -95,7 +95,7 @@ def predict(model_name: str, ts_name: str = ""):
 def forecast(ts_name: str = ""):
     forecast = ResultsHandler().load_csv_results("forecast")
     if not ts_name:
-        ts_name = random.choice(list(df["ISIN"].unique()))
+        ts_name = random.choice(list(forecast["ISIN"].unique()))
     forecast = forecast[forecast["ISIN"] == ts_name].reset_index(drop=True)
     print(forecast)
     plot_price_forecast(forecast)
@@ -105,10 +105,10 @@ def forecast(ts_name: str = ""):
 @click.argument("position_type")
 @click.argument("optimize")
 def recommend_open(position_type: str, optimize: str):
-    mts = preprocess_data("main.csv")
-    current_prices = {ts_name: cp[-1] for ts_name, cp in mts.close_prices.items()}
+    close_prices = preprocess_data("main.csv").close_prices
+    current_prices = {ts_name: cp[-1] for ts_name, cp in close_prices.items()}
     top_stock, _, _ = recommend_stock(current_prices, position_type, optimize)
-    trend, state, macdc, fso, bbb = compute_market_signals(mts.close_prices[top_stock])
+    trend, state, macdc, fso, bbb = compute_market_signals(close_prices[top_stock])
     interpret_market_signals(top_stock, trend, state)
     print(" - MACD Crossover:", macdc)
     print(" - Fast Stochastic Oscillator:", fso)
@@ -119,12 +119,12 @@ def recommend_open(position_type: str, optimize: str):
 @click.argument("position_type")
 @click.argument("ts_name")
 def recommend_close(position_type: str, ts_name: str):
-    mts = preprocess_data("main.csv")
-    current_price = mts.close_prices[ts_name][-1]
+    close_prices = preprocess_data("main.csv").close_prices
+    current_price = close_prices[ts_name][-1]
     forecast = ResultsHandler().load_csv_results("forecast")
     forecast = forecast[forecast["ISIN"] == ts_name]
     recommend_close_position(forecast, current_price, position_type)
-    trend, state, macdc, fso, bbb = compute_market_signals(mts.close_prices[ts_name])
+    trend, state, macdc, fso, bbb = compute_market_signals(close_prices[ts_name])
     interpret_market_signals(ts_name, trend, state)
     print(" - MACD Crossover:", macdc)
     print(" - Fast Stochastic Oscillator:", fso)

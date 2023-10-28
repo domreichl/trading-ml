@@ -19,7 +19,7 @@ def generate_predictions(
 
         y_preds = fit_predict_boosting_model(model_name, mts)
     elif "_net" in model_name:
-        from models.neural_networks import RegressionNet
+        from models.neural_nets import RegressionNet
 
         model = RegressionNet(model_name, mts)
         model.load()

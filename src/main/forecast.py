@@ -18,7 +18,7 @@ for model_name in ranked_models:
     deep_learning = False
     if "_net" in model_name:
         deep_learning = True
-    mts = preprocess_data("main.csv")
+    mts = preprocess_data("main.csv", model_name=model_name.replace("prod_", ""))
     mts.merge_features(for_deep_learning=deep_learning)
     train_model(model_name, mts)
     returns_predicted, prices_predicted = generate_predictions(

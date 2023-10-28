@@ -9,15 +9,15 @@ from utils.file_handling import ResultsHandler
 
 
 rh = ResultsHandler()
-performance, predictions = [], []
-mts = preprocess_data("main.csv")
-returns_actual = mts.get_test_returns()
-prices_actual = mts.get_test_prices()
-dates = mts.get_test_dates()
-naive_errors = mts.get_naive_errors()
 ranked_models = rh.load_csv_results("validation_ranked")["Model"].unique()
 
+performance, predictions = [], []
 for model_name in ranked_models:
+    mts = preprocess_data("main.csv", model_name=model_name.replace("val_", ""))
+    returns_actual = mts.get_test_returns()
+    prices_actual = mts.get_test_prices()
+    dates = mts.get_test_dates()
+    naive_errors = mts.get_naive_errors()
     model_name = model_name.replace("val_", "main_")
     print(f"Computing predictions with model '{model_name}'")
     returns_predicted, prices_predicted = generate_predictions(model_name, mts)

@@ -12,7 +12,7 @@ class Config:
         self.date_format: str = data_cfg["date_format"]
 
         model_cfg = yaml.safe_load(open(cfg_dir.joinpath("models.yaml"), "r"))
-        self.models: list = model_cfg["models"]
+        self.models: dict = model_cfg["models"]
 
     def set_dates(self, start_date: str, end_date: str) -> None:
         self.start_date = dt.strptime(start_date, self.date_format)

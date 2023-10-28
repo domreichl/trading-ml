@@ -3,21 +3,21 @@ import numpy as np
 import pandas as pd
 from lightgbm import LGBMRegressor
 from mlforecast import MLForecast
-from window_ops.rolling import rolling_mean, rolling_max, rolling_min
+from window_ops.expanding import expanding_mean
+from window_ops.rolling import rolling_mean
 from xgboost import XGBRegressor
 
 from utils.data_classes import MultipleTimeSeries
-from utils.data_processing import get_signs_from_returns
-from utils.evaluation import evaluate_return_predictions, evaluate_sign_predictions
+from utils.evaluation import get_validation_metrics
 
 
 def load_lightgbm() -> MLForecast:
     model = MLForecast(
         models=[LGBMRegressor()],
         freq="B",
-        lags=[1, 5, 10],
         lag_transforms={
-            1: [(rolling_mean, 5), (rolling_max, 5), (rolling_min, 5)],
+            1: [expanding_mean],
+            5: [(rolling_mean, 10)],
         },
         num_threads=2,
     )
@@ -30,7 +30,7 @@ def load_xgboost() -> MLForecast:
         freq="B",
         lags=[1, 5, 10],
         lag_transforms={
-            1: [(rolling_mean, 5), (rolling_max, 5), (rolling_min, 5)],
+            1: [(rolling_mean, 5), (rolling_mean, 15), (rolling_mean, 25)],
         },
         num_threads=2,
     )
@@ -68,16 +68,13 @@ def validate_boosting_model(
         results = model.predict(h=test_days)
         y_preds = get_y_preds_from_boosting_results(results, mts.names, model_name)
         y_pred = np.stack(list(y_preds.values()), 1)
-        assert y_true.shape == y_pred.shape == (test_days, len(mts.names))
-        gt = mts.get_returns_from_features(y_true)
-        pr = mts.get_returns_from_features(y_pred)
-        metrics = evaluate_return_predictions(gt, pr)
-        metrics_sign = evaluate_sign_predictions(
-            get_signs_from_returns(gt), get_signs_from_returns(pr)
+        mae, rmse, f1 = get_validation_metrics(
+            mts.get_returns_from_features(y_true),
+            mts.get_returns_from_features(y_pred),
         )
-        mae_lst.append(metrics["MAE"])
-        rmse_lst.append(metrics["RMSE"])
-        f1_lst.append(metrics_sign["F1"])
+        mae_lst.append(mae)
+        rmse_lst.append(rmse)
+        f1_lst.append(f1)
     return float(np.mean(mae_lst)), float(np.mean(rmse_lst)), float(np.mean(f1_lst))
 
 
