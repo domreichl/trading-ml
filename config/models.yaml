@@ -12,6 +12,6 @@ models:
   recurrent_regression_net:
     look_back_window_size: 20
   LGBMRegressor:
-    look_back_window_size: -1
+    look_back_window_size: 1300
   XGBRegressor:
-    look_back_window_size: -1
+    look_back_window_size: 1300

@@ -3,8 +3,6 @@ import numpy as np
 import pandas as pd
 from lightgbm import LGBMRegressor
 from mlforecast import MLForecast
-from window_ops.expanding import expanding_mean
-from window_ops.rolling import rolling_mean
 from xgboost import XGBRegressor
 
 from utils.data_classes import MultipleTimeSeries
@@ -13,12 +11,11 @@ from utils.evaluation import get_validation_metrics
 
 def load_lightgbm() -> MLForecast:
     model = MLForecast(
-        models=[LGBMRegressor()],
+        models=[
+            LGBMRegressor(boosting_type="gbdt", n_estimators=10, learning_rate=0.15)
+        ],
         freq="B",
-        lag_transforms={
-            1: [expanding_mean],
-            5: [(rolling_mean, 10)],
-        },
+        lags=[1, 5],
         num_threads=2,
     )
     return model
@@ -26,12 +23,9 @@ def load_lightgbm() -> MLForecast:
 
 def load_xgboost() -> MLForecast:
     model = MLForecast(
-        models=[XGBRegressor()],
+        models=[XGBRegressor(booster="dart", n_estimators=10, learning_rate=0.15)],
         freq="B",
-        lags=[1, 5, 10],
-        lag_transforms={
-            1: [(rolling_mean, 5), (rolling_mean, 15), (rolling_mean, 25)],
-        },
+        lags=[1, 5],
         num_threads=2,
     )
     return model

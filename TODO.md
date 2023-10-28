@@ -1,29 +1,6 @@
 ## TODO
-1. hypertuning:
-  - LGBMRegressor
-    - Base: LBWS only
-    - MLForecast:
-      - lags
-      - lag_transforms
-    - LGBMRegressor:
-      - boosting_type
-      - num_leaves
-      - learning_rate
-      - n_estimators
-  - XGBRegressor:
-    - Base: LBWS only
-    - MLForecast:
-      - lags
-      - lag_transforms
-    - XGBRegressor:
-      - booster
-      - "n_estimators": [100, 200, 300, 400],
-      - "learning_rate": [0.001, 0.005, 0.01, 0.05],
-      - "max_depth": [8, 10, 12, 15],
-      - "gamma": [0.001, 0.005, 0.01, 0.02],
-  - update 'look_back_window_size' in models.yaml
-2. rerun validation with full date range
-3. rerun main pipeline with extended date range
+1. rerun validation with full date range
+2. rerun main pipeline with extended date range
 
 ### Data
 - https://www.wienerborse.at/aktien-prime-market/
