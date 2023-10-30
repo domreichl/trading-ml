@@ -14,7 +14,7 @@ for position_type in ["short", "long"]:
     top_models = list(
         ranked_models[ranked_models["Position"] == position_type]["Model"].unique()
     )
-    results[position_type] = {"top models": top_models}
+    results[position_type] = {"Top Models": top_models}
     for optimize in ["risk", "reward"]:
         top_stock, predicted_return, model_agreement = recommend_stock(
             current_prices, position_type, optimize

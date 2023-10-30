@@ -9,10 +9,10 @@ from utils.file_handling import ResultsHandler
 
 
 rh = ResultsHandler()
-ranked_models = rh.load_csv_results("validation_ranked")["Model"].unique()
+top_val_models = rh.load_csv_results("validation_results")["Model"].unique()
 
 performance, predictions = [], []
-for model_name in ranked_models:
+for model_name in top_val_models:
     mts = preprocess_data("main.csv", model_name=model_name.replace("val_", ""))
     returns_actual = mts.get_test_returns()
     prices_actual = mts.get_test_prices()

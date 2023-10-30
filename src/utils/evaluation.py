@@ -13,12 +13,12 @@ from utils.file_handling import ResultsHandler
 
 def rank_models(top_n: int = 3) -> pd.DataFrame:
     test_metrics = ResultsHandler().load_csv_results("test_metrics")
-    test_metrics = test_metrics[
+    relevant_metrics = test_metrics[
         test_metrics["Metric"].isin(["Precision", "NPV", "SMAPE"])
     ]
     position_types, top_models, ranks = [], [], []
     for position_type in ["long", "short"]:
-        sorted_ratings = rate_models(test_metrics, position_type)
+        sorted_ratings = rate_models(relevant_metrics, position_type)
         for i, model_name in enumerate(list(sorted_ratings.keys())):
             if i == top_n:
                 break

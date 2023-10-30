@@ -24,7 +24,7 @@ stages:
     params:
       - validate_params.yaml:
     outs:
-      - ../../results/validation_ranked.csv
+      - ../../results/validation_results.csv
     metrics:
       - ../../results/validation_metrics.json:
           cache: false

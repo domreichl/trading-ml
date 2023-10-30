@@ -1,6 +1,7 @@
 ## TODO
-1. rerun validation with full date range
-2. rerun main pipeline with extended date range
+1. run main pipeline with extending date range
+    - 06.10., 13.10., 20.10., 27.10.
+    - incl. analyses
 
 ### Data
 - https://www.wienerborse.at/aktien-prime-market/
@@ -31,7 +32,3 @@
         - probably focus on multi-class sign prediction
         - optimize model for non-linear paths (the model shouldn't systematically just all up/down!)
         - recommendation: invest when every prediction in path has the same sign with high confidence
-
-### Recommendation
-- improve ensembling algorithm
-- add technical indicators

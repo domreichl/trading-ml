@@ -20,8 +20,16 @@ for model_name in cfg.models.keys():
     mae, rmse, f1 = validate_model(model_name, mts, params["n_validations"])
     results[model_name] = {"MAE": mae, "RMSE": rmse, "F1": f1}
 
-sorted_results = pd.DataFrame(results).transpose().reset_index().sort_values("RMSE")
-top_models = list(sorted_results[sorted_results["F1"] > 0.5]["index"])
-ranking = pd.DataFrame({"Rank": range(1, len(top_models) + 1), "Model": top_models})
 rh.write_json_results(results, "validation_metrics")
-rh.write_csv_results(ranking, "validation_ranked")
+results = pd.DataFrame(results).transpose().reset_index(names="Model")
+top_models = (
+    pd.concat(
+        [
+            results.sort_values("RMSE").iloc[:3],
+            results.sort_values("F1", ascending=False).iloc[:3],
+        ]
+    )
+    .sort_values("RMSE")
+    .drop_duplicates()
+)
+rh.write_csv_results(top_models, "validation_results")
