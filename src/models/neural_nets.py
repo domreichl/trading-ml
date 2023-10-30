@@ -41,12 +41,12 @@ class RegressionNet:
     def compute_heads(self, x: tf.Tensor, test_days: int, n_heads: int) -> list:
         outputs = []
         for _ in range(n_heads):
-            head = Dense(65, activation="relu")(x)
+            head = Dense(130, activation="relu")(x)
             head = Dense(test_days)(head)
             outputs.append(head)
         return tf.stack(outputs, 2)
 
-    def train(self, batch_size: int = 30, epochs: int = 10) -> None:
+    def train(self, batch_size: int = 100, epochs: int = 10) -> None:
         self.model.compile(
             loss="mean_squared_error",
             optimizer=tf.keras.optimizers.Adam(learning_rate=1e-3),

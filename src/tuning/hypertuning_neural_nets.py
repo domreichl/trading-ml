@@ -18,15 +18,14 @@ with open(CSV_PATH, "w") as file:
             "Epochs",
             "LearningRate",
             "LookBackWindowSize",
-            "MAE",
             "RMSE",
-            "F1-Score",
+            "PredictiveScore",
         ]
     )
 
-for epochs in [5, 10, 20]:
-    for batch_size in [10, 20, 30, 40]:
-        for lbws in [5, 10, 20, 22, 25, 30, 65, 260, 520, 780]:
+for epochs in [10]:
+    for batch_size in [100]:
+        for lbws in [5, 10, 20, 25, 65, 260, 520]:
             mts = preprocess_data("exp.csv", look_back_window_size=lbws)
             model = RegressionNet("exp_" + MODEL_NAME, mts)
             model.train(batch_size, epochs)

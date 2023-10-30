@@ -2,7 +2,7 @@ models:
   arima:
     look_back_window_size: 260
   exponential_smoothing:
-    look_back_window_size: 260
+    look_back_window_size: 520
   moving_average_recursive:
     look_back_window_size: 260
   prophet:
@@ -10,7 +10,7 @@ models:
   simple_regression_net:
     look_back_window_size: 25
   recurrent_regression_net:
-    look_back_window_size: 20
+    look_back_window_size: 25
   LGBMRegressor:
     look_back_window_size: 260
   XGBRegressor:

@@ -1,5 +1,4 @@
 ## TODO
-0. hypertuning with PredictiveScore
 1. rerun validation pipeline
 2. run main pipeline with extending date range
     - 06.10., 13.10., 20.10., 27.10.
