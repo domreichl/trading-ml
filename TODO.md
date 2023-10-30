@@ -1,8 +1,7 @@
 ## TODO
-1. rerun validation pipeline
-2. run main pipeline with extending date range
+1. run main pipeline with extending date range
     - 06.10., 13.10., 20.10., 27.10.
-    - incl. analyses
+    - incl. analyses (performance_analysis.ipynb & recommendation_analysis.ipynb)
 
 ### Data
 - https://www.wienerborse.at/aktien-prime-market/
