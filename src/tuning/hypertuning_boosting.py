@@ -10,7 +10,7 @@ N_VALIDATIONS = 50
 
 
 def objective(trial):
-    lbws = trial.suggest_int("look_back_window_size", 10, 1300, 5)
+    lbws = trial.suggest_int("look_back_window_size", 260, 1300, 260)
     mts = preprocess_data("exp.csv", look_back_window_size=lbws)
     rmse, ps = validate_boosting_model(MODEL_NAME, mts, N_VALIDATIONS)
     return rmse, ps
@@ -18,11 +18,7 @@ def objective(trial):
 
 study = optuna.create_study(
     directions=["minimize", "maximize"],
-    sampler=optuna.samplers.GridSampler(
-        {
-            "look_back_window_size": [65, 260, 520, 780, 1300],
-        }
-    ),
+    sampler=optuna.samplers.GridSampler({"look_back_window_size": [260, 520, 780]}),
 )
 study.optimize(objective)
 

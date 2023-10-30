@@ -11,11 +11,9 @@ from utils.evaluation import get_validation_metrics
 
 def load_lightgbm() -> MLForecast:
     model = MLForecast(
-        models=[
-            LGBMRegressor(boosting_type="gbdt", n_estimators=10, learning_rate=0.15)
-        ],
+        models=[LGBMRegressor(n_estimators=1, learning_rate=0.2)],
         freq="B",
-        lags=[1, 5],
+        lags=[1],
         num_threads=2,
     )
     return model
@@ -23,9 +21,9 @@ def load_lightgbm() -> MLForecast:
 
 def load_xgboost() -> MLForecast:
     model = MLForecast(
-        models=[XGBRegressor(booster="dart", n_estimators=10, learning_rate=0.15)],
+        models=[XGBRegressor(n_estimators=1, learning_rate=0.2)],
         freq="B",
-        lags=[1, 5],
+        lags=[1],
         num_threads=2,
     )
     return model
