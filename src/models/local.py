@@ -29,7 +29,7 @@ def predict_arima(mts: MultipleTimeSeries, model_name: str) -> dict:
 
 def validate_arima(mts: MultipleTimeSeries, n_validations: int) -> tuple[float]:
     test_days = len(mts.y_test)
-    mae_lst, rmse_lst, f1_lst = [], [], []
+    rmse_lst, ps_lst = [], []
     for i, ts_name in enumerate(mts.names):
         print(f"Validating arima_{ts_name}")
         for _ in range(n_validations):
@@ -43,18 +43,17 @@ def validate_arima(mts: MultipleTimeSeries, n_validations: int) -> tuple[float]:
                     mts.x_train[trial_i, :, i], fh=range(1, test_days + 1)
                 )
             )
-            mae, rmse, f1 = get_validation_metrics(
+            rmse, ps = get_validation_metrics(
                 mts.get_returns_from_features(y_true),
                 mts.get_returns_from_features(y_pred),
             )
-            mae_lst.append(mae)
             rmse_lst.append(rmse)
-            f1_lst.append(f1)
-    return float(np.mean(mae_lst)), float(np.mean(rmse_lst)), float(np.mean(f1_lst))
+            ps_lst.append(ps)
+    return float(np.mean(rmse_lst)), float(np.mean(ps_lst))
 
 
 def fit_predict_exponential_smoothing(mts: MultipleTimeSeries) -> dict:
-    model = ExponentialSmoothing(method="Powell")
+    model = initialize_exponential_smoothing(mts.x_train.shape[1])
     results = model.fit_predict(mts.x_train[-1, :, :], fh=range(1, len(mts.y_test) + 1))
     y_preds = {name: results[:, i] for i, name in enumerate(mts.names)}
     return y_preds
@@ -64,22 +63,31 @@ def validate_exponential_smoothing(
     mts: MultipleTimeSeries, n_validations: int
 ) -> tuple[float]:
     test_days = len(mts.y_test)
-    model = ExponentialSmoothing(method="Powell")
-    mae_lst, rmse_lst, f1_lst = [], [], []
+    model = initialize_exponential_smoothing(mts.x_train.shape[1])
+    rmse_lst, ps_lst = [], []
     for _ in range(n_validations):
         trial_i = random.randint(0, len(mts.x_train) - 1 - test_days)
         y_true = mts.x_train[trial_i + 1 : trial_i + 1 + test_days, -1, :]
         y_pred = model.fit_predict(
             mts.x_train[trial_i, :, :], fh=range(1, test_days + 1)
         )
-        mae, rmse, f1 = get_validation_metrics(
+        rmse, ps = get_validation_metrics(
             mts.get_returns_from_features(y_true),
             mts.get_returns_from_features(y_pred),
         )
-        mae_lst.append(mae)
         rmse_lst.append(rmse)
-        f1_lst.append(f1)
-    return float(np.mean(mae_lst)), float(np.mean(rmse_lst)), float(np.mean(f1_lst))
+        ps_lst.append(ps)
+    return float(np.mean(rmse_lst)), float(np.mean(ps_lst))
+
+
+def initialize_exponential_smoothing(
+    look_back_window_size: int,
+) -> ExponentialSmoothing:
+    if look_back_window_size > 260:
+        method = "SLSQP"
+    else:
+        method = "L-BFGS-B"
+    return ExponentialSmoothing(method=method)
 
 
 def predict_moving_average(mts: MultipleTimeSeries, idx: int = -1) -> dict:
@@ -116,7 +124,7 @@ def validate_moving_average(
     mts: MultipleTimeSeries, n_validations: int, recursive: bool
 ) -> tuple[float]:
     test_days = len(mts.y_test)
-    mae_lst, rmse_lst, f1_lst = [], [], []
+    rmse_lst, ps_lst = [], []
     for _ in range(n_validations):
         trial_i = random.randint(0, len(mts.x_train) - 1 - test_days)
         if recursive:
@@ -125,14 +133,13 @@ def validate_moving_average(
             y_preds = predict_moving_average(mts, trial_i)
         y_pred = np.stack(list(y_preds.values()), 1)
         y_true = mts.x_train[trial_i + 1 : trial_i + 1 + test_days, -1, :]
-        mae, rmse, f1 = get_validation_metrics(
+        rmse, ps = get_validation_metrics(
             mts.get_returns_from_features(y_true),
             mts.get_returns_from_features(y_pred),
         )
-        mae_lst.append(mae)
         rmse_lst.append(rmse)
-        f1_lst.append(f1)
-    return float(np.mean(mae_lst)), float(np.mean(rmse_lst)), float(np.mean(f1_lst))
+        ps_lst.append(ps)
+    return float(np.mean(rmse_lst)), float(np.mean(ps_lst))
 
 
 def fit_prophet(mts: MultipleTimeSeries, model_name: str) -> None:
@@ -142,7 +149,7 @@ def fit_prophet(mts: MultipleTimeSeries, model_name: str) -> None:
         model = Prophet(
             growth="flat",
             daily_seasonality=True,
-            weekly_seasonality=True,
+            weekly_seasonality=False,
             yearly_seasonality=False,
         ).fit(x)
         CkptHandler().save_model_to_json_ckpt(model, f"{model_name}_{ts_name}")
@@ -161,7 +168,7 @@ def predict_prophet(mts: MultipleTimeSeries, model_name: str) -> dict:
 
 def validate_prophet(mts: MultipleTimeSeries, n_validations: int) -> dict:
     test_days = len(mts.y_test)
-    mae_lst, rmse_lst, f1_lst = [], [], []
+    rmse_lst, ps_lst = [], []
     for i, ts_name in enumerate(mts.names):
         print(f"Validating prophet_{ts_name}")
         for _ in range(n_validations):
@@ -169,7 +176,7 @@ def validate_prophet(mts: MultipleTimeSeries, n_validations: int) -> dict:
             model = Prophet(
                 growth="flat",
                 daily_seasonality=True,
-                weekly_seasonality=True,
+                weekly_seasonality=False,
                 yearly_seasonality=False,
             ).fit(mts.get_train_df(trial_i, ts_name))
             y_true = mts.x_train[trial_i + 1 : trial_i + 1 + test_days, -1, i]
@@ -180,11 +187,10 @@ def validate_prophet(mts: MultipleTimeSeries, n_validations: int) -> dict:
                     )
                 )["yhat"]
             )
-            mae, rmse, f1 = get_validation_metrics(
+            rmse, ps = get_validation_metrics(
                 mts.get_returns_from_features(y_true),
                 mts.get_returns_from_features(y_pred),
             )
-            mae_lst.append(mae)
             rmse_lst.append(rmse)
-            f1_lst.append(f1)
-    return float(np.mean(mae_lst)), float(np.mean(rmse_lst)), float(np.mean(f1_lst))
+            ps_lst.append(ps)
+    return float(np.mean(rmse_lst)), float(np.mean(ps_lst))

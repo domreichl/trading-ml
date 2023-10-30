@@ -29,7 +29,7 @@ def cli():
 @cli.command()
 def prepare():
     cfg = Config()
-    cfg.set_dates("2000-01-03", "2023-09-22")
+    cfg.set_dates("2000-01-03", "2023-10-27")
     prepare_data("exp.csv", cfg)
 
 
@@ -44,11 +44,10 @@ def train(model_name: str):
 def validate(model_name: str):
     mts = preprocess_data("exp.csv", model_name=model_name)
     model_name = "exp_" + model_name
-    mae, rmse, f1 = validate_model(model_name, mts, n_validations=10)
+    rmse, ps = validate_model(model_name, mts, n_validations=10)
     print(f"Validation results for {model_name}:")
-    print("MAE: ", mae)
     print("RMSE: ", rmse)
-    print("F1: ", f1)
+    print("PredictiveScore: ", ps)
 
 
 @cli.command()
@@ -62,7 +61,7 @@ def test(model_name: str):
         returns_predicted,
         mts.get_test_prices(),
         prices_predicted,
-        mts.get_naive_errors(),
+        mts.get_naive_error(),
         model_name,
     )
     print(df)

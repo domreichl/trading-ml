@@ -63,13 +63,10 @@ def get_validation_metrics(
 ) -> tuple[float]:
     assert returns_true.shape == returns_pred.shape
     metrics = evaluate_return_predictions(returns_true, returns_pred)
-    f1 = f1_score(
-        get_signs_from_returns(returns_true),
-        get_signs_from_returns(returns_pred),
-        average="binary",
-        zero_division=1.0,
+    sign_metrics = evaluate_sign_predictions(
+        get_signs_from_returns(returns_true), get_signs_from_returns(returns_pred)
     )
-    return metrics["MAE"], metrics["RMSE"], f1
+    return metrics["RMSE"], sign_metrics["PredictiveScore"]
 
 
 def compute_prediction_performances(
@@ -77,13 +74,13 @@ def compute_prediction_performances(
     returns_predicted: dict,
     prices_actual: dict,
     prices_predicted: dict,
-    naive_errors: tuple[float, float],
+    naive_error: float,
     model_name: str,
 ):
     return pd.concat(
         [
             compute_return_prediction_performance(
-                returns_actual, returns_predicted, naive_errors, model_name
+                returns_actual, returns_predicted, naive_error, model_name
             ),
             compute_price_prediction_performance(
                 prices_actual, prices_predicted, model_name
@@ -95,7 +92,7 @@ def compute_prediction_performances(
 def compute_return_prediction_performance(
     returns_actual: dict,
     returns_predicted: dict,
-    naive_errors: tuple[float, float],
+    naive_error: float,
     model_name: str,
 ) -> pd.DataFrame:
     gt = stack_array_from_dict(returns_actual, 1)
@@ -108,7 +105,7 @@ def compute_return_prediction_performance(
         model_name,
     )
     performance = process_metrics(
-        evaluate_return_predictions(gt, pr, naive_errors),
+        evaluate_return_predictions(gt, pr, naive_error),
         "Return",
         model_name,
     )
@@ -130,15 +127,15 @@ def compute_price_prediction_performance(
 
 
 def evaluate_return_predictions(
-    gt: np.array, pr: np.array, naive_errors: Optional[tuple[float, float]] = None
+    gt: np.array, pr: np.array, naive_error: Optional[float] = None
 ) -> dict:
     metrics = {
-        "MAE": np.mean(np.abs(pr - gt)),  # for homogenous returns scales
-        "RMSE": np.sqrt(np.mean(np.square(pr - gt))),  # to penalize large errors
+        "RMSE": np.sqrt(
+            np.mean(np.square(pr - gt))
+        ),  # for homogenous return scales, penalizing large errors
     }
-    if naive_errors:
-        metrics["MASE"] = metrics["MAE"] / naive_errors[0]
-        metrics["RMSSE"] = metrics["RMSE"] / naive_errors[1]
+    if naive_error:
+        metrics["RMSSE"] = metrics["RMSE"] / naive_error
     return metrics
 
 
@@ -149,10 +146,21 @@ def evaluate_sign_predictions(gt: np.array, pr: np.array) -> dict:
     negative_predictive_value, _, _, _ = precision_recall_fscore_support(
         1 - gt, 1 - pr, average="binary", zero_division=1.0
     )
+    predictive_score = (
+        2
+        * (precision * negative_predictive_value)
+        / (precision + negative_predictive_value)
+    )
     metrics = dict(
         zip(
-            ["Precision", "Recall", "F1", "NPV"],
-            [precision, recall, f1_score, negative_predictive_value],
+            ["Precision", "Recall", "F1", "NPV", "PredictiveScore"],
+            [
+                precision,
+                recall,
+                f1_score,
+                negative_predictive_value,
+                predictive_score,
+            ],
         )
     )
     return metrics

@@ -1,19 +1,19 @@
 import optuna
 
-from models.boosting import validate_boosting_model
 from utils.data_preprocessing import preprocess_data
 from utils.file_handling import ResultsHandler
+from utils.validation import validate_model
 
 
-MODEL_NAME = "arima"
-N_VALIDATIONS = 50
+MODEL_NAME = "prophet"
+N_VALIDATIONS = 100
 
 
 def objective(trial):
     lbws = trial.suggest_int("look_back_window_size", 10, 1300, 5)
     mts = preprocess_data("exp.csv", look_back_window_size=lbws)
-    mae, _, f1 = validate_boosting_model(MODEL_NAME, mts, N_VALIDATIONS)
-    return mae, f1
+    rmse, ps = validate_model(MODEL_NAME, mts, N_VALIDATIONS)
+    return rmse, ps
 
 
 study = optuna.create_study(
@@ -29,7 +29,5 @@ study.optimize(objective)
 df = study.trials_dataframe()
 df["Model"] = MODEL_NAME
 df = df[["Model", "params_look_back_window_size", "values_0", "values_1"]]
-df.columns = ["Model", "LookBackWindowSize", "MAE", "F1-Score"]
-df.sort_values("F1-Score", inplace=True)
-
+df.columns = ["Model", "LookBackWindowSize", "RMSE", "PredictiveScore"]
 ResultsHandler().write_csv_results(df, f"tuning/{MODEL_NAME}")

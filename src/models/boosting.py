@@ -54,7 +54,7 @@ def validate_boosting_model(
     else:
         raise Exception(f"Name '{model_name}' is not a valid booster model name.")
     test_days = len(mts.y_test)
-    mae_lst, rmse_lst, f1_lst = [], [], []
+    rmse_lst, ps_lst = [], []
     for _ in range(n_validations):
         trial_i = random.randint(0, len(mts.x_train) - 1 - test_days)
         y_true = mts.x_train[trial_i + 1 : trial_i + 1 + test_days, -1, :]
@@ -62,14 +62,12 @@ def validate_boosting_model(
         results = model.predict(h=test_days)
         y_preds = get_y_preds_from_boosting_results(results, mts.names, model_name)
         y_pred = np.stack(list(y_preds.values()), 1)
-        mae, rmse, f1 = get_validation_metrics(
-            mts.get_returns_from_features(y_true),
-            mts.get_returns_from_features(y_pred),
+        rmse, ps = get_validation_metrics(
+            mts.get_returns_from_features(y_true), mts.get_returns_from_features(y_pred)
         )
-        mae_lst.append(mae)
         rmse_lst.append(rmse)
-        f1_lst.append(f1)
-    return float(np.mean(mae_lst)), float(np.mean(rmse_lst)), float(np.mean(f1_lst))
+        ps_lst.append(ps)
+    return float(np.mean(rmse_lst)), float(np.mean(ps_lst))
 
 
 def get_y_preds_from_boosting_results(

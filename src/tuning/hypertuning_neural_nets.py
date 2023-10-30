@@ -30,7 +30,7 @@ for epochs in [5, 10, 20]:
             mts = preprocess_data("exp.csv", look_back_window_size=lbws)
             model = RegressionNet("exp_" + MODEL_NAME, mts)
             model.train(batch_size, epochs)
-            mae, rmse, f1 = model.validate(N_VALIDATIONS)
+            rmse, ps = model.validate(N_VALIDATIONS)
             with open(CSV_PATH, "a") as file:
                 writer = csv.writer(file, delimiter=";")
                 writer.writerow(
@@ -40,8 +40,7 @@ for epochs in [5, 10, 20]:
                         epochs,
                         1e-3,
                         lbws,
-                        mae,
                         rmse,
-                        f1,
+                        ps,
                     ]
                 )

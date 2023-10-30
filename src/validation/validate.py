@@ -17,8 +17,8 @@ for model_name in cfg.models.keys():
     print(
         f"Validating {model_name} with {params['n_validations']} iterations on train set"
     )
-    mae, rmse, f1 = validate_model(model_name, mts, params["n_validations"])
-    results[model_name] = {"MAE": mae, "RMSE": rmse, "F1": f1}
+    rmse, ps = validate_model(model_name, mts, params["n_validations"])
+    results[model_name] = {"RMSE": rmse, "PredictiveScore": ps}
 
 rh.write_json_results(results, "validation_metrics")
 results = pd.DataFrame(results).transpose().reset_index(names="Model")
@@ -26,7 +26,7 @@ top_models = (
     pd.concat(
         [
             results.sort_values("RMSE").iloc[:3],
-            results.sort_values("F1", ascending=False).iloc[:3],
+            results.sort_values("PredictiveScore", ascending=False).iloc[:3],
         ]
     )
     .sort_values("RMSE")

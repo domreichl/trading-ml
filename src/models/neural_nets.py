@@ -68,17 +68,16 @@ class RegressionNet:
 
     def validate(self, n_validations: int) -> tuple[float, float]:
         test_days = len(self.mts.y_test)
-        mae_lst, rmse_lst, f1_lst = [], [], []
+        rmse_lst, ps_lst = [], []
         for _ in range(n_validations):
             trial_idx = random.randint(0, len(self.mts.x_train) - test_days)
             x = np.expand_dims(self.mts.x_train[trial_idx], 0)
             y_true = self.mts.y_train[trial_idx]
             y_pred = np.squeeze(self.model.predict(x))
-            mae, rmse, f1 = get_validation_metrics(
+            rmse, ps = get_validation_metrics(
                 self.mts.get_returns_from_features(y_true),
                 self.mts.get_returns_from_features(y_pred),
             )
-            mae_lst.append(mae)
             rmse_lst.append(rmse)
-            f1_lst.append(f1)
-        return float(np.mean(mae_lst)), float(np.mean(rmse_lst)), float(np.mean(f1_lst))
+            ps_lst.append(ps)
+        return float(np.mean(rmse_lst)), float(np.mean(ps_lst))

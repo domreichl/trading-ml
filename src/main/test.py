@@ -17,7 +17,7 @@ for model_name in top_val_models:
     returns_actual = mts.get_test_returns()
     prices_actual = mts.get_test_prices()
     dates = mts.get_test_dates()
-    naive_errors = mts.get_naive_errors()
+    naive_error = mts.get_naive_error()
     model_name = model_name.replace("val_", "main_")
     print(f"Computing predictions with model '{model_name}'")
     returns_predicted, prices_predicted = generate_predictions(model_name, mts)
@@ -27,7 +27,7 @@ for model_name in top_val_models:
             returns_predicted,
             prices_actual,
             prices_predicted,
-            naive_errors,
+            naive_error,
             model_name,
         )
     )

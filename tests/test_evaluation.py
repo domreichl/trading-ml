@@ -21,11 +21,17 @@ def test_evaluate_sign_predictions():
     recall = TP / P
     f1_score = 2 * (precision * recall) / (precision + recall)
     negative_predictive_value = TN / Npr
+    predictive_score = (
+        2
+        * (precision * negative_predictive_value)
+        / (precision + negative_predictive_value)
+    )
     metrics = evaluate_sign_predictions(gt.reshape(-1, 1), pr.reshape(-1, 1))
     assert metrics["Precision"] == precision
     assert metrics["Recall"] == recall
     assert metrics["F1"] == f1_score
     assert metrics["NPV"] == negative_predictive_value
+    assert metrics["PredictiveScore"] == predictive_score
 
 
 def test_evaluate_price_predictions():
@@ -45,11 +51,9 @@ def test_compute_SMAPE():
 def test_evaluate_return_predictions():
     gt = np.array([100, 100])
     pr = np.array([90, 110])
-    naive_errors = (9, 15)
-    metrics = evaluate_return_predictions(gt, pr, naive_errors)
-    assert metrics["MAE"] == 10
+    naive_error = 15
+    metrics = evaluate_return_predictions(gt, pr, naive_error)
     assert metrics["RMSE"] == 10
-    assert round(metrics["MASE"], 2) == 1.11
     assert round(metrics["RMSSE"], 2) == 0.67
 
 

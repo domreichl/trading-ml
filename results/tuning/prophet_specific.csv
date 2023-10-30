@@ -1,5 +1,3 @@
-Model;LookBackWindowSize;MAE;F1-Score;DailySeasonality;WeeklySeasonality;YearlySeasonality
-prophet;260;0.012594331213758627;0.5544583304046972;true;true;false
-prophet;520;0.01286700319818383;0.5751861025617172;true;true;false
-prophet;520;0.012795202784548494;0.5577556596866377;false;true;false
-prophet;260;0.012718940489304423;0.5608952114782564;false;true;false
+Model;LookBackWindowSize;RMSE;PredictiveScore;DailySeasonality;WeeklySeasonality;YearlySeasonality
+prophet;520;0.016285020588001773;0.6425759254101087;true;false;false
+prophet;260;0.016071557812762254;0.655301220865781;true;false;false

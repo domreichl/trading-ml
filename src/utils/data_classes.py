@@ -93,13 +93,11 @@ class MultipleTimeSeries:
     def get_test_dates(self) -> list:
         return self.dates[-len(self.y_test) :]
 
-    def get_naive_errors(self) -> tuple[float, float]:
-        # MAE and RMSE of a naive model where y_t = y_t-1
-        naive_mae = float(np.mean(np.abs(np.diff(self.get_eval_returns(), axis=0))))
-        naive_rmse = float(
+    def get_naive_error(self) -> float:
+        # RMSE of a naive model where y_t = y_t-1
+        return float(
             np.sqrt(np.mean(np.square(np.diff(self.get_eval_returns(), axis=0))))
         )
-        return naive_mae, naive_rmse
 
     def get_eval_returns(self) -> np.array:
         return np.concatenate(
