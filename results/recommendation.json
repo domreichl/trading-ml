@@ -1,13 +1,13 @@
 {
     "short": {
         "Top Models": [
-            "main_arima",
+            "main_exponential_smoothing",
             "main_prophet",
-            "main_XGBRegressor"
+            "main_arima"
         ],
         "risk": {
             "Top Stock": "AT0000644505",
-            "Predicted Return": 0.9906,
+            "Predicted Return": 0.9889,
             "Model Agreement": 100,
             "Market Trend": "neutral",
             "MACD Crossover": 0,
@@ -16,26 +16,26 @@
             "Bollinger Band Breakout": 0
         },
         "reward": {
-            "Top Stock": "AT0000758305",
-            "Predicted Return": 0.98909,
-            "Model Agreement": 67,
+            "Top Stock": "AT0000644505",
+            "Predicted Return": 0.9889,
+            "Model Agreement": 100,
             "Market Trend": "neutral",
             "MACD Crossover": 0,
-            "Market State": "oversold",
-            "Fast Stochastic Oscillator": 14,
+            "Market State": "neither overbought nor oversold",
+            "Fast Stochastic Oscillator": 24,
             "Bollinger Band Breakout": 0
         }
     },
     "long": {
         "Top Models": [
-            "main_arima",
+            "main_exponential_smoothing",
             "main_prophet",
-            "main_XGBRegressor"
+            "main_arima"
         ],
         "risk": {
             "Top Stock": "AT00000VIE62",
-            "Predicted Return": 1.01087,
-            "Model Agreement": 67,
+            "Predicted Return": 1.01513,
+            "Model Agreement": 100,
             "Market Trend": "bullish",
             "MACD Crossover": 1,
             "Market State": "very overbought",
@@ -44,8 +44,8 @@
         },
         "reward": {
             "Top Stock": "AT00000VIE62",
-            "Predicted Return": 1.01087,
-            "Model Agreement": 67,
+            "Predicted Return": 1.01513,
+            "Model Agreement": 100,
             "Market Trend": "bullish",
             "MACD Crossover": 1,
             "Market State": "very overbought",

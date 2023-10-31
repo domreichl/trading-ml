@@ -1,46 +1,42 @@
 {
     "main_prophet": {
-        "Precision": 0.3929,
-        "Recall": 0.2933,
-        "F1": 0.3359,
-        "NPV": 0.5351,
-        "MAE": 0.0095,
-        "RMSE": 0.0135,
-        "MASE": 0.4753,
-        "RMSSE": 0.4639,
-        "SMAPE": 1.2488
+        "Precision": 0.4727,
+        "Recall": 0.6933,
+        "F1": 0.5622,
+        "NPV": 0.6167,
+        "PredictiveScore": 0.5352,
+        "RMSE": 0.0132,
+        "RMSSE": 0.5229,
+        "SMAPE": 1.4675
     },
     "main_arima": {
-        "Precision": 0.4667,
-        "Recall": 0.1867,
-        "F1": 0.2667,
-        "NPV": 0.5643,
-        "MAE": 0.0093,
+        "Precision": 0.4727,
+        "Recall": 0.6933,
+        "F1": 0.5622,
+        "NPV": 0.6167,
+        "PredictiveScore": 0.5352,
         "RMSE": 0.0132,
-        "MASE": 0.4631,
-        "RMSSE": 0.4536,
-        "SMAPE": 1.308
+        "RMSSE": 0.5229,
+        "SMAPE": 1.4675
     },
-    "main_LGBMRegressor": {
-        "Precision": 0.4392,
-        "Recall": 0.8667,
-        "F1": 0.583,
-        "NPV": 0.5455,
-        "MAE": 0.0094,
-        "RMSE": 0.0134,
-        "MASE": 0.4737,
-        "RMSSE": 0.4604,
-        "SMAPE": 1.5735
+    "main_exponential_smoothing": {
+        "Precision": 0.525,
+        "Recall": 0.28,
+        "F1": 0.3652,
+        "NPV": 0.5846,
+        "PredictiveScore": 0.5532,
+        "RMSE": 0.0132,
+        "RMSSE": 0.4534,
+        "SMAPE": 1.2694
     },
-    "main_XGBRegressor": {
-        "Precision": 0.4452,
-        "Recall": 0.8667,
-        "F1": 0.5882,
-        "NPV": 0.5833,
-        "MAE": 0.0094,
-        "RMSE": 0.0134,
-        "MASE": 0.4757,
-        "RMSSE": 0.4613,
-        "SMAPE": 1.5792
+    "main_moving_average_recursive": {
+        "Precision": 0.458,
+        "Recall": 0.8,
+        "F1": 0.5825,
+        "NPV": 0.6154,
+        "PredictiveScore": 0.5252,
+        "RMSE": 0.0133,
+        "RMSSE": 0.5244,
+        "SMAPE": 1.5137
     }
 }
