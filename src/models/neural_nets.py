@@ -1,9 +1,8 @@
 import random
 import numpy as np
 import tensorflow as tf
-from typing import Optional
 from tensorflow.keras.models import Model, load_model
-from tensorflow.keras.layers import Input, Dense, LSTM, GlobalAveragePooling1D
+from tensorflow.keras.layers import Input, Dense, GRU, GlobalAveragePooling1D
 
 from utils.data_classes import MultipleTimeSeries
 from utils.evaluation import get_validation_metrics
@@ -33,8 +32,8 @@ class RegressionNet:
 
     def set_recurrent_net(self) -> Model:
         inputs = Input(shape=(self.look_back_window_size, self.n_heads))
-        x = LSTM(260, return_sequences=True)(inputs)
-        x = LSTM(130)(x)
+        x = GRU(260, return_sequences=True)(inputs)
+        x = GRU(130)(x)
         outputs = self.compute_heads(x, self.test_days, self.n_heads)
         return Model(inputs=inputs, outputs=outputs)
 

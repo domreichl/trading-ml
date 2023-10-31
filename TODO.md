@@ -15,6 +15,7 @@
     - XGBClassifier
     - neural_nets.py: LocalLinearClassifier, GlobalLinearClassifier
 2. deep neural nets:
+    - add indicators (at least 3 EMAs for each TS) as additional input features
     - one model in PyTorch
     - TCN: temporal convolutional network -> keras.layers.Conv1d(padding='causal', 'dilation_rate'>1)
     - FFNN: N-BEATS

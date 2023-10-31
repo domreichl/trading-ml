@@ -29,7 +29,7 @@ def cli():
 @cli.command()
 def prepare():
     cfg = Config()
-    cfg.set_dates("2000-01-03", "2023-10-27")
+    cfg.set_dates("2000-01-03", "2023-10-31")
     prepare_data("exp.csv", cfg)
 
 

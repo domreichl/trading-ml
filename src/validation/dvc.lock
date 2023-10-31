@@ -13,7 +13,7 @@ stages:
       size: 268
     params:
       prepare_params.yaml:
-        end_date: '2023-10-27'
+        end_date: '2023-10-31'
         start_date: '2000-01-03'
     outs:
     - path: ../../data/val.csv
@@ -25,8 +25,8 @@ stages:
     deps:
     - path: ../../config/models.yaml
       hash: md5
-      md5: 2d0b3f263bc2c34a014bf3c57bbfe86e
-      size: 412
+      md5: d00207d9c0f1c99b595470dfd904af0b
+      size: 411
     - path: ../../data/val.csv
       hash: md5
       md5: 492d5dbcf8da484317d8b30c3d995464
@@ -38,16 +38,16 @@ stages:
     outs:
     - path: ../../ckpts/val
       hash: md5
-      md5: e6b9dacebbc7f1e4101d4dd19cc7a90b.dir
-      size: 21778669
+      md5: 748bd17eb99bb75c9975e770e8ec8ce6.dir
+      size: 20149880
       nfiles: 44
   validate:
     cmd: python validate.py
     deps:
     - path: ../../ckpts/val
       hash: md5
-      md5: e6b9dacebbc7f1e4101d4dd19cc7a90b.dir
-      size: 21778669
+      md5: 748bd17eb99bb75c9975e770e8ec8ce6.dir
+      size: 20149880
       nfiles: 44
     - path: validate.py
       hash: md5
@@ -59,9 +59,9 @@ stages:
     outs:
     - path: ../../results/validation_metrics.json
       hash: md5
-      md5: fbc5c45f1fcca64478e80596c7908e45
-      size: 962
+      md5: bd61eaa6c570edc26b36a2f1e898c951
+      size: 969
     - path: ../../results/validation_results.csv
       hash: md5
-      md5: bd0b47cc38e4e9ca9949ae4856d92087
-      size: 261
+      md5: 53a97671aa37c31ea2bf6079411ed9d5
+      size: 186

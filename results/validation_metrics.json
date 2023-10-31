@@ -1,34 +1,34 @@
 {
     "val_arima": {
-        "RMSE": 0.01673127355862498,
-        "PredictiveScore": 0.6474471302084668
+        "RMSE": 0.01654732677692698,
+        "PredictiveScore": 0.6459304745013178
     },
     "val_exponential_smoothing": {
-        "RMSE": 0.01801194805706081,
-        "PredictiveScore": 0.5081553356910202
+        "RMSE": 0.018656056951990005,
+        "PredictiveScore": 0.5011454960650333
     },
     "val_moving_average_recursive": {
-        "RMSE": 0.01858728565158732,
-        "PredictiveScore": 0.5146428642152184
+        "RMSE": 0.018122598922292222,
+        "PredictiveScore": 0.5174197772714723
     },
     "val_prophet": {
-        "RMSE": 0.016385702395296877,
-        "PredictiveScore": 0.6503167335406453
+        "RMSE": 0.016244488204431674,
+        "PredictiveScore": 0.6463451326390681
     },
     "val_simple_regression_net": {
-        "RMSE": 0.019473720921383823,
-        "PredictiveScore": 0.4849038559206678
+        "RMSE": 0.018589298107080696,
+        "PredictiveScore": 0.48581062085022475
     },
     "val_recurrent_regression_net": {
-        "RMSE": 0.023486298247251663,
-        "PredictiveScore": 0.46924861457459
+        "RMSE": 0.020354092927958888,
+        "PredictiveScore": 0.4722522982497845
     },
     "val_LGBMRegressor": {
-        "RMSE": 0.01830792897323441,
-        "PredictiveScore": 0.494392087201274
+        "RMSE": 0.017482851787184145,
+        "PredictiveScore": 0.5514464320200214
     },
     "val_XGBRegressor": {
-        "RMSE": 0.018946265694183673,
-        "PredictiveScore": 0.5016403073513389
+        "RMSE": 0.017809184132724403,
+        "PredictiveScore": 0.5171666012997239
     }
 }
