@@ -2,55 +2,55 @@
     "short": {
         "Top Models": [
             "main_exponential_smoothing",
-            "main_prophet",
-            "main_arima"
+            "main_moving_average_recursive",
+            "main_prophet"
         ],
         "risk": {
             "Top Stock": "AT0000644505",
-            "Predicted Return": 0.9889,
-            "Model Agreement": 100,
+            "Predicted Return": 0.99019,
+            "Model Agreement": 67,
             "Market Trend": "neutral",
             "MACD Crossover": 0,
             "Market State": "neither overbought nor oversold",
-            "Fast Stochastic Oscillator": 24,
+            "Fast Stochastic Oscillator": 40,
             "Bollinger Band Breakout": 0
         },
         "reward": {
-            "Top Stock": "AT0000644505",
-            "Predicted Return": 0.9889,
-            "Model Agreement": 100,
+            "Top Stock": "AT0000758305",
+            "Predicted Return": 0.98894,
+            "Model Agreement": 33,
             "Market Trend": "neutral",
             "MACD Crossover": 0,
-            "Market State": "neither overbought nor oversold",
-            "Fast Stochastic Oscillator": 24,
+            "Market State": "oversold",
+            "Fast Stochastic Oscillator": 0,
             "Bollinger Band Breakout": 0
         }
     },
     "long": {
         "Top Models": [
             "main_exponential_smoothing",
-            "main_prophet",
-            "main_arima"
+            "main_moving_average_recursive",
+            "main_prophet"
         ],
         "risk": {
-            "Top Stock": "AT00000VIE62",
-            "Predicted Return": 1.01513,
+            "Top Stock": "AT0000A21KS2",
+            "Predicted Return": 1.01758,
             "Model Agreement": 100,
-            "Market Trend": "bullish",
-            "MACD Crossover": 1,
-            "Market State": "very overbought",
-            "Fast Stochastic Oscillator": 100,
-            "Bollinger Band Breakout": 1
+            "Market Trend": "neutral",
+            "MACD Crossover": 0,
+            "Market State": "overbought",
+            "Fast Stochastic Oscillator": 90,
+            "Bollinger Band Breakout": 0
         },
         "reward": {
-            "Top Stock": "AT00000VIE62",
-            "Predicted Return": 1.01513,
+            "Top Stock": "AT0000A21KS2",
+            "Predicted Return": 1.01758,
             "Model Agreement": 100,
-            "Market Trend": "bullish",
-            "MACD Crossover": 1,
-            "Market State": "very overbought",
-            "Fast Stochastic Oscillator": 100,
-            "Bollinger Band Breakout": 1
+            "Market Trend": "neutral",
+            "MACD Crossover": 0,
+            "Market State": "overbought",
+            "Fast Stochastic Oscillator": 90,
+            "Bollinger Band Breakout": 0
         }
     }
 }
