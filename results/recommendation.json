@@ -7,22 +7,22 @@
         ],
         "risk": {
             "Top Stock": "AT0000644505",
-            "Predicted Return": 0.99019,
-            "Model Agreement": 67,
+            "Predicted Return": 0.98703,
+            "Model Agreement": 100,
             "Market Trend": "neutral",
             "MACD Crossover": 0,
             "Market State": "neither overbought nor oversold",
-            "Fast Stochastic Oscillator": 40,
+            "Fast Stochastic Oscillator": 21,
             "Bollinger Band Breakout": 0
         },
         "reward": {
-            "Top Stock": "AT0000758305",
-            "Predicted Return": 0.98894,
-            "Model Agreement": 33,
+            "Top Stock": "AT0000644505",
+            "Predicted Return": 0.98703,
+            "Model Agreement": 100,
             "Market Trend": "neutral",
             "MACD Crossover": 0,
-            "Market State": "oversold",
-            "Fast Stochastic Oscillator": 0,
+            "Market State": "neither overbought nor oversold",
+            "Fast Stochastic Oscillator": 21,
             "Bollinger Band Breakout": 0
         }
     },
@@ -34,22 +34,22 @@
         ],
         "risk": {
             "Top Stock": "AT0000A21KS2",
-            "Predicted Return": 1.01758,
+            "Predicted Return": 1.01538,
             "Model Agreement": 100,
             "Market Trend": "neutral",
             "MACD Crossover": 0,
             "Market State": "overbought",
-            "Fast Stochastic Oscillator": 90,
+            "Fast Stochastic Oscillator": 91,
             "Bollinger Band Breakout": 0
         },
         "reward": {
             "Top Stock": "AT0000A21KS2",
-            "Predicted Return": 1.01758,
+            "Predicted Return": 1.01538,
             "Model Agreement": 100,
             "Market Trend": "neutral",
             "MACD Crossover": 0,
             "Market State": "overbought",
-            "Fast Stochastic Oscillator": 90,
+            "Fast Stochastic Oscillator": 91,
             "Bollinger Band Breakout": 0
         }
     }

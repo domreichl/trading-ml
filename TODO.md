@@ -1,7 +1,5 @@
 ## TODO
-1. run main pipeline with extending date range
-    - 06.10., 13.10., 20.10., 27.10.
-    - incl. analyses (performance_analysis.ipynb & recommendation_analysis.ipynb)
+1. trading + performance analysis
 
 ### Data
 - https://www.wienerborse.at/aktien-prime-market/

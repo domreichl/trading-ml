@@ -13,7 +13,7 @@ stages:
       size: 231
     params:
       prepare_params.yaml:
-        end_date: '2023-10-30'
+        end_date: '2023-10-31'
         start_date: '2000-01-03'
     outs:
     - path: ../../data/main.csv
@@ -23,6 +23,10 @@ stages:
   train:
     cmd: python train.py
     deps:
+    - path: ../../config/data.yaml
+      hash: md5
+      md5: 0dc87b324c12218372ddf6a9e2daf984
+      size: 804
     - path: ../../config/models.yaml
       hash: md5
       md5: 2d0b3f263bc2c34a014bf3c57bbfe86e
@@ -38,7 +42,7 @@ stages:
     outs:
     - path: ../../ckpts/main
       hash: md5
-      md5: edfb57719e25473686f08bf3c205827a.dir
+      md5: 8a7d323e9e1d93db4c6c2a72e13c35b4.dir
       size: 4848730
       nfiles: 34
   test:
@@ -46,9 +50,13 @@ stages:
     deps:
     - path: ../../ckpts/main
       hash: md5
-      md5: edfb57719e25473686f08bf3c205827a.dir
+      md5: 8a7d323e9e1d93db4c6c2a72e13c35b4.dir
       size: 4848730
       nfiles: 34
+    - path: ../../config/data.yaml
+      hash: md5
+      md5: 0dc87b324c12218372ddf6a9e2daf984
+      size: 804
     - path: test.py
       hash: md5
       md5: c3ebc99dfff2514f7f11118005dba508
@@ -73,6 +81,10 @@ stages:
   forecast:
     cmd: python forecast.py
     deps:
+    - path: ../../config/data.yaml
+      hash: md5
+      md5: 0dc87b324c12218372ddf6a9e2daf984
+      size: 804
     - path: ../../results/test_ranked.csv
       hash: md5
       md5: fdc771c8b5d0d794c8507f7c5dfd7f99
@@ -84,20 +96,24 @@ stages:
     outs:
     - path: ../../ckpts/prod
       hash: md5
-      md5: bbdd6e98d6d77232418086adf0595489.dir
-      size: 883347
+      md5: 69af4eb068eb174d0b1ed70da2dedbe9.dir
+      size: 882279
       nfiles: 17
     - path: ../../results/forecast.csv
       hash: md5
-      md5: 320c7051eb06b6171a35d9e79e7f9be9
-      size: 36816
+      md5: b7880bbffc0004ed2ee29913c89dac9a
+      size: 36861
   recommend:
     cmd: python recommend.py
     deps:
+    - path: ../../config/data.yaml
+      hash: md5
+      md5: 0dc87b324c12218372ddf6a9e2daf984
+      size: 804
     - path: ../../results/forecast.csv
       hash: md5
-      md5: 320c7051eb06b6171a35d9e79e7f9be9
-      size: 36816
+      md5: b7880bbffc0004ed2ee29913c89dac9a
+      size: 36861
     - path: recommend.py
       hash: md5
       md5: 5b6eca0ff1ff82f86dc40fc9fb6c23d2
@@ -105,5 +121,5 @@ stages:
     outs:
     - path: ../../results/recommendation.json
       hash: md5
-      md5: 032e5dcf91efbf0db0cfdff433e54d24
-      size: 1753
+      md5: 76c9b569133a2e88b362a48eeb957374
+      size: 1779
