@@ -1,11 +1,9 @@
 ## TODO
-1. trading + performance analysis
-
-### Data
-- https://www.wienerborse.at/aktien-prime-market/
-    - 43 prime, 22 standard, 7 direct+, 21 direct, 780 global
-    - use all time series with T > LBWS
-- stick to eurozone ISINs to minimize currency risk (ATX < ATX+DAX < MSCI EMU < EMU part of Stoxx Europe 600)
+1. extend data:
+    - https://www.wienerborse.at/aktien-prime-market/
+    - 43 prime, 22 standard, 7 direct plus, 21 direct
+    - use all with T > 260
+2. trading + performance analysis
 
 ### Models
 1. multi class classifiers for direct sign prediction:
