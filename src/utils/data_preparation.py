@@ -9,7 +9,17 @@ from utils.file_handling import DataHandler
 
 def prepare_data(csv_name: str, cfg: Config):
     df = download_data(cfg.start_date, cfg.end_date, cfg.securities)
-    df = impute_missing_data(df, get_weekdays(cfg.start_date, cfg.end_date))
+    weekdays = (
+        pd.date_range(start=cfg.start_date, end=cfg.end_date, freq="B")
+        .astype(str)
+        .tolist()
+    )
+    df = pd.concat(
+        [
+            trim_time_series(impute_missing_data(df[df["ISIN"] == isin], weekdays))
+            for isin in df["ISIN"].unique()
+        ]
+    )
     DataHandler().write_csv_data(df, csv_name)
 
 
@@ -33,60 +43,34 @@ def download_data(
     return pd.concat(dfs)
 
 
-def get_weekdays(start_date: dt.datetime, end_date: dt.datetime) -> list:
-    """builds a list of all weekdays (Mon-Fri) within a given date range"""
-
-    weekdays = []
-    day = start_date
-    while day <= end_date:
-        if day.weekday() not in [5, 6]:
-            weekdays.append(str(day.date()))
-        day += dt.timedelta(days=1)
-    print(
-        f"Date range from {start_date.date()} to {end_date.date()} has {len(weekdays)} weekdays."
-    )
-    return weekdays
-
-
 def impute_missing_data(df: pd.DataFrame, weekdays: list) -> pd.DataFrame:
-    """fills in missing close prices by imputing the previous day's value;
-    ensures that the time series can be separated evenly into 5-day weekly cycles"""
-
-    dfs = []
-    for isin in df["ISIN"].unique():
-        df_isin = df[df["ISIN"] == isin]
-
-        # find and impute missing values
-        missing_dates = set(pd.to_datetime(pd.Series(weekdays)).unique()).difference(
-            set(df_isin["Date"].unique())
+    missing_dates = list(
+        set(pd.to_datetime(pd.Series(weekdays)).unique()).difference(
+            set(df["Date"].unique())
         )
-        print(
-            f"ISIN {isin} has {len(df_isin)} entries: {len(missing_dates)} values will be imputed."
-        )
-        df_isin = pd.concat(
-            [
-                df_isin,
-                pd.DataFrame(
-                    {"ISIN": isin, "Date": list(missing_dates), "Close": np.nan}
-                ),
-            ]
-        )
-        df_isin.sort_values(by="Date", inplace=True)
-        while len(df_isin[df_isin["Close"].isna()]) > 0:
-            df_isin["Close"] = df_isin["Close"].fillna(
-                (df_isin["Close"].shift(1))
-            )  # impute prev value
+    )
+    df = pd.concat(
+        [
+            df,
+            pd.DataFrame(
+                {"ISIN": df["ISIN"].iloc[0], "Date": missing_dates, "Close": np.nan}
+            ),
+        ]
+    )
+    df.sort_values(by="Date", inplace=True)
+    df["Close"] = df["Close"].ffill()
+    return df
 
-        # make the series start on a Monday and end on a Friday
-        weekday = df_isin["Date"].iloc[0].weekday()
-        while weekday != 0:  # Monday
-            df_isin = df_isin.iloc[1:]
-            weekday = df_isin["Date"].iloc[0].weekday()
-        weekday = df_isin["Date"].iloc[-1].weekday()
-        while weekday != 4:  # Friday
-            df_isin = df_isin.iloc[:-1]
-            weekday = df_isin["Date"].iloc[-1].weekday()
 
-        dfs.append(df_isin)
+def trim_time_series(df: pd.DataFrame) -> pd.DataFrame:
+    """make the series start on a Monday and end on a Friday so that it can be separated evenly into 5-day weekly cycles"""
 
-    return pd.concat(dfs)
+    weekday = df["Date"].iloc[0].weekday()
+    while weekday != 0:  # Monday
+        df = df.iloc[1:]
+        weekday = df["Date"].iloc[0].weekday()
+    weekday = df["Date"].iloc[-1].weekday()
+    while weekday != 4:  # Friday
+        df = df.iloc[:-1]
+        weekday = df["Date"].iloc[-1].weekday()
+    return df

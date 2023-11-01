@@ -48,6 +48,7 @@ class MultipleTimeSeries:
             if next_day.weekday() not in [5, 6]:
                 forecast_dates.append(next_day.strftime(date_format))
             next_day += dt.timedelta(days=1)
+        # TODO: simplify with pd.Timedelta(len(self.y_test), unit="B")
         return forecast_dates
 
     def merge_features(self, for_deep_learning: bool = False) -> None:
