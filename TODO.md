@@ -1,10 +1,11 @@
 ## TODO
-1. recommendation_analysis.ipynb + refactor trades.py --> new git tag
-2. extend data:
+- recommendation_analysis.ipynb
+- refactor trades.py
+- performance analysis.ipynb
+- extend data:
     - https://www.wienerborse.at/aktien-prime-market/
     - 43 prime, 22 standard, 7 direct plus, 21 direct
     - use all with T > 260
-3. performance analysis.ipynb
 
 ### Models
 1. multi class classifiers for direct sign prediction:
