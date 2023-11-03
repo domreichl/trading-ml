@@ -11,68 +11,45 @@ from utils.data_processing import (
 from utils.file_handling import ResultsHandler
 
 
-def filter_overfit_models(ranked_models: pd.DataFrame) -> pd.DataFrame:
+def filter_overfit_models(models: list, threshold: float = 0.05) -> list:
     val = ResultsHandler().load_csv_results("validation_results")
     test = ResultsHandler().load_csv_results("test_metrics")
-    overfit_models = []
-    for model in ranked_models["Model"].unique():
-        val_score = val[val["Model"] == model.replace("main_", "val_")]["RMSE"].iloc[0]
-        test_score = test[(test["Model"] == model) & (test["Metric"] == "RMSE")][
+    well_fit_models = []
+    for model_name in models:
+        val_score = val[val["Model"] == model_name.replace("main_", "val_")][
+            "RMSE"
+        ].iloc[0]
+        test_score = test[(test["Model"] == model_name) & (test["Metric"] == "RMSE")][
             "Score"
         ].iloc[0]
         overfitting = test_score / val_score - 1
-        if overfitting > 0.05:
-            overfit_models.append(model)
+        if overfitting < threshold:
+            well_fit_models.append(model_name)
+        else:
             print(
-                f"Dropping '{model}' from top models due to overfitting of {overfitting}."
+                f"Dropping '{model_name}' from top models due to overfitting of {overfitting}."
             )
-    return ranked_models[~ranked_models["Model"].isin(overfit_models)]
+    if len(well_fit_models) == 0:
+        raise Exception("No models left after dropping the overfit ones.")
+    return well_fit_models
 
 
-def rank_models(top_n: int = 3) -> tuple[pd.DataFrame, pd.DataFrame]:
-    test_metrics = ResultsHandler().load_csv_results("test_metrics")
-    relevant_metrics = test_metrics[
-        test_metrics["Metric"].isin(["Precision", "NPV", "SMAPE"])
-    ]
-    position_types, top_models, ranks = [], [], []
-    for position_type in ["long", "short"]:
-        sorted_ratings = rate_models(relevant_metrics, position_type)
-        for i, model_name in enumerate(list(sorted_ratings.keys())):
-            if i == top_n:
-                break
-            position_types.append(position_type)
-            top_models.append(model_name)
-            ranks.append(i + 1)
-    if max(ranks) < top_n:
-        (f"Warning: Only {len(top_models)} top models were ranked.")
-    return (
-        pd.DataFrame({"Position": position_types, "Rank": ranks, "Model": top_models}),
-        relevant_metrics,
-    )
-
-
-def rate_models(test_metrics: pd.DataFrame, position_type: str) -> dict:
+def rate_models(metrics: pd.DataFrame) -> dict:
     ratings = {}
-    for model_name in test_metrics["Model"].unique():
-        metrics = test_metrics[test_metrics["Model"] == model_name]
-        if position_type == "long":
-            sign_prediction_score = metrics[metrics["Metric"] == "Precision"][
-                "Score"
-            ].iloc[0]
-        elif position_type == "short":
-            sign_prediction_score = metrics[metrics["Metric"] == "NPV"]["Score"].iloc[0]
-        ratings[model_name] = round(
-            sign_prediction_score
-            / metrics[metrics["Metric"] == "SMAPE"]["Score"].iloc[0]
-            * 100,
-            2,
-        )
+    for model_name in metrics["Model"].unique():
+        mm = metrics[metrics["Model"] == model_name]
+        accuracy = mm[mm["Metric"] == "Accuracy"]["Score"].iloc[0]
+        if accuracy < 0.5:
+            continue
+        rmsse = mm[mm["Metric"] == "RMSSE"]["Score"].iloc[0]
+        smape = mm[mm["Metric"] == "SMAPE"]["Score"].iloc[0]
+        ratings[model_name] = accuracy / (rmsse + smape)
+    if len(ratings) == 0:
+        raise Exception("No models left after dropping those with low test accuracy.")
     sorted_ratings = dict(
         sorted(ratings.items(), key=lambda item: item[1], reverse=True)
     )
-    print(
-        f"\nRatings of top {test_metrics['Model'].nunique()} validated models ({position_type} position):"
-    )
+    print(f"\nRatings of top {metrics['Model'].nunique()} validated models:")
     [print(f" [{i+1}] {k}: {v}") for i, (k, v) in enumerate(sorted_ratings.items())]
     return sorted_ratings
 

@@ -25,7 +25,7 @@ stages:
     outs:
       - ../../results/test_metrics.csv
       - ../../results/test_predictions.csv
-      - ../../results/test_ranked.csv
+      - ../../results/test_ratings.json
     metrics:
       - ../../results/test_metrics.json:
           cache: false
@@ -33,7 +33,7 @@ stages:
     cmd: python forecast.py
     deps:
       - forecast.py
-      - ../../results/test_ranked.csv
+      - ../../results/test_ratings.json
     outs:
       - ../../ckpts/prod
       - ../../results/forecast.csv

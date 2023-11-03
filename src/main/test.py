@@ -2,7 +2,7 @@ import pandas as pd
 
 from utils.data_preprocessing import preprocess_data
 from utils.data_processing import get_df_from_predictions, convert_metrics_df_to_dict
-from utils.evaluation import compute_prediction_performances, rank_models
+from utils.evaluation import compute_prediction_performances, rate_models
 from utils.prediction import generate_predictions
 from utils.file_handling import ResultsHandler
 
@@ -46,8 +46,7 @@ predictions = pd.concat(predictions)
 rh.write_csv_results(performance, "test_metrics")
 rh.write_csv_results(predictions, "test_predictions")
 rh.write_json_results(convert_metrics_df_to_dict(performance), "test_metrics")
-ranked_models, _ = rank_models()
-rh.write_csv_results(ranked_models, "test_ranked")
+rh.write_json_results(rate_models(performance), "test_ratings")
 rh.write_frontend_data(performance, "test_metrics")
 rh.write_frontend_data(
     predictions.drop(columns=["Return", "ReturnPredicted"]), "test_predictions"

@@ -1,64 +1,64 @@
 {
+    "TopModelRatings": {
+        "main_exponential_smoothing": 0.19140263743791744
+    },
+    "MedianTopModelTestMetrics": {
+        "Precision": 0.5667,
+        "Recall": 0.2152,
+        "F1": 0.3119,
+        "NPV": 0.5571,
+        "PredictiveScore": 0.5619,
+        "Accuracy": 0.5588,
+        "RMSE": 0.0152,
+        "RMSSE": 0.5262,
+        "SMAPE": 2.3933
+    },
     "short": {
-        "Top Models": [
-            "main_XGBRegressor",
-            "main_prophet",
-            "main_arima"
-        ],
-        "Median SMAPE": 0.8265,
-        "Median NPV": 0.5,
         "risk": {
-            "Top Stock": "AT0000785555",
-            "Median Predicted Return": 0.99412,
-            "Model Agreement": "2/3",
-            "Market Trend": "neutral",
-            "MACD Crossover": 0,
-            "Market State": "oversold",
-            "Relative Strength Index": 29,
-            "Fast Stochastic Oscillator": 4,
-            "Bollinger Band Breakout": 0
+            "TopStock": "AT0000644505",
+            "MedianPredictedReturn": 0.98305,
+            "ModelAgreement": "1/1",
+            "MarketTrend": "bullish",
+            "MACDCrossover": 1,
+            "MarketState": "overbought",
+            "RelativeStrengthIndex": 59,
+            "FastStochasticOscillator": 100,
+            "BollingerBandBreakout": 0
         },
         "reward": {
-            "Top Stock": "AT0000785555",
-            "Median Predicted Return": 0.99412,
-            "Model Agreement": "2/3",
-            "Market Trend": "neutral",
-            "MACD Crossover": 0,
-            "Market State": "oversold",
-            "Relative Strength Index": 29,
-            "Fast Stochastic Oscillator": 4,
-            "Bollinger Band Breakout": 0
+            "TopStock": "AT0000644505",
+            "MedianPredictedReturn": 0.98305,
+            "ModelAgreement": "1/1",
+            "MarketTrend": "bullish",
+            "MACDCrossover": 1,
+            "MarketState": "overbought",
+            "RelativeStrengthIndex": 59,
+            "FastStochasticOscillator": 100,
+            "BollingerBandBreakout": 0
         }
     },
     "long": {
-        "Top Models": [
-            "main_XGBRegressor",
-            "main_LGBMRegressor",
-            "main_prophet"
-        ],
-        "Median SMAPE": 0.8265,
-        "Median PPV": 0.34225,
         "risk": {
-            "Top Stock": "AT0000A21KS2",
-            "Median Predicted Return": 1.00536,
-            "Model Agreement": "2/3",
-            "Market Trend": "neutral",
-            "MACD Crossover": 0,
-            "Market State": "overbought",
-            "Relative Strength Index": 66,
-            "Fast Stochastic Oscillator": 91,
-            "Bollinger Band Breakout": 0
+            "TopStock": "AT0000A21KS2",
+            "MedianPredictedReturn": 1.01771,
+            "ModelAgreement": "1/1",
+            "MarketTrend": "neutral",
+            "MACDCrossover": 0,
+            "MarketState": "very overbought",
+            "RelativeStrengthIndex": 83,
+            "FastStochasticOscillator": 100,
+            "BollingerBandBreakout": 1
         },
         "reward": {
-            "Top Stock": "AT0000741053",
-            "Median Predicted Return": 1.00755,
-            "Model Agreement": "1/3",
-            "Market Trend": "neutral",
-            "MACD Crossover": 0,
-            "Market State": "overbought",
-            "Relative Strength Index": 68,
-            "Fast Stochastic Oscillator": 100,
-            "Bollinger Band Breakout": 1
+            "TopStock": "AT0000A21KS2",
+            "MedianPredictedReturn": 1.01771,
+            "ModelAgreement": "1/1",
+            "MarketTrend": "neutral",
+            "MACDCrossover": 0,
+            "MarketState": "very overbought",
+            "RelativeStrengthIndex": 83,
+            "FastStochasticOscillator": 100,
+            "BollingerBandBreakout": 1
         }
     }
 }

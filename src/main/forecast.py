@@ -9,10 +9,10 @@ from utils.training import train_model
 
 predictions = []
 rh = ResultsHandler()
-ranked_models = rh.load_csv_results("test_ranked")["Model"].unique()
+model_ratings = rh.load_json_results("test_ratings")
 CkptHandler().reset_dir("prod")
 
-for model_name in ranked_models:
+for model_name in model_ratings.keys():
     model_name = model_name.replace("main_", "prod_")
     print(f"Computing forecast with model '{model_name}'")
     deep_learning = False
