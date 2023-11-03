@@ -8,6 +8,46 @@ rcParams["figure.figsize"] = 20, 10
 from utils.file_handling import ResultsHandler
 
 
+def plot_overfitting() -> None:
+    val = ResultsHandler().load_csv_results("validation_results")
+    val["Model"] = val["Model"].str.replace("val_", "")
+    val["Data"] = "train"
+    test = ResultsHandler().load_csv_results("test_metrics")
+    test["Model"] = test["Model"].str.replace("main_", "")
+    test["Data"] = "test"
+    fig, axs = plt.subplots(2, 1)
+    sns.barplot(
+        ax=axs[0],
+        x="Model",
+        y="RMSE",
+        hue="Data",
+        data=pd.concat(
+            [
+                val[["Model", "Data", "RMSE"]],
+                test[test["Metric"] == "RMSE"][
+                    ["Model", "Data", "Metric", "Score"]
+                ].rename(columns={"Score": "RMSE"}),
+            ]
+        ),
+    )
+    sns.barplot(
+        ax=axs[1],
+        x="Model",
+        y="PredictiveScore",
+        hue="Data",
+        data=pd.concat(
+            [
+                val[["Model", "Data", "PredictiveScore"]],
+                test[test["Metric"] == "PredictiveScore"][
+                    ["Model", "Data", "Metric", "Score"]
+                ].rename(columns={"Score": "PredictiveScore"}),
+            ]
+        ),
+    )
+    plt.suptitle(f"Overfitting between Train Set Validation and Test Set Evaluation")
+    plt.show()
+
+
 def plot_validation_metrics() -> None:
     validation = ResultsHandler().load_json_results("validation_metrics")
     models, metrics, scores = [], [], []

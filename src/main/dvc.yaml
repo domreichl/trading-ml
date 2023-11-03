@@ -13,7 +13,6 @@ stages:
     deps:
       - train.py
       - ../../data/main.csv
-      - ../../config/data.yaml
       - ../../config/models.yaml
     outs:
       - ../../ckpts/main
@@ -21,7 +20,7 @@ stages:
     cmd: python test.py
     deps:
       - test.py
-      - ../../config/data.yaml
+      - ../../data/main.csv
       - ../../ckpts/main
     outs:
       - ../../results/test_metrics.csv
@@ -34,7 +33,6 @@ stages:
     cmd: python forecast.py
     deps:
       - forecast.py
-      - ../../config/data.yaml
       - ../../results/test_ranked.csv
     outs:
       - ../../ckpts/prod
@@ -43,7 +41,6 @@ stages:
     cmd: python recommend.py
     deps:
       - recommend.py
-      - ../../config/data.yaml
       - ../../results/forecast.csv
     metrics:
       - ../../results/recommendation.json:

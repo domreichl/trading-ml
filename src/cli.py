@@ -107,9 +107,10 @@ def recommend_open(position_type: str, optimize: str):
     close_prices = preprocess_data("main.csv").close_prices
     current_prices = {ts_name: cp[-1] for ts_name, cp in close_prices.items()}
     top_stock, _, _ = recommend_stock(current_prices, position_type, optimize)
-    trend, state, macdc, fso, bbb = compute_market_signals(close_prices[top_stock])
+    trend, state, macdc, rsi, fso, bbb = compute_market_signals(close_prices[top_stock])
     interpret_market_signals(top_stock, trend, state)
     print(" - MACD Crossover:", macdc)
+    print(" - Relative Strength Index:", rsi)
     print(" - Fast Stochastic Oscillator:", fso)
     print(" - Bollinger Band Breakout:", bbb)
 
@@ -123,9 +124,10 @@ def recommend_close(position_type: str, ts_name: str):
     forecast = ResultsHandler().load_csv_results("forecast")
     forecast = forecast[forecast["ISIN"] == ts_name]
     recommend_close_position(forecast, current_price, position_type)
-    trend, state, macdc, fso, bbb = compute_market_signals(close_prices[ts_name])
+    trend, state, macdc, rsi, fso, bbb = compute_market_signals(close_prices[ts_name])
     interpret_market_signals(ts_name, trend, state)
     print(" - MACD Crossover:", macdc)
+    print(" - Relative Strength Index:", rsi)
     print(" - Fast Stochastic Oscillator:", fso)
     print(" - Bollinger Band Breakout:", bbb)
 

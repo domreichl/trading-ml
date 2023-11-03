@@ -23,7 +23,7 @@ from models.neural_nets import RegressionNet
 
 class UnitTestDataTrimmer:
     def __init__(self, path: Path, days_to_keep: int):
-        self.mts = preprocess_data(path)
+        self.mts = preprocess_data(path, test_days=10)
         self.mts.x_train = self.mts.x_train[-days_to_keep:]
         self.mts.y_train = self.mts.y_train[-days_to_keep:]
         self.mts.dates = self.mts.dates[

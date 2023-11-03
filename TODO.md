@@ -1,10 +1,10 @@
 ## TODO
-1. recommendation_analysis.ipynb: Log Trade
+1. recommendation_analysis.ipynb + refactor trades.py
 2. extend data:
     - https://www.wienerborse.at/aktien-prime-market/
     - 43 prime, 22 standard, 7 direct plus, 21 direct
     - use all with T > 260
-3. trading + performance analysis
+3. performance analysis.ipynb
 
 ### Models
 1. multi class classifiers for direct sign prediction:

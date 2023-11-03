@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from typing import Optional
 
 from utils.data_processing import compute_predicted_return, compute_predicted_returns
 from utils.file_handling import ResultsHandler
@@ -9,11 +10,15 @@ def recommend_stock(
     current_prices: dict,
     position_type: str,
     optimize: str,
+    top_models: Optional[list[str]] = None,
     buy_price: float = 1000,
 ) -> str:
     candidates = {}
     forecast = ResultsHandler().load_csv_results("forecast")
     for model_name in forecast["Model"].unique():
+        if top_models:
+            if model_name.replace("prod_", "main_") not in top_models:
+                continue
         predicted_returns = compute_predicted_returns(
             current_prices,
             forecast[forecast["Model"] == model_name],
@@ -26,7 +31,7 @@ def recommend_stock(
     )
     print(f"\nTop stock for a {position_type} position, optimized for {optimize}:")
     print(f" - ISIN: {top_stock}")
-    print(f" - Model Agreement {model_agreement}%")
+    print(f" - Model Agreement: {model_agreement}")
     print(f" - Predicted return: {predicted_return}")
     if position_type == "long":
         print(
@@ -57,23 +62,21 @@ def pick_top_stock(candidates: dict, position_type: str, optimize: str) -> tuple
     candidates = pd.DataFrame(candidates).transpose()
     for col in candidates.columns:
         stocks[col] = {
-            "ModelsNotFavoringStock": candidates[col].isna().sum(),
-            "MeanPredictedReturn": candidates[col].mean(),
+            "ModelsFavoringStock": (~candidates[col].isna()).sum(),
+            "MedianPredictedReturn": candidates[col].median(),
         }
     stocks = pd.DataFrame(stocks).transpose()
     if optimize == "risk":
         stocks = stocks[
-            stocks["ModelsNotFavoringStock"] == stocks["ModelsNotFavoringStock"].min()
+            stocks["ModelsFavoringStock"] == stocks["ModelsFavoringStock"].max()
         ].copy()
     elif optimize == "reward":
         pass  # accept that model agreement may be low
     top_stock = get_most_lucrative_stock(stocks, position_type)
     ISIN = top_stock.index[0]
-    predicted_return = round((top_stock["MeanPredictedReturn"].iloc[0]), 5)
-    model_agreement = round(
-        (len(candidates) - top_stock["ModelsNotFavoringStock"].iloc[0])
-        / len(candidates)
-        * 100
+    predicted_return = round((top_stock["MedianPredictedReturn"].iloc[0]), 5)
+    model_agreement = (
+        f"{int(top_stock['ModelsFavoringStock'].iloc[0])}/{len(candidates)}"
     )
     return ISIN, predicted_return, model_agreement
 
@@ -81,11 +84,11 @@ def pick_top_stock(candidates: dict, position_type: str, optimize: str) -> tuple
 def get_most_lucrative_stock(stocks: pd.DataFrame, position_type: str) -> pd.DataFrame:
     if position_type == "long":
         return stocks[
-            stocks["MeanPredictedReturn"] == stocks["MeanPredictedReturn"].max()
+            stocks["MedianPredictedReturn"] == stocks["MedianPredictedReturn"].max()
         ]
     elif position_type == "short":
         return stocks[
-            stocks["MeanPredictedReturn"] == stocks["MeanPredictedReturn"].min()
+            stocks["MedianPredictedReturn"] == stocks["MedianPredictedReturn"].min()
         ]
 
 

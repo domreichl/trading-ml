@@ -4,7 +4,7 @@ from utils.data_preprocessing import preprocess_data
 
 
 def test_preprocess_data():
-    mts = preprocess_data(Path(__file__).parent.joinpath("test_data.csv"))
+    mts = preprocess_data(Path(__file__).parent.joinpath("test_data.csv"), test_days=10)
     assert round(mts.x_train[-1][-1][-1], 4) == 0.4173
     assert round(mts.y_train[0][0][0], 4) == 0.8725
     assert round(mts.x_test[-1][-1], 4) == 0.4042

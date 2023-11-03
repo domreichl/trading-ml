@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from ta.trend import ema_indicator
+from ta.momentum import RSIIndicator
 
 
 def interpret_market_signals(top_stock: str, trend: int, state: int) -> tuple[str]:
@@ -14,7 +15,7 @@ def interpret_market_signals(top_stock: str, trend: int, state: int) -> tuple[st
         state_str = "overbought"
     elif state < 0:
         state_str = "oversold"
-    if abs(state) > 1:
+    if abs(state) > 2:
         state_str = "very " + state_str
     print(f"\nThe market for {top_stock} is currently {trend_str} and {state_str}.")
     return trend_str, state_str
@@ -27,6 +28,12 @@ def compute_market_signals(prices: np.array) -> tuple[int, int]:
     macdc, _, _, _ = moving_average_convergence_divergence(prices)
     trend += macdc
 
+    rsi = round(RSIIndicator(pd.Series(prices)).rsi().iloc[-1])
+    if rsi > 70:
+        state += 1
+    elif rsi < 30:
+        state -= 1
+
     fso = fast_stochastic_oscillator(prices)
     if fso > 80:
         state += 1
@@ -36,7 +43,7 @@ def compute_market_signals(prices: np.array) -> tuple[int, int]:
     bbb, _, _ = bollinger_band_breakout(prices)
     state += bbb
 
-    return trend, state, macdc, fso, bbb
+    return trend, state, macdc, rsi, fso, bbb
 
 
 def moving_average_convergence_divergence(

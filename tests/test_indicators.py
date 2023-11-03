@@ -13,7 +13,7 @@ from utils.indicators import (
 )
 
 
-mts = preprocess_data(Path(__file__).parent.joinpath("test_data.csv"))
+mts = preprocess_data(Path(__file__).parent.joinpath("test_data.csv"), test_days=10)
 prices = list(mts.close_prices.values())[0]
 
 

@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from sklearn.metrics import f1_score, precision_recall_fscore_support
+from sklearn.metrics import precision_recall_fscore_support, accuracy_score
 from typing import Optional
 
 from utils.data_processing import (
@@ -11,7 +11,25 @@ from utils.data_processing import (
 from utils.file_handling import ResultsHandler
 
 
-def rank_models(top_n: int = 3) -> pd.DataFrame:
+def filter_overfit_models(ranked_models: pd.DataFrame) -> pd.DataFrame:
+    val = ResultsHandler().load_csv_results("validation_results")
+    test = ResultsHandler().load_csv_results("test_metrics")
+    overfit_models = []
+    for model in ranked_models["Model"].unique():
+        val_score = val[val["Model"] == model.replace("main_", "val_")]["RMSE"].iloc[0]
+        test_score = test[(test["Model"] == model) & (test["Metric"] == "RMSE")][
+            "Score"
+        ].iloc[0]
+        overfitting = test_score / val_score - 1
+        if overfitting > 0.05:
+            overfit_models.append(model)
+            print(
+                f"Dropping '{model}' from top models due to overfitting of {overfitting}."
+            )
+    return ranked_models[~ranked_models["Model"].isin(overfit_models)]
+
+
+def rank_models(top_n: int = 3) -> tuple[pd.DataFrame, pd.DataFrame]:
     test_metrics = ResultsHandler().load_csv_results("test_metrics")
     relevant_metrics = test_metrics[
         test_metrics["Metric"].isin(["Precision", "NPV", "SMAPE"])
@@ -27,8 +45,9 @@ def rank_models(top_n: int = 3) -> pd.DataFrame:
             ranks.append(i + 1)
     if max(ranks) < top_n:
         (f"Warning: Only {len(top_models)} top models were ranked.")
-    return pd.DataFrame(
-        {"Position": position_types, "Rank": ranks, "Model": top_models}
+    return (
+        pd.DataFrame({"Position": position_types, "Rank": ranks, "Model": top_models}),
+        relevant_metrics,
     )
 
 
@@ -151,15 +170,17 @@ def evaluate_sign_predictions(gt: np.array, pr: np.array) -> dict:
         * (precision * negative_predictive_value)
         / (precision + negative_predictive_value)
     )
+    accuracy = accuracy_score(gt, pr)
     metrics = dict(
         zip(
-            ["Precision", "Recall", "F1", "NPV", "PredictiveScore"],
+            ["Precision", "Recall", "F1", "NPV", "PredictiveScore", "Accuracy"],
             [
                 precision,
                 recall,
                 f1_score,
                 negative_predictive_value,
                 predictive_score,
+                accuracy,
             ],
         )
     )
