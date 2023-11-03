@@ -51,17 +51,17 @@ stages:
       nfiles: 44
     - path: validate.py
       hash: md5
-      md5: d355789ac644d8c6170fee759e5f6461
-      size: 1089
+      md5: abd22d74061f84476ce6153f33717751
+      size: 1182
     params:
       validate_params.yaml:
         n_validations: 100
     outs:
     - path: ../../results/validation_metrics.json
       hash: md5
-      md5: a16b100aa91d069fcb06f4a0362b5037
-      size: 966
+      md5: e6985ab2e08dc5dc59053beea88846a2
+      size: 1291
     - path: ../../results/validation_results.csv
       hash: md5
-      md5: 62a27d05548a4bd448d2631913d9af04
-      size: 251
+      md5: 421845aa0de8cf30d42548bdd37653a2
+      size: 435

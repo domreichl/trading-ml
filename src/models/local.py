@@ -29,7 +29,7 @@ def predict_arima(mts: MultipleTimeSeries, model_name: str) -> dict:
 
 def validate_arima(mts: MultipleTimeSeries, n_validations: int) -> tuple[float]:
     test_days = len(mts.y_test)
-    rmse_lst, ps_lst = [], []
+    rmse_lst, ps_lst, acc_lst = [], [], []
     for i, ts_name in enumerate(mts.names):
         print(f"Validating arima_{ts_name}")
         for _ in range(n_validations):
@@ -43,13 +43,14 @@ def validate_arima(mts: MultipleTimeSeries, n_validations: int) -> tuple[float]:
                     mts.x_train[trial_i, :, i], fh=range(1, test_days + 1)
                 )
             )
-            rmse, ps = get_validation_metrics(
+            rmse, ps, acc = get_validation_metrics(
                 mts.get_returns_from_features(y_true),
                 mts.get_returns_from_features(y_pred),
             )
             rmse_lst.append(rmse)
             ps_lst.append(ps)
-    return float(np.mean(rmse_lst)), float(np.mean(ps_lst))
+            acc_lst.append(acc)
+    return float(np.mean(rmse_lst)), float(np.mean(ps_lst)), float(np.mean(acc_lst))
 
 
 def fit_predict_exponential_smoothing(mts: MultipleTimeSeries) -> dict:
@@ -64,20 +65,21 @@ def validate_exponential_smoothing(
 ) -> tuple[float]:
     test_days = len(mts.y_test)
     model = initialize_exponential_smoothing(mts.x_train.shape[1])
-    rmse_lst, ps_lst = [], []
+    rmse_lst, ps_lst, acc_lst = [], [], []
     for _ in range(n_validations):
         trial_i = random.randint(0, len(mts.x_train) - 1 - test_days)
         y_true = mts.x_train[trial_i + 1 : trial_i + 1 + test_days, -1, :]
         y_pred = model.fit_predict(
             mts.x_train[trial_i, :, :], fh=range(1, test_days + 1)
         )
-        rmse, ps = get_validation_metrics(
+        rmse, ps, acc = get_validation_metrics(
             mts.get_returns_from_features(y_true),
             mts.get_returns_from_features(y_pred),
         )
         rmse_lst.append(rmse)
         ps_lst.append(ps)
-    return float(np.mean(rmse_lst)), float(np.mean(ps_lst))
+        acc_lst.append(acc)
+    return float(np.mean(rmse_lst)), float(np.mean(ps_lst)), float(np.mean(acc_lst))
 
 
 def initialize_exponential_smoothing(
@@ -124,7 +126,7 @@ def validate_moving_average(
     mts: MultipleTimeSeries, n_validations: int, recursive: bool
 ) -> tuple[float]:
     test_days = len(mts.y_test)
-    rmse_lst, ps_lst = [], []
+    rmse_lst, ps_lst, acc_lst = [], [], []
     for _ in range(n_validations):
         trial_i = random.randint(0, len(mts.x_train) - 1 - test_days)
         if recursive:
@@ -133,13 +135,14 @@ def validate_moving_average(
             y_preds = predict_moving_average(mts, trial_i)
         y_pred = np.stack(list(y_preds.values()), 1)
         y_true = mts.x_train[trial_i + 1 : trial_i + 1 + test_days, -1, :]
-        rmse, ps = get_validation_metrics(
+        rmse, ps, acc = get_validation_metrics(
             mts.get_returns_from_features(y_true),
             mts.get_returns_from_features(y_pred),
         )
         rmse_lst.append(rmse)
         ps_lst.append(ps)
-    return float(np.mean(rmse_lst)), float(np.mean(ps_lst))
+        acc_lst.append(acc)
+    return float(np.mean(rmse_lst)), float(np.mean(ps_lst)), float(np.mean(acc_lst))
 
 
 def fit_prophet(mts: MultipleTimeSeries, model_name: str) -> None:
@@ -168,7 +171,7 @@ def predict_prophet(mts: MultipleTimeSeries, model_name: str) -> dict:
 
 def validate_prophet(mts: MultipleTimeSeries, n_validations: int) -> dict:
     test_days = len(mts.y_test)
-    rmse_lst, ps_lst = [], []
+    rmse_lst, ps_lst, acc_lst = [], [], []
     for i, ts_name in enumerate(mts.names):
         print(f"Validating prophet_{ts_name}")
         for _ in range(n_validations):
@@ -187,10 +190,11 @@ def validate_prophet(mts: MultipleTimeSeries, n_validations: int) -> dict:
                     )
                 )["yhat"]
             )
-            rmse, ps = get_validation_metrics(
+            rmse, ps, acc = get_validation_metrics(
                 mts.get_returns_from_features(y_true),
                 mts.get_returns_from_features(y_pred),
             )
             rmse_lst.append(rmse)
             ps_lst.append(ps)
-    return float(np.mean(rmse_lst)), float(np.mean(ps_lst))
+            acc_lst.append(acc)
+    return float(np.mean(rmse_lst)), float(np.mean(ps_lst)), float(np.mean(acc_lst))

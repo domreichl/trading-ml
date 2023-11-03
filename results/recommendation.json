@@ -1,38 +1,39 @@
 {
     "TopModelRatings": {
-        "main_exponential_smoothing": 0.19140263743791744
+        "main_exponential_smoothing": 0.19140263743791744,
+        "main_simple_regression_net": 0.13869773817683345
     },
     "MedianTopModelTestMetrics": {
-        "Precision": 0.5667,
-        "Recall": 0.2152,
-        "F1": 0.3119,
-        "NPV": 0.5571,
-        "PredictiveScore": 0.5619,
-        "Accuracy": 0.5588,
-        "RMSE": 0.0152,
-        "RMSSE": 0.5262,
-        "SMAPE": 2.3933
+        "Precision": 0.51525,
+        "Recall": 0.31015000000000004,
+        "F1": 0.37215,
+        "NPV": 0.5459,
+        "PredictiveScore": 0.5293,
+        "Accuracy": 0.53235,
+        "RMSE": 0.01565,
+        "RMSSE": 0.6416999999999999,
+        "SMAPE": 2.6418
     },
     "short": {
         "risk": {
-            "TopStock": "AT0000644505",
-            "MedianPredictedReturn": 0.98305,
-            "ModelAgreement": "1/1",
+            "TopStock": "AT0000821103",
+            "MedianPredictedReturn": 0.95201,
+            "ModelAgreement": "1/2",
             "MarketTrend": "bullish",
             "MACDCrossover": 1,
             "MarketState": "overbought",
-            "RelativeStrengthIndex": 59,
+            "RelativeStrengthIndex": 67,
             "FastStochasticOscillator": 100,
             "BollingerBandBreakout": 0
         },
         "reward": {
-            "TopStock": "AT0000644505",
-            "MedianPredictedReturn": 0.98305,
-            "ModelAgreement": "1/1",
+            "TopStock": "AT0000821103",
+            "MedianPredictedReturn": 0.95201,
+            "ModelAgreement": "1/2",
             "MarketTrend": "bullish",
             "MACDCrossover": 1,
             "MarketState": "overbought",
-            "RelativeStrengthIndex": 59,
+            "RelativeStrengthIndex": 67,
             "FastStochasticOscillator": 100,
             "BollingerBandBreakout": 0
         }
@@ -41,7 +42,7 @@
         "risk": {
             "TopStock": "AT0000A21KS2",
             "MedianPredictedReturn": 1.01771,
-            "ModelAgreement": "1/1",
+            "ModelAgreement": "1/2",
             "MarketTrend": "neutral",
             "MACDCrossover": 0,
             "MarketState": "very overbought",
@@ -52,7 +53,7 @@
         "reward": {
             "TopStock": "AT0000A21KS2",
             "MedianPredictedReturn": 1.01771,
-            "ModelAgreement": "1/1",
+            "ModelAgreement": "1/2",
             "MarketTrend": "neutral",
             "MACDCrossover": 0,
             "MarketState": "very overbought",

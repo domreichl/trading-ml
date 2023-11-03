@@ -29,14 +29,16 @@ def cli():
 @cli.command()
 def prepare():
     cfg = Config()
-    cfg.set_dates("2000-01-03", "2023-10-31")
+    cfg.set_dates("2000-01-03", "2023-11-03")
     prepare_data("exp.csv", cfg)
 
 
 @cli.command()
 @click.argument("model_name")
 def train(model_name: str):
-    train_model("exp_" + model_name, mts=preprocess_data("exp.csv"))
+    train_model(
+        "exp_" + model_name, mts=preprocess_data("exp.csv", model_name=model_name)
+    )
 
 
 @cli.command()
@@ -44,10 +46,11 @@ def train(model_name: str):
 def validate(model_name: str):
     mts = preprocess_data("exp.csv", model_name=model_name)
     model_name = "exp_" + model_name
-    rmse, ps = validate_model(model_name, mts, n_validations=10)
+    rmse, ps, acc = validate_model(model_name, mts, n_validations=10)
     print(f"Validation results for {model_name}:")
-    print("RMSE: ", rmse)
-    print("PredictiveScore: ", ps)
+    print("RMSE:", rmse)
+    print("PredictiveScore:", ps)
+    print("Accuracy:", acc)
 
 
 @cli.command()

@@ -15,35 +15,23 @@ def plot_overfitting() -> None:
     test = ResultsHandler().load_csv_results("test_metrics")
     test["Model"] = test["Model"].str.replace("main_", "")
     test["Data"] = "test"
-    fig, axs = plt.subplots(2, 1)
-    sns.barplot(
-        ax=axs[0],
-        x="Model",
-        y="RMSE",
-        hue="Data",
-        data=pd.concat(
-            [
-                val[["Model", "Data", "RMSE"]],
-                test[test["Metric"] == "RMSE"][
-                    ["Model", "Data", "Metric", "Score"]
-                ].rename(columns={"Score": "RMSE"}),
-            ]
-        ),
-    )
-    sns.barplot(
-        ax=axs[1],
-        x="Model",
-        y="PredictiveScore",
-        hue="Data",
-        data=pd.concat(
-            [
-                val[["Model", "Data", "PredictiveScore"]],
-                test[test["Metric"] == "PredictiveScore"][
-                    ["Model", "Data", "Metric", "Score"]
-                ].rename(columns={"Score": "PredictiveScore"}),
-            ]
-        ),
-    )
+    metrics = ["RMSE", "PredictiveScore", "Accuracy"]
+    fig, axs = plt.subplots(len(metrics), 1)
+    for i, metric in enumerate(metrics):
+        sns.barplot(
+            ax=axs[i],
+            x="Model",
+            y=metric,
+            hue="Data",
+            data=pd.concat(
+                [
+                    val[["Model", "Data", metric]],
+                    test[test["Metric"] == metric][
+                        ["Model", "Data", "Metric", "Score"]
+                    ].rename(columns={"Score": metric}),
+                ]
+            ),
+        )
     plt.suptitle(f"Overfitting between Train Set Validation and Test Set Evaluation")
     plt.show()
 
@@ -65,7 +53,7 @@ def plot_validation_metrics() -> None:
             y="Score",
             hue="Metric",
             data=df[df["Metric"] == metric],
-            palette="Blues" if metric == "F1" else "Oranges",
+            palette="Oranges" if metric == "RMSE" else "Blues",
         )
     plt.suptitle(f"Train Set Validation Error for {df['Model'].nunique()} Models")
     plt.show()

@@ -1,5 +1,5 @@
 ## TODO
-1. recommendation_analysis.ipynb + refactor trades.py
+1. recommendation_analysis.ipynb + refactor trades.py --> new git tag
 2. extend data:
     - https://www.wienerborse.at/aktien-prime-market/
     - 43 prime, 22 standard, 7 direct plus, 21 direct

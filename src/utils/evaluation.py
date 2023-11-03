@@ -62,7 +62,7 @@ def get_validation_metrics(
     sign_metrics = evaluate_sign_predictions(
         get_signs_from_returns(returns_true), get_signs_from_returns(returns_pred)
     )
-    return metrics["RMSE"], sign_metrics["PredictiveScore"]
+    return metrics["RMSE"], sign_metrics["PredictiveScore"], sign_metrics["Accuracy"]
 
 
 def compute_prediction_performances(

@@ -49,9 +49,10 @@ def test_local_fit_predict_arima():
 
 
 def test_local_validate_arima():
-    rmse, ps = validate_arima(mts, n_validations=2)
+    rmse, ps, acc = validate_arima(mts, n_validations=2)
     assert rmse > 0
     assert ps > 0
+    assert acc > 0
 
 
 def test_local_fit_predict_exponential_smoothing():
@@ -61,9 +62,10 @@ def test_local_fit_predict_exponential_smoothing():
 
 
 def test_local_validate_exponential_smoothing():
-    rmse, ps = validate_exponential_smoothing(mts, n_validations=2)
+    rmse, ps, acc = validate_exponential_smoothing(mts, n_validations=2)
     assert rmse > 0
     assert ps > 0
+    assert acc > 0
 
 
 def test_local_predict_moving_average():
@@ -79,12 +81,16 @@ def test_local_predict_moving_average_recursive():
 
 
 def test_local_validate_moving_average():
-    rmse, ps = validate_moving_average(mts, recursive=False, n_validations=2)
-    rmse_rec, ps_rec = validate_moving_average(mts, recursive=True, n_validations=2)
+    rmse, ps, acc = validate_moving_average(mts, recursive=False, n_validations=2)
+    rmse_rec, ps_rec, acc_rec = validate_moving_average(
+        mts, recursive=True, n_validations=2
+    )
     assert rmse > 0
     assert ps > 0
+    assert acc > 0
     assert rmse_rec > 0
     assert ps_rec > 0
+    assert acc_rec > 0
 
 
 def test_local_fit_predict_prophet():
@@ -97,9 +103,10 @@ def test_local_fit_predict_prophet():
 
 
 def test_local_validate_prophet():
-    rmse, ps = validate_prophet(mts, n_validations=2)
+    rmse, ps, acc = validate_prophet(mts, n_validations=2)
     assert rmse > 0
     assert ps > 0
+    assert acc > 0
 
 
 def test_boosting_fit_predict_boosting_model():
@@ -111,9 +118,10 @@ def test_boosting_fit_predict_boosting_model():
 
 def test_boosting_validate_boosting_model():
     for model_name in ["LGBMRegressor", "XGBRegressor"]:
-        rmse, ps = validate_boosting_model(model_name, mts, n_validations=2)
+        rmse, ps, acc = validate_boosting_model(model_name, mts, n_validations=2)
         assert rmse > 0
         assert ps > 0
+        assert acc > 0
 
 
 def test_neural_nets_simple_regression_net():
@@ -130,6 +138,7 @@ def test_neural_nets_recurrent_regression_net():
 
 def test_neural_nets_simple_regression_net_validate():
     model = RegressionNet("test_simple_regression_net", mts)
-    rmse, ps = model.validate(n_validations=2)
+    rmse, ps, acc = model.validate(n_validations=2)
     assert rmse > 0
     assert ps > 0
+    assert acc > 0

@@ -12,8 +12,8 @@ N_VALIDATIONS = 50
 def objective(trial):
     lbws = trial.suggest_int("look_back_window_size", 260, 1300, 260)
     mts = preprocess_data("exp.csv", look_back_window_size=lbws)
-    rmse, ps = validate_boosting_model(MODEL_NAME, mts, N_VALIDATIONS)
-    return rmse, ps
+    rmse, ps, acc = validate_boosting_model(MODEL_NAME, mts, N_VALIDATIONS)
+    return rmse, ps, acc
 
 
 study = optuna.create_study(
@@ -30,7 +30,8 @@ df = df[
         "params_look_back_window_size",
         "values_0",
         "values_1",
+        "values_2",
     ]
 ]
-df.columns = ["Model", "LookBackWindowSize", "RMSE", "PredictiveScore"]
+df.columns = ["Model", "LookBackWindowSize", "RMSE", "PredictiveScore", "Accuracy"]
 ResultsHandler().write_csv_results(df, f"tuning/{MODEL_NAME}")

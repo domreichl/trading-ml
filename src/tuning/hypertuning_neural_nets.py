@@ -20,6 +20,7 @@ with open(CSV_PATH, "w") as file:
             "LookBackWindowSize",
             "RMSE",
             "PredictiveScore",
+            "Accuracy",
         ]
     )
 
@@ -29,17 +30,9 @@ for epochs in [10]:
             mts = preprocess_data("exp.csv", look_back_window_size=lbws)
             model = RegressionNet("exp_" + MODEL_NAME, mts)
             model.train(batch_size, epochs)
-            rmse, ps = model.validate(N_VALIDATIONS)
+            rmse, ps, acc = model.validate(N_VALIDATIONS)
             with open(CSV_PATH, "a") as file:
                 writer = csv.writer(file, delimiter=";")
                 writer.writerow(
-                    [
-                        MODEL_NAME,
-                        batch_size,
-                        epochs,
-                        1e-3,
-                        lbws,
-                        rmse,
-                        ps,
-                    ]
+                    [MODEL_NAME, batch_size, epochs, 1e-3, lbws, rmse, ps, acc]
                 )
